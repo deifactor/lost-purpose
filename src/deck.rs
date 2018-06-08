@@ -1,34 +1,27 @@
 /// A deck is basically just a vector of `card::Card`s with some fancy dressing.
-/// In particular, we allow decks to be named (in case someone might want
-/// different decks?), define a method for shuffling a deck using an RNG and so
-/// on.
-use itertools::Itertools;
-
 use card::*;
 
 #[derive(Debug)]
 pub struct Deck {
-    name: String,
     cards: Vec<Card>,
 }
 
 impl Deck {
     /// Constructs a new deck with the standard 22 major arcana and 56 minor
     /// arcana. The order is unspecified but is *not* randomized.
-    pub fn standard<S: Into<String>>(name: S) -> Deck {
+    pub fn standard() -> Deck {
         let cards = iproduct!(Rank::standard(), Suit::standard())
             .map(|(&rank, &suit)| Card::Minor(MinorArcana { rank, suit }))
             .chain(MajorArcana::standard().map(|&arc| Card::Major(arc)))
             .collect();
         Deck {
-            name: name.into(),
             cards,
         }
     }
 
     /// Constructs a new Silicon Dawn deck. The order is unspecified but is
     /// *not* randomized.
-    pub fn silicon_dawn<S: Into<String>>(name: S) -> Deck {
+    pub fn silicon_dawn() -> Deck {
         let minor = iproduct!(Rank::standard(), Suit::standard())
             .map(|(&rank, &suit)| Card::Minor(MinorArcana { rank, suit }));
         let ninety_nines = Suit::standard().map(|&suit| {
@@ -61,7 +54,6 @@ impl Deck {
             .chain(extra.cloned())
             .collect();
         Deck {
-            name: name.into(),
             cards,
         }
     }
@@ -77,11 +69,11 @@ mod test {
 
     #[test]
     fn count_standard_deck() {
-        assert_eq!(Deck::standard("").cards().len(), 78)
+        assert_eq!(Deck::standard().cards().len(), 78)
     }
 
     #[test]
     fn count_silicon_dawn() {
-        assert_eq!(Deck::silicon_dawn("").cards().len(), 94)
+        assert_eq!(Deck::silicon_dawn().cards().len(), 94)
     }
 }
