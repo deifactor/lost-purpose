@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate itertools;
 extern crate rand_core;
 

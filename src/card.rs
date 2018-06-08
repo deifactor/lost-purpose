@@ -131,11 +131,9 @@ impl MajorArcana {
     }
 
     /// An iterator over the arcana *only* present in the Silicon Dawn arcana.
-    pub fn silicon_dawn() -> impl Iterator<Item = Self> {
+    pub fn silicon_dawn() -> slice::Iter<'static, Self> {
         use self::MajorArcana::*;
-        [Maya, Vulture, SheIsLegend, History, AlephFour]
-            .into_iter()
-            .cloned()
+        [Maya, Vulture, SheIsLegend, History, AlephFour].into_iter()
     }
 }
 
