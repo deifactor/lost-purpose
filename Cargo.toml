@@ -6,3 +6,4 @@ authors = ["Astra <deifacted@users.noreply.github.com>"]
 [dependencies]
 itertools = "0.7"
 rand_core = "0.2"
+rand = "0.5"
