@@ -3,6 +3,7 @@
 /// of the proper nouns (and a couple maybe-sensitive words) modified.
 use byteorder::{BigEndian, ByteOrder};
 use itertools::Itertools;
+use std::collections::HashMap;
 
 pub fn to_false_name(id: u64) -> String {
     let mut bytes = [0u8; 8];
@@ -12,26 +13,63 @@ pub fn to_false_name(id: u64) -> String {
         .enumerate()
         .map(|(index, &byte)| {
             if index % 2 == 0 {
-                WORDS[byte as usize].0
+                BYTE_TO_WORD[byte as usize].0
             } else {
-                WORDS[byte as usize].1
+                BYTE_TO_WORD[byte as usize].1
             }
         })
         .join(" ")
 }
 
+/// This will fail if the string is not a valid false name. False names are not
+/// sensitive to capitalization, punctuation between words, or space at the
+/// start (so `'foo bar baz'`, `'Foo Bar BAZ'`, and `' foo-bar...baz '` are all
+/// equivalent). However, it makes no attempts to correct typos.
 pub fn from_false_name(false_name: &str) -> Result<u64, FalseNameError> {
-    unimplemented!()
+    let false_name = false_name.to_lowercase();
+    let bytes = false_name
+        .split(|c| !char::is_ascii_alphabetic(&c))
+        .filter(|s| !s.is_empty())
+        .enumerate()
+        .map(|(index, word)| word_to_byte(index, word))
+        .collect::<Result<Vec<u8>, FalseNameError>>()?;
+    if bytes.len() == 8 {
+        Ok(BigEndian::read_u64(&bytes))
+    } else {
+        Err(FalseNameError::WrongWordCount { count: bytes.len() })
+    }
 }
 
-/// An error that can occur
+/// Tries to convert the word to the corresponding byte. `index` is the index of
+/// the word in the false name.
+fn word_to_byte(index: usize, word: &str) -> Result<u8, FalseNameError> {
+    // We need the explicit type annotation because lazy_static makes a wrapper.
+    let (right, wrong): (&HashMap<_, _>, &HashMap<_, _>) = if index % 2 == 0 {
+        (&EVEN_WORD_TO_BYTE, &ODD_WORD_TO_BYTE)
+    } else {
+        (&ODD_WORD_TO_BYTE, &EVEN_WORD_TO_BYTE)
+    };
+    if let Some(byte) = right.get(word) {
+        Ok(*byte)
+    } else if wrong.contains_key(word) {
+        Err(FalseNameError::ParityError {
+            word: word.to_string(),
+        })
+    } else {
+        Err(FalseNameError::UnknownWord {
+            word: word.to_string(),
+        })
+    }
+}
+
+/// An error that can occur when parsing a false name.
 #[derive(Debug, PartialEq, Eq, Fail)]
 pub enum FalseNameError {
     #[fail(display = "{} is not a valid word in a false name", word)]
     UnknownWord { word: String },
 
     #[fail(display = "False names should be 8 words, but got {}", count)]
-    WrongWordCount { count: u32 },
+    WrongWordCount { count: usize },
 
     #[fail(
         display = "{} wasn't an expected word at this position; did you forget or duplicate a word?",
@@ -40,9 +78,10 @@ pub enum FalseNameError {
     ParityError { word: String },
 }
 
-/// The PGP word list has two-syllable words alternates between two-syllable and
-/// three-syllable words.
-static WORDS: [(&'static str, &'static str); 256] = [
+/// The PGP word list alternates between two-syllable and three-syllable words.
+/// This makes a few alterations while trying to preserve the fact that the two
+/// word lists are *mostly* (but not entirely!) alphabetical.
+static BYTE_TO_WORD: [(&'static str, &'static str); 256] = [
     ("aardvark", "adroitness"),
     ("absurd", "adviser"),
     ("accrue", "aftermath"),
@@ -301,6 +340,26 @@ static WORDS: [(&'static str, &'static str); 256] = [
     ("xylem", "yucatan"),
 ];
 
+lazy_static! {
+    /// Maps the even-index words to their corresponding byte.
+    static ref EVEN_WORD_TO_BYTE: HashMap<&'static str, u8> = {
+        BYTE_TO_WORD
+            .into_iter()
+            .enumerate()
+            .map(|(index, (even, _))| (*even, index as u8))
+            .collect()
+    };
+
+    /// Maps the odd-index words to their corresponding byte.
+    static ref ODD_WORD_TO_BYTE: HashMap<&'static str, u8> = {
+        BYTE_TO_WORD
+            .into_iter()
+            .enumerate()
+            .map(|(index, (_, odd))| (*odd, index as u8))
+            .collect()
+    };
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -323,6 +382,14 @@ mod test {
                 "xylem yucatan xylem yucatan xylem yucatan xylem yucatan"
             );
         }
+
+        #[test]
+        fn proper_endianness() {
+            assert_eq!(
+                to_false_name(0xd7fa3f197daa29f8),
+                "stopwatch whimsical cowbell bottomless klaxon pedigree breakup warranty"
+            )
+        }
     }
 
     mod from_false_name {
@@ -332,7 +399,7 @@ mod test {
         fn too_few_words() {
             assert_eq!(
                 from_false_name(
-                    "aardvark adroitness aardvark adroitness aardvark ardroitness aardvark"
+                    "aardvark adroitness aardvark adroitness aardvark adroitness aardvark"
                 ),
                 Err(FalseNameError::WrongWordCount { count: 7 })
             )
@@ -342,7 +409,7 @@ mod test {
         fn too_many_words() {
             assert_eq!(
                 from_false_name(
-                    "aardvark adroitness aardvark adroitness aardvark ardroitness aardvark adroitness aardvark"
+                    "aardvark adroitness aardvark adroitness aardvark adroitness aardvark adroitness aardvark"
                 ),
                 Err(FalseNameError::WrongWordCount { count: 9 })
             )

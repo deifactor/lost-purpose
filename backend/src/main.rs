@@ -3,6 +3,8 @@ extern crate byteorder;
 extern crate failure;
 #[macro_use]
 extern crate itertools;
+#[macro_use]
+extern crate lazy_static;
 extern crate rand_core;
 extern crate rand;
 
