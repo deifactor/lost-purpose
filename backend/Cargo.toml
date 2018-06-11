@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["Astra <deifacted@users.noreply.github.com>"]
 
 [dependencies]
+byteorder = "1.2"
+failure = "0.1"
 itertools = "0.7"
 rand_core = "0.2"
 rand = "0.5"
