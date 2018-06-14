@@ -3,7 +3,7 @@
 /// We use a convention where success is defined by returning a JSON object (or
 /// a number or string, which technically isn't valid JSON at the top level) and
 /// a 2xx error code. Failure is indicated by returning a JSON object with an
-/// `err` property containing user-readable text and a `debug` property
+/// `err` property containing user-interpretable text and a `debug` property
 /// containing the original object, as well as a non-2xx error code.
 use false_name;
 use rocket::http::Status;
