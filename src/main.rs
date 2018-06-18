@@ -2,6 +2,11 @@
 #![plugin(rocket_codegen)]
 
 extern crate byteorder;
+extern crate chrono;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate diesel_migrations;
 #[macro_use]
 extern crate failure;
 #[macro_use]
@@ -17,10 +22,12 @@ extern crate rocket_contrib;
 extern crate structopt;
 
 mod card;
+mod db;
 mod deck;
 mod false_name;
 mod lfsr;
 mod routes;
+mod schema;
 
 use structopt::StructOpt;
 
