@@ -31,12 +31,12 @@ impl Deck {
             .map(|(&rank, &suit)| Card::Minor(MinorArcana { rank, suit }));
         let ninety_nines = Suit::standard().map(|&suit| {
             Card::Minor(MinorArcana {
-                rank: Rank::Numeric(99),
+                rank: Rank::NinetyNine,
                 suit,
             })
         });
         let voids = [
-            Rank::Numeric(0),
+            Rank::Zero,
             Rank::Progeny,
             Rank::Cavalier,
             Rank::Queen,

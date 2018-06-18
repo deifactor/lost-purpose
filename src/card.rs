@@ -12,12 +12,24 @@ use std::slice;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Rank {
-    // 1-10, plus 0 or 99 for Silicon Dawn
-    Numeric(u8),
+    /// Only used in Silicon Dawn.
+    Zero,
+    One,
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
     Progeny,
     Cavalier,
     Queen,
     King,
+    /// Only used in Silicon Dawn.
+    NinetyNine,
 }
 
 impl Rank {
@@ -25,19 +37,7 @@ impl Rank {
     pub fn standard() -> slice::Iter<'static, Self> {
         use self::Rank::*;
         [
-            Numeric(1),
-            Numeric(2),
-            Numeric(3),
-            Numeric(4),
-            Numeric(5),
-            Numeric(6),
-            Numeric(7),
-            Numeric(8),
-            Numeric(9),
-            Numeric(10),
-            Progeny,
-            Cavalier,
-            Queen,
+            One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Progeny, Cavalier, Queen,
             King,
         ].into_iter()
     }
