@@ -5,6 +5,7 @@
 use chrono::prelude::*;
 use diesel;
 use diesel::prelude::*;
+use pile;
 use rand;
 use std;
 
@@ -17,6 +18,15 @@ pub struct Database {
 pub struct User {
     pub id: i64,
     created_at: NaiveDateTime
+}
+
+#[derive(Debug, Queryable, PartialEq, Eq)]
+pub struct Deck {
+    id: u32,
+    user_id: i64,
+    position: u32,
+    name: String,
+    pile: pile::Pile
 }
 
 /// All kinds of errors that can be returned from a database API call.
