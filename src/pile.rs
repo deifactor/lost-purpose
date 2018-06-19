@@ -1,4 +1,6 @@
-/// A deck is basically just a vector of `card::Card`s with some fancy dressing.
+/// A pile is basically just a vector of `card::Card`s with some fancy dressing.
+/// We distinguish it from a full-blown deck, which has an owner, a name, and so
+/// on.
 use itertools::Itertools;
 
 use card::*;
@@ -9,24 +11,24 @@ use rand_core::SeedableRng;
 use std::cmp;
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Deck {
+pub struct Pile {
     cards: Vec<Card>,
 }
 
-impl Deck {
-    /// Constructs a new deck with the standard 22 major arcana and 56 minor
+impl Pile {
+    /// Constructs a new pile with the standard 22 major arcana and 56 minor
     /// arcana. The order is unspecified but is *not* randomized.
-    pub fn standard() -> Deck {
+    pub fn standard() -> Pile {
         let cards = iproduct!(Rank::standard(), Suit::standard())
             .map(|(&rank, &suit)| Card::Minor(MinorArcana { rank, suit }))
             .chain(MajorArcana::standard().map(|&arc| Card::Major(arc)))
             .collect();
-        Deck { cards }
+        Pile { cards }
     }
 
-    /// Constructs a new Silicon Dawn deck. The order is unspecified but is
+    /// Constructs a new Silicon Dawn pile. The order is unspecified but is
     /// *not* randomized.
-    pub fn silicon_dawn() -> Deck {
+    pub fn silicon_dawn() -> Pile {
         let minor = iproduct!(Rank::standard(), Suit::standard())
             .map(|(&rank, &suit)| Card::Minor(MinorArcana { rank, suit }));
         let ninety_nines = Suit::standard().map(|&suit| {
@@ -58,7 +60,7 @@ impl Deck {
             .chain(major)
             .chain(extra.cloned())
             .collect();
-        Deck { cards }
+        Pile { cards }
     }
 
     pub fn cards(&self) -> &Vec<Card> {
@@ -69,7 +71,7 @@ impl Deck {
         if self.cards.len() == 1 {
             return;
         }
-        // We'll cut the deck such the 'left' (i.e., top) half has cut_point cards in it.
+        // We'll cut the pile such the 'left' (i.e., top) half has cut_point cards in it.
         let cut_point = rng.gen_range(
             cmp::max(self.cards.len() / 2 - self.cards.len() / 6, 1),
             cmp::min(
@@ -106,46 +108,46 @@ mod test {
     }
 
     #[test]
-    fn count_standard_deck() {
-        assert_eq!(Deck::standard().cards().len(), 78)
+    fn count_standard_pile() {
+        assert_eq!(Pile::standard().cards().len(), 78)
     }
 
     #[test]
     fn count_silicon_dawn() {
-        assert_eq!(Deck::silicon_dawn().cards().len(), 94)
+        assert_eq!(Pile::silicon_dawn().cards().len(), 94)
     }
 
     #[test]
-    fn shuffle_one_card_deck() {
-        Deck {
+    fn shuffle_one_card_pile() {
+        Pile {
             cards: vec![Card::Black],
         }.shuffle(&mut rng())
     }
 
     #[test]
-    fn shuffle_two_card_deck() {
-        Deck {
+    fn shuffle_two_card_pile() {
+        Pile {
             cards: vec![Card::Black],
         }.shuffle(&mut rng())
     }
 
     #[test]
-    fn shuffle_two_card_deck_always_swaps() {
-        let mut deck = Deck {
+    fn shuffle_two_card_pile_always_swaps() {
+        let mut pile = Pile {
             cards: vec![Card::Black, Card::White],
         };
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, vec![Card::White, Card::Black]);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, vec![Card::Black, Card::White]);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, vec![Card::White, Card::Black]);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, vec![Card::Black, Card::White]);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, vec![Card::White, Card::Black]);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, vec![Card::Black, Card::White]);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, vec![Card::White, Card::Black]);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, vec![Card::Black, Card::White]);
     }
 
     #[test]
-    fn shuffle_four_card_deck_always_swaps_pairs() {
+    fn shuffle_four_card_pile_always_swaps_pairs() {
         let cards = vec![
             Card::Major(MajorArcana::Fool),
             Card::Major(MajorArcana::Magician),
@@ -158,16 +160,16 @@ mod test {
             Card::Major(MajorArcana::Fool),
             Card::Major(MajorArcana::Magician),
         ];
-        let mut deck = Deck {
+        let mut pile = Pile {
             cards: cards.clone(),
         };
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, swapped);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, cards);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, swapped);
-        deck.shuffle(&mut rng());
-        assert_eq!(deck.cards, cards);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, swapped);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, cards);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, swapped);
+        pile.shuffle(&mut rng());
+        assert_eq!(pile.cards, cards);
     }
 }

@@ -26,9 +26,9 @@ extern crate structopt;
 
 mod card;
 mod db;
-mod deck;
 mod false_name;
 mod lfsr;
+mod pile;
 mod routes;
 mod schema;
 
