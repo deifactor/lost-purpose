@@ -18,6 +18,9 @@ extern crate rand_core;
 extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
 #[macro_use]
 extern crate structopt;
 

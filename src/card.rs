@@ -10,7 +10,7 @@
 /// explanations for each. The deck has been included with permission.
 use std::slice;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Rank {
     /// Only used in Silicon Dawn.
     Zero,
@@ -43,7 +43,7 @@ impl Rank {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Suit {
     Wands,
     Cups,
@@ -61,13 +61,13 @@ impl Suit {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MinorArcana {
     pub rank: Rank,
     pub suit: Suit,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum MajorArcana {
     // Silicon Dawn has five fools but we don't distinguish between them here;
     // for now, we always use 0(0). TODO: deunify the Fools.
@@ -137,7 +137,7 @@ impl MajorArcana {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Card {
     Major(MajorArcana),
     Minor(MinorArcana),

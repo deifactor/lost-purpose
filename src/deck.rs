@@ -8,7 +8,7 @@ use rand::Rng;
 use rand_core::SeedableRng;
 use std::cmp;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Deck {
     cards: Vec<Card>,
 }
