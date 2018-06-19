@@ -31,7 +31,9 @@ impl From<diesel::result::Error> for DatabaseError {
 
 type Result<T> = std::result::Result<T, DatabaseError>;
 
-#[derive(Debug, Queryable, PartialEq, Eq)]
+use schema::{decks, users};
+
+#[derive(Debug, Identifiable, Queryable, PartialEq, Eq)]
 pub struct User {
     pub id: i64,
     created_at: NaiveDateTime,
@@ -66,13 +68,14 @@ impl User {
     }
 }
 
-#[derive(Debug, Queryable, PartialEq, Eq)]
+#[derive(Debug, Identifiable, Associations, Queryable, PartialEq, Eq, Serialize)]
+#[belongs_to(User)]
 pub struct Deck {
-    id: u32,
-    user_id: i64,
-    position: u32,
-    name: String,
-    pile: pile::Pile,
+    pub id: i32,
+    pub user_id: i64,
+    pub position: i32,
+    pub name: String,
+    pub pile: pile::Pile,
 }
 
 #[cfg(test)]

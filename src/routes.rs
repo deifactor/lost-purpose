@@ -5,16 +5,36 @@
 /// a 2xx error code. Failure is indicated by returning a JSON object with an
 /// `err` property containing user-interpretable text and a `debug` property
 /// containing the original object, as well as a non-2xx error code.
+use diesel;
+use diesel::prelude::*;
 use false_name;
+use model;
+use pile;
 use rocket::http::Status;
+use rocket::request::{self, FromRequest, Request};
 use rocket::response::{status, NamedFile, Responder};
-use rocket::State;
+use rocket::{Outcome, State};
 use rocket_contrib::Json;
+use schema::{decks, users};
 use std::fmt::{Debug, Display};
 use std::path::PathBuf;
+use std::sync::Mutex;
 
 trait ToStatus {
     fn to_status(&self) -> Status;
+
+    fn to_json(&self) -> status::Custom<Json>
+    where
+        Self: Debug + Display,
+    {
+        status::Custom(
+            self.to_status(),
+            Json(json!({
+                "err": format!("{}", self),
+                "debug": format!("{:?}", self)
+            })),
+        )
+    }
 }
 
 impl ToStatus for false_name::FalseNameError {
@@ -23,18 +43,10 @@ impl ToStatus for false_name::FalseNameError {
     }
 }
 
-fn prepare<T, E: ToStatus + Debug + Display>(
-    val: Result<T, E>,
-) -> Result<Json<T>, status::Custom<Json>> {
-    val.map(Json).map_err(|e| {
-        status::Custom(
-            e.to_status(),
-            Json(json!({
-                "err": format!("{}", e),
-                "debug": format!("{:?}", e)
-            })),
-        )
-    })
+impl ToStatus for diesel::result::Error {
+    fn to_status(&self) -> Status {
+        Status::InternalServerError
+    }
 }
 
 #[derive(Debug)]
@@ -49,7 +61,95 @@ fn get_false_name(id: u64) -> String {
 
 #[get("/id/<false_name>")]
 fn get_id(false_name: String) -> impl Responder<'static> {
-    prepare(false_name::from_false_name(&false_name))
+    false_name::from_false_name(&false_name)
+        .map(Json)
+        .map_err(|e| e.to_json())
+}
+
+/// Guards that there must be an `id` cookie with a valid user ID.
+#[derive(Debug)]
+struct UserGuard(model::User);
+
+impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, ()> {
+        let cookies = request.cookies();
+        let id_cookie = cookies.get("id").ok_or(Err((Status::Forbidden, ())))?;
+        let user_id: i64 = id_cookie
+            .value()
+            .parse()
+            .map_err(|_| Err((Status::BadRequest, ())))?;
+        let conn_guard = request.guard::<State<Mutex<SqliteConnection>>>()?;
+        let conn = conn_guard.lock().expect("connection lock poisoned");
+        let user = users::table
+            .find(user_id)
+            .first(&*conn)
+            .map_err(|_| Err((Status::NotFound, ())))?;
+        Outcome::Success(UserGuard(user))
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Deserialize)]
+enum NewDeckType {
+    Standard,
+    SiliconDawn,
+}
+
+#[derive(Debug, Deserialize)]
+struct NewDeck {
+    name: String,
+    type_: NewDeckType,
+}
+
+#[get("/deck/<id>")]
+fn get_deck(
+    id: i32,
+    user_guard: UserGuard,
+    conn_guard: State<Mutex<SqliteConnection>>,
+) -> Result<Json<model::Deck>, status::Custom<Json>> {
+    let user = user_guard.0;
+    let conn = conn_guard.lock().expect("connection lock poisoned");
+    model::Deck::belonging_to(&user)
+        .find(id)
+        .first(&*conn)
+        .map_err(|e| e.to_json())
+        .map(Json)
+}
+
+#[post("/deck", format = "application/json", data = "<deck_json>")]
+fn new_deck(
+    deck_json: Json<NewDeck>,
+    user_guard: UserGuard,
+    conn_guard: State<Mutex<SqliteConnection>>,
+) -> Result<Json<model::Deck>, status::Custom<Json>> {
+    let user = user_guard.0;
+    let pile = match deck_json.type_ {
+        NewDeckType::Standard => pile::Pile::standard(),
+        NewDeckType::SiliconDawn => pile::Pile::silicon_dawn(),
+    };
+    let conn = conn_guard.lock().expect("connection lock poisoned");
+    let position = model::Deck::belonging_to(&user)
+        .select(diesel::dsl::max(decks::position))
+        .first::<Option<i32>>(&*conn)
+        .map_err(|e| e.to_json())?
+        .map(|pos| pos + 1)
+        .unwrap_or(0);
+    diesel::insert_into(decks::table)
+        .values((
+            decks::user_id.eq(user.id),
+            decks::position.eq(position),
+            decks::name.eq(&deck_json.name),
+            decks::pile.eq(pile),
+        ))
+        .execute(&*conn)
+        .map_err(|e| e.to_json())?;
+    decks::table
+        .filter(decks::user_id.eq(user.id))
+        .filter(decks::position.eq(position))
+        .first(&*conn)
+        .map(Json)
+        .map_err(|e| e.to_json())
 }
 
 #[get("/<file..>")]

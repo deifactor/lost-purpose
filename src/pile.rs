@@ -4,13 +4,18 @@
 use itertools::Itertools;
 
 use card::*;
-
+use diesel;
+use diesel::sql_types::Text;
+use diesel::{deserialize, serialize};
 use rand::prng::XorShiftRng;
 use rand::Rng;
 use rand_core::SeedableRng;
+use serde_json;
 use std::cmp;
+use std::io::Write;
 
-#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize, AsExpression, FromSqlRow)]
+#[sql_type = "Text"]
 pub struct Pile {
     cards: Vec<Card>,
 }
@@ -171,5 +176,26 @@ mod test {
         assert_eq!(pile.cards, swapped);
         pile.shuffle(&mut rng());
         assert_eq!(pile.cards, cards);
+    }
+}
+
+impl<DB> deserialize::FromSql<diesel::sql_types::Text, DB> for Pile
+where
+    DB: diesel::backend::Backend,
+    String: deserialize::FromSql<diesel::sql_types::Text, DB>,
+{
+    fn from_sql(bytes: Option<&DB::RawValue>) -> deserialize::Result<Self> {
+        <String as deserialize::FromSql<diesel::sql_types::Text, DB>>::from_sql(bytes)?;
+        unimplemented!()
+    }
+}
+
+impl<DB> serialize::ToSql<diesel::sql_types::Text, DB> for Pile
+where
+    DB: diesel::backend::Backend,
+{
+    fn to_sql<W: Write>(&self, out: &mut serialize::Output<W, DB>) -> serialize::Result {
+        let json = serde_json::to_string(&self)?;
+        <String as serialize::ToSql<diesel::sql_types::Text, DB>>::to_sql(&json, out)
     }
 }

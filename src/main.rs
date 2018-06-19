@@ -21,6 +21,7 @@ extern crate rocket_contrib;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_json;
 #[macro_use]
 extern crate structopt;
 
@@ -39,14 +40,24 @@ use structopt::StructOpt;
 struct Opt {
     /// Path to the directory containing the static files.
     #[structopt(long = "static_dir")]
-    static_dir: String
+    static_dir: String,
 }
 
 fn main() {
     let opt = Opt::from_args();
     rocket::ignite()
-        .manage(routes::StaticFileConfig { root_path: opt.static_dir.into() })
-        .mount("/", routes![routes::get_false_name, routes::get_id])
+        .manage(routes::StaticFileConfig {
+            root_path: opt.static_dir.into(),
+        })
+        .mount(
+            "/",
+            routes![
+                routes::get_false_name,
+                routes::get_id,
+                routes::get_deck,
+                routes::new_deck
+            ],
+        )
         .mount("/static", routes![routes::get_file])
         .launch();
 }
