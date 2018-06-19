@@ -25,9 +25,9 @@ extern crate serde_derive;
 extern crate structopt;
 
 mod card;
-mod db;
 mod false_name;
 mod lfsr;
+mod model;
 mod pile;
 mod routes;
 mod schema;
