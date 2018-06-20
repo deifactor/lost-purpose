@@ -5,7 +5,8 @@ use itertools::Itertools;
 
 use card::*;
 use diesel;
-use diesel::sql_types::Text;
+use diesel::pg::Pg;
+use diesel::sql_types::Jsonb;
 use diesel::{deserialize, serialize};
 use rand::prng::XorShiftRng;
 use rand::Rng;
@@ -15,7 +16,7 @@ use std::cmp;
 use std::io::Write;
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize, AsExpression, FromSqlRow)]
-#[sql_type = "Text"]
+#[sql_type = "Jsonb"]
 pub struct Pile {
     cards: Vec<Card>,
 }
@@ -179,23 +180,21 @@ mod test {
     }
 }
 
-impl<DB> deserialize::FromSql<diesel::sql_types::Text, DB> for Pile
-where
-    DB: diesel::backend::Backend,
-    String: deserialize::FromSql<diesel::sql_types::Text, DB>,
-{
-    fn from_sql(bytes: Option<&DB::RawValue>) -> deserialize::Result<Self> {
-        <String as deserialize::FromSql<diesel::sql_types::Text, DB>>::from_sql(bytes)?;
-        unimplemented!()
+impl deserialize::FromSql<diesel::sql_types::Jsonb, Pg> for Pile where {
+    fn from_sql(
+        bytes: Option<&<Pg as diesel::backend::Backend>::RawValue>,
+    ) -> deserialize::Result<Self> {
+        let value =
+            <serde_json::Value as deserialize::FromSql<diesel::sql_types::Jsonb, Pg>>::from_sql(
+                bytes,
+            )?;
+        serde_json::from_value(value).map_err(|e| e.into())
     }
 }
 
-impl<DB> serialize::ToSql<diesel::sql_types::Text, DB> for Pile
-where
-    DB: diesel::backend::Backend,
-{
-    fn to_sql<W: Write>(&self, out: &mut serialize::Output<W, DB>) -> serialize::Result {
-        let json = serde_json::to_string(&self)?;
-        <String as serialize::ToSql<diesel::sql_types::Text, DB>>::to_sql(&json, out)
+impl serialize::ToSql<diesel::sql_types::Jsonb, Pg> for Pile where {
+    fn to_sql<W: Write>(&self, out: &mut serialize::Output<W, Pg>) -> serialize::Result {
+        let value = serde_json::to_value(&self)?;
+        <serde_json::Value as serialize::ToSql<diesel::sql_types::Jsonb, Pg>>::to_sql(&value, out)
     }
 }

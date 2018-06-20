@@ -57,11 +57,11 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
     fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, ()> {
         let cookies = request.cookies();
         let id_cookie = cookies.get("id").ok_or(Err((Status::Forbidden, ())))?;
-        let user_id: i64 = id_cookie
+        let user_id: i32 = id_cookie
             .value()
             .parse()
             .map_err(|_| Err((Status::BadRequest, ())))?;
-        let conn_guard = request.guard::<State<Mutex<SqliteConnection>>>()?;
+        let conn_guard = request.guard::<State<Mutex<PgConnection>>>()?;
         let conn = conn_guard.lock().expect("connection lock poisoned");
         let user = users::table
             .find(user_id)
@@ -87,7 +87,7 @@ struct NewDeck {
 fn get_deck(
     id: i32,
     user_guard: UserGuard,
-    conn_guard: State<Mutex<SqliteConnection>>,
+    conn_guard: State<Mutex<PgConnection>>,
 ) -> Result<Json<model::Deck>, status::Custom<Json>> {
     let user = user_guard.0;
     let conn = conn_guard.lock().expect("connection lock poisoned");
@@ -102,7 +102,7 @@ fn get_deck(
 fn new_deck(
     deck_json: Json<NewDeck>,
     user_guard: UserGuard,
-    conn_guard: State<Mutex<SqliteConnection>>,
+    conn_guard: State<Mutex<PgConnection>>,
 ) -> Result<Json<model::Deck>, status::Custom<Json>> {
     let user = user_guard.0;
     let pile = match deck_json.type_ {

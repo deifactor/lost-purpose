@@ -35,24 +35,24 @@ use schema::{decks, users};
 
 #[derive(Debug, Identifiable, Queryable, PartialEq, Eq)]
 pub struct User {
-    pub id: i64,
+    pub id: i32,
     created_at: NaiveDateTime,
 }
 
 const NEW_USER_ATTEMPTS: u64 = 1_000;
 
 impl User {
-    pub fn insert_new_user(conn: &SqliteConnection) -> Result<User> {
+    pub fn insert_new_user(conn: &PgConnection) -> Result<User> {
         Self::insert_new_user_with_rng(conn, &mut rand::thread_rng())
     }
 
     fn insert_new_user_with_rng<R: rand::Rng + ?Sized>(
-        conn: &SqliteConnection,
+        conn: &PgConnection,
         rng: &mut R,
     ) -> Result<User> {
         use schema::users::dsl::*;
         for _ in 0..NEW_USER_ATTEMPTS {
-            let new_id = rng.gen::<i64>();
+            let new_id = rng.gen::<i32>();
             let count: i64 = users.find(new_id).count().get_result(conn)?;
             if count != 0 {
                 continue;
@@ -72,7 +72,7 @@ impl User {
 #[belongs_to(User)]
 pub struct Deck {
     pub id: i32,
-    pub user_id: i64,
+    pub user_id: i32,
     pub position: i32,
     pub name: String,
     pub pile: pile::Pile,
@@ -85,8 +85,8 @@ mod tests {
 
     embed_migrations!("migrations");
 
-    fn setup_connection() -> SqliteConnection {
-        let conn = SqliteConnection::establish(":memory:")
+    fn setup_connection() -> PgConnection {
+        let conn = PgConnection::establish(":memory:")
             .expect("Could not connect to in-memory SQLite database");
         embedded_migrations::run(&conn).expect("Failed to run embedded migrations");
         conn

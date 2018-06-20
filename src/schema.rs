@@ -1,17 +1,19 @@
 table! {
+    use diesel::sql_types::*;
     decks (id) {
-        id -> Integer,
-        user_id -> BigInt,
-        position -> Integer,
+        id -> Int4,
+        user_id -> Int4,
+        position -> Int4,
         name -> Text,
-        pile -> Text,
+        pile -> Jsonb,
     }
 }
 
 table! {
+    use diesel::sql_types::*;
     users (id) {
-        id -> BigInt,
-        created_at -> Timestamp,
+        id -> Int4,
+        created_at -> Timestamptz,
     }
 }
 

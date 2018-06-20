@@ -46,13 +46,7 @@ fn main() {
         .manage(routes::StaticFileConfig {
             root_path: opt.static_dir.into(),
         })
-        .mount(
-            "/",
-            routes![
-                routes::get_deck,
-                routes::new_deck
-            ],
-        )
+        .mount("/", routes![routes::get_deck, routes::new_deck])
         .mount("/static", routes![routes::get_file])
         .launch();
 }
