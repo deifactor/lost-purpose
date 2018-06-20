@@ -180,21 +180,18 @@ mod test {
     }
 }
 
-impl deserialize::FromSql<diesel::sql_types::Jsonb, Pg> for Pile where {
+impl deserialize::FromSql<Jsonb, Pg> for Pile where {
     fn from_sql(
         bytes: Option<&<Pg as diesel::backend::Backend>::RawValue>,
     ) -> deserialize::Result<Self> {
-        let value =
-            <serde_json::Value as deserialize::FromSql<diesel::sql_types::Jsonb, Pg>>::from_sql(
-                bytes,
-            )?;
+        let value = <serde_json::Value as deserialize::FromSql<Jsonb, Pg>>::from_sql(bytes)?;
         serde_json::from_value(value).map_err(|e| e.into())
     }
 }
 
-impl serialize::ToSql<diesel::sql_types::Jsonb, Pg> for Pile where {
+impl serialize::ToSql<Jsonb, Pg> for Pile where {
     fn to_sql<W: Write>(&self, out: &mut serialize::Output<W, Pg>) -> serialize::Result {
         let value = serde_json::to_value(&self)?;
-        <serde_json::Value as serialize::ToSql<diesel::sql_types::Jsonb, Pg>>::to_sql(&value, out)
+        <serde_json::Value as serialize::ToSql<Jsonb, Pg>>::to_sql(&value, out)
     }
 }
