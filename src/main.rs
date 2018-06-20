@@ -24,6 +24,7 @@ extern crate serde_json;
 extern crate structopt;
 
 mod card;
+mod db_test;
 mod lfsr;
 mod model;
 mod pile;

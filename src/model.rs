@@ -82,15 +82,7 @@ pub struct Deck {
 mod tests {
     use super::*;
     use rand::rngs::mock::StepRng;
-
-    embed_migrations!("migrations");
-
-    fn setup_connection() -> PgConnection {
-        let conn = PgConnection::establish(":memory:")
-            .expect("Could not connect to in-memory SQLite database");
-        embedded_migrations::run(&conn).expect("Failed to run embedded migrations");
-        conn
-    }
+    use db_test::setup_connection;
 
     mod get_new_user {
         use super::*;
