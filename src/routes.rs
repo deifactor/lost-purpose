@@ -7,7 +7,6 @@
 /// containing the original object, as well as a non-2xx error code.
 use diesel;
 use diesel::prelude::*;
-use false_name;
 use model;
 use pile;
 use rocket::http::Status;
@@ -37,12 +36,6 @@ trait ToStatus {
     }
 }
 
-impl ToStatus for false_name::FalseNameError {
-    fn to_status(&self) -> Status {
-        Status::BadRequest
-    }
-}
-
 impl ToStatus for diesel::result::Error {
     fn to_status(&self) -> Status {
         Status::InternalServerError
@@ -52,18 +45,6 @@ impl ToStatus for diesel::result::Error {
 #[derive(Debug)]
 pub struct StaticFileConfig {
     pub root_path: PathBuf,
-}
-
-#[get("/false_name/<id>")]
-fn get_false_name(id: u64) -> String {
-    false_name::to_false_name(id)
-}
-
-#[get("/id/<false_name>")]
-fn get_id(false_name: String) -> impl Responder<'static> {
-    false_name::from_false_name(&false_name)
-        .map(Json)
-        .map_err(|e| e.to_json())
 }
 
 /// Guards that there must be an `id` cookie with a valid user ID.
