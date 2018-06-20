@@ -14,6 +14,7 @@ static MIGRATE: Once = ONCE_INIT;
 /// variable, running migrations if necessary. This function is thread-safe;
 /// migrations are run exactly once, and each connection has its own
 /// transaction, which will never be committed.
+#[allow(dead_code)]
 pub fn setup_connection() -> PgConnection {
     let url = env::var("DATABASE_TEST_URL").expect("DATABASE_TEST_URL must be set to run tests");
     let conn = PgConnection::establish(&url).expect(&format!("Could not connect to {:?}", url));

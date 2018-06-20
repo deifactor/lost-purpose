@@ -25,7 +25,7 @@ impl Lfsr {
     /// Constructs a new LFSR with a 64-bit state.
     pub fn new_64(state: u64) -> Lfsr {
         Lfsr {
-            feed: 0x800000000000000D,
+            feed: 0x8000_0000_0000_000D,
             state,
         }
     }
@@ -60,7 +60,8 @@ impl RngCore for Lfsr {
     }
 
     fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), Error> {
-        Ok(self.fill_bytes(dest))
+        self.fill_bytes(dest);
+        Ok(())
     }
 }
 

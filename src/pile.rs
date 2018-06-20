@@ -8,9 +8,7 @@ use diesel;
 use diesel::pg::Pg;
 use diesel::sql_types::Jsonb;
 use diesel::{deserialize, serialize};
-use rand::prng::XorShiftRng;
 use rand::Rng;
-use rand_core::SeedableRng;
 use serde_json;
 use std::cmp;
 use std::io::Write;
@@ -108,6 +106,8 @@ impl Pile {
 #[cfg(test)]
 mod test {
     use super::*;
+    use rand::prng::XorShiftRng;
+    use rand_core::SeedableRng;
 
     fn rng() -> XorShiftRng {
         XorShiftRng::from_seed([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])

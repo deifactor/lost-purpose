@@ -1,3 +1,4 @@
+#![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value, print_literal))]
 /// Handlers for all of the API calls defined for Skarot.
 ///
 /// We use a convention where success is defined by returning a JSON object (or
@@ -11,7 +12,7 @@ use model;
 use pile;
 use rocket::http::Status;
 use rocket::request::{self, FromRequest, Request};
-use rocket::response::{status, NamedFile, Responder};
+use rocket::response::{status, NamedFile};
 use rocket::{Outcome, State};
 use rocket_contrib::Json;
 use schema::{decks, users};
