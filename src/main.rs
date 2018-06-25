@@ -23,12 +23,14 @@ extern crate serde_json;
 #[macro_use]
 extern crate structopt;
 
+mod auth;
 mod card;
 mod db_test;
 mod lfsr;
 mod model;
 mod pile;
 mod routes;
+mod route_util;
 mod schema;
 
 use structopt::StructOpt;
