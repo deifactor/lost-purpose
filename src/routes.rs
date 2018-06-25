@@ -6,6 +6,7 @@
 /// a 2xx error code. Failure is indicated by returning a JSON object with an
 /// `err` property containing user-interpretable text and a `debug` property
 /// containing the original object, as well as a non-2xx error code.
+use auth::UserGuard;
 use diesel;
 use diesel::prelude::*;
 use model;
@@ -46,30 +47,6 @@ impl ToStatus for diesel::result::Error {
 #[derive(Debug)]
 pub struct StaticFileConfig {
     pub root_path: PathBuf,
-}
-
-/// Guards that there must be an `id` cookie with a valid user ID.
-#[derive(Debug)]
-struct UserGuard(model::User);
-
-impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
-    type Error = ();
-
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, ()> {
-        let cookies = request.cookies();
-        let id_cookie = cookies.get("id").ok_or(Err((Status::Forbidden, ())))?;
-        let user_id: i32 = id_cookie
-            .value()
-            .parse()
-            .map_err(|_| Err((Status::BadRequest, ())))?;
-        let conn_guard = request.guard::<State<Mutex<PgConnection>>>()?;
-        let conn = conn_guard.lock().expect("connection lock poisoned");
-        let user = users::table
-            .find(user_id)
-            .first(&*conn)
-            .map_err(|_| Err((Status::NotFound, ())))?;
-        Outcome::Success(UserGuard(user))
-    }
 }
 
 #[derive(Debug, PartialEq, Eq, Deserialize)]
