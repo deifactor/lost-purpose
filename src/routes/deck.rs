@@ -8,16 +8,15 @@ use routes::ApiError;
 use schema::decks;
 use std::sync::Mutex;
 
-#[get("/deck/<id>")]
-fn get_deck(
-    id: i32,
+#[get("/deck")]
+fn get_decks(
     user_guard: Result<UserGuard, ApiError>,
     conn_guard: State<Mutex<PgConnection>>,
-) -> Result<Json<Deck>, ApiError> {
+) -> Result<Json<Vec<Deck>>, ApiError> {
     let user = user_guard?.0;
-    let conn = conn_guard.lock().expect("connection lock poisoned");
-    let deck = Deck::belonging_to(&user).find(id).first(&*conn)?;
-    Ok(Json(deck))
+    let conn = conn_guard.lock()?;
+    let decks = Deck::belonging_to(&user).load(&*conn)?;
+    Ok(Json(decks))
 }
 
 #[derive(Debug, PartialEq, Eq, Deserialize)]
@@ -43,7 +42,7 @@ fn new_deck(
         NewDeckType::Standard => Pile::standard(),
         NewDeckType::SiliconDawn => Pile::silicon_dawn(),
     };
-    let conn = conn_guard.lock().expect("connection lock poisoned");
+    let conn = conn_guard.lock()?;
     let position = Deck::belonging_to(&user)
         .select(diesel::dsl::max(decks::position))
         .first::<Option<i32>>(&*conn)?
