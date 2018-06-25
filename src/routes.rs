@@ -6,10 +6,9 @@
 /// a 2xx error code. Failure is indicated by returning a JSON object with an
 /// `err` property containing user-interpretable text and a `debug` property
 /// containing the original object, as well as a non-2xx error code.
-use auth::UserGuard;
+use auth::{User, UserGuard};
 use diesel;
 use diesel::prelude::*;
-use model;
 use pile;
 use rocket::http::Status;
 use rocket::request::{self, FromRequest, Request};
@@ -20,6 +19,16 @@ use schema::{decks, users};
 use std::fmt::{Debug, Display};
 use std::path::PathBuf;
 use std::sync::Mutex;
+
+#[derive(Debug, Identifiable, Associations, Queryable, PartialEq, Eq, Serialize)]
+#[belongs_to(User)]
+pub struct Deck {
+    pub id: i32,
+    pub user_id: i32,
+    pub position: i32,
+    pub name: String,
+    pub pile: pile::Pile,
+}
 
 trait ToStatus {
     fn to_status(&self) -> Status;
@@ -66,10 +75,10 @@ fn get_deck(
     id: i32,
     user_guard: UserGuard,
     conn_guard: State<Mutex<PgConnection>>,
-) -> Result<Json<model::Deck>, status::Custom<Json>> {
+) -> Result<Json<Deck>, status::Custom<Json>> {
     let user = user_guard.0;
     let conn = conn_guard.lock().expect("connection lock poisoned");
-    model::Deck::belonging_to(&user)
+    Deck::belonging_to(&user)
         .find(id)
         .first(&*conn)
         .map_err(|e| e.to_json())
@@ -81,14 +90,14 @@ fn new_deck(
     deck_json: Json<NewDeck>,
     user_guard: UserGuard,
     conn_guard: State<Mutex<PgConnection>>,
-) -> Result<Json<model::Deck>, status::Custom<Json>> {
+) -> Result<Json<Deck>, status::Custom<Json>> {
     let user = user_guard.0;
     let pile = match deck_json.type_ {
         NewDeckType::Standard => pile::Pile::standard(),
         NewDeckType::SiliconDawn => pile::Pile::silicon_dawn(),
     };
     let conn = conn_guard.lock().expect("connection lock poisoned");
-    let position = model::Deck::belonging_to(&user)
+    let position = Deck::belonging_to(&user)
         .select(diesel::dsl::max(decks::position))
         .first::<Option<i32>>(&*conn)
         .map_err(|e| e.to_json())?

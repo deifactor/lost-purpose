@@ -27,7 +27,6 @@ mod auth;
 mod card;
 mod db_test;
 mod lfsr;
-mod model;
 mod pile;
 mod routes;
 mod route_util;
