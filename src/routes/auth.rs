@@ -1,22 +1,68 @@
-use chrono::prelude::*;
 use diesel;
 use diesel::prelude::*;
+use model::auth::User;
 use rocket;
 use rocket::http::{Cookie, Cookies, Status};
 use rocket::local::Client;
 use rocket::request::{self, FromRequest, Request};
 use rocket::{Outcome, State};
 use rocket_contrib::Json;
-use route_util::ApiError;
+use routes::ApiError;
 use schema::users;
 use std::fmt::{self, Debug};
 use std::num;
 use std::sync::Mutex;
 
-#[derive(Debug, Identifiable, Queryable, PartialEq, Eq)]
-pub struct User {
-    pub id: i32,
-    created_at: DateTime<Utc>,
+/// Guards that there must be an `id` cookie with a valid user ID.
+#[derive(Debug)]
+pub struct UserGuard(pub User);
+
+#[derive(Debug, PartialEq, Eq, Fail)]
+pub enum UserGuardError {
+    /// No user cookie was set.
+    #[fail(display = "no user cookie set")]
+    NoUserCookie,
+
+    /// The cookie was set, but could not be parsed. This should never happen
+    /// unless there was an internal bug.
+    #[fail(display = "user cookie could not be parsed: {}", err)]
+    UserCookieParseError { err: num::ParseIntError },
+
+    /// We couldn't look up the user.
+    #[fail(display = "user {} not found", id)]
+    UserNotFound { id: i32 },
+
+    /// Something else went wrong.
+    #[fail(display = "unknown error")]
+    InternalError,
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
+    type Error = UserGuardError;
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, UserGuardError> {
+        let mut cookies = request.cookies();
+        let id_cookie = cookies
+            .get_private("id")
+            .ok_or(Err((Status::Forbidden, UserGuardError::NoUserCookie)))?;
+        let user_id: i32 = id_cookie.value().parse().map_err(|err| {
+            Err((
+                Status::BadRequest,
+                UserGuardError::UserCookieParseError { err },
+            ))
+        })?;
+        let conn_guard = request
+            .guard::<State<Mutex<PgConnection>>>()
+            .map_failure(|_| (Status::InternalServerError, UserGuardError::InternalError))?;
+        let conn = conn_guard.lock().expect("connection lock poisoned");
+        let user = users::table.find(user_id).first(&*conn).map_err(|e| {
+            Err((
+                Status::NotFound,
+                UserGuardError::UserNotFound { id: user_id },
+            ))
+        })?;
+        Outcome::Success(UserGuard(user))
+    }
 }
 
 #[derive(Deserialize)]
@@ -81,58 +127,6 @@ pub fn register(
         .get_result(&*conn)?;
     cookies.add_private(Cookie::new("id", user.id.to_string()));
     Ok(Json(user.id))
-}
-
-/// Guards that there must be an `id` cookie with a valid user ID.
-#[derive(Debug)]
-pub struct UserGuard(pub User);
-
-#[derive(Debug, PartialEq, Eq, Fail)]
-pub enum UserGuardError {
-    /// No user cookie was set.
-    #[fail(display = "no user cookie set")]
-    NoUserCookie,
-
-    /// The cookie was set, but could not be parsed. This should never happen
-    /// unless there was an internal bug.
-    #[fail(display = "user cookie could not be parsed: {}", err)]
-    UserCookieParseError { err: num::ParseIntError },
-
-    /// We couldn't look up the user.
-    #[fail(display = "user {} not found", id)]
-    UserNotFound { id: i32 },
-
-    /// Something else went wrong.
-    #[fail(display = "unknown error")]
-    InternalError,
-}
-
-impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
-    type Error = UserGuardError;
-
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, UserGuardError> {
-        let mut cookies = request.cookies();
-        let id_cookie = cookies
-            .get_private("id")
-            .ok_or(Err((Status::Forbidden, UserGuardError::NoUserCookie)))?;
-        let user_id: i32 = id_cookie.value().parse().map_err(|err| {
-            Err((
-                Status::BadRequest,
-                UserGuardError::UserCookieParseError { err },
-            ))
-        })?;
-        let conn_guard = request
-            .guard::<State<Mutex<PgConnection>>>()
-            .map_failure(|_| (Status::InternalServerError, UserGuardError::InternalError))?;
-        let conn = conn_guard.lock().expect("connection lock poisoned");
-        let user = users::table.find(user_id).first(&*conn).map_err(|e| {
-            Err((
-                Status::NotFound,
-                UserGuardError::UserNotFound { id: user_id },
-            ))
-        })?;
-        Outcome::Success(UserGuard(user))
-    }
 }
 
 #[cfg(test)]

@@ -1,14 +1,12 @@
-/// A pile is basically just a vector of `card::Card`s with some fancy dressing.
-/// We distinguish it from a full-blown deck, which has an owner, a name, and so
-/// on.
-use itertools::Itertools;
-
-use card::*;
 use diesel;
 use diesel::pg::Pg;
 use diesel::sql_types::Jsonb;
 use diesel::{deserialize, serialize};
+use itertools::Itertools;
+use model::auth::User;
+use model::card::*;
 use rand::Rng;
+use schema::decks;
 use serde_json;
 use std::cmp;
 use std::io::Write;
@@ -194,4 +192,14 @@ impl serialize::ToSql<Jsonb, Pg> for Pile where {
         let value = serde_json::to_value(&self)?;
         <serde_json::Value as serialize::ToSql<Jsonb, Pg>>::to_sql(&value, out)
     }
+}
+
+#[derive(Debug, Identifiable, Associations, Queryable, PartialEq, Eq, Serialize)]
+#[belongs_to(User)]
+pub struct Deck {
+    pub id: i32,
+    pub user_id: i32,
+    pub position: i32,
+    pub name: String,
+    pub pile: Pile,
 }

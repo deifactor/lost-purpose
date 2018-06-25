@@ -23,13 +23,10 @@ extern crate serde_json;
 #[macro_use]
 extern crate structopt;
 
-mod auth;
-mod card;
 mod db_test;
 mod lfsr;
-mod pile;
+mod model;
 mod routes;
-mod route_util;
 mod schema;
 
 use structopt::StructOpt;
@@ -45,10 +42,10 @@ struct Opt {
 fn main() {
     let opt = Opt::from_args();
     rocket::ignite()
-        .manage(routes::StaticFileConfig {
+        .manage(routes::static_file::StaticFileConfig {
             root_path: opt.static_dir.into(),
         })
-        .mount("/", routes![routes::get_deck, routes::new_deck])
-        .mount("/static", routes![routes::get_file])
+        .mount("/", routes![routes::deck::get_deck, routes::deck::new_deck])
+        .mount("/static", routes![routes::static_file::static_file])
         .launch();
 }
