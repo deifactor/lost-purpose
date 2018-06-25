@@ -10,12 +10,14 @@ use rocket::http::Status;
 use rocket::request::Request;
 use rocket::response::{status, Responder, Response};
 use rocket_contrib::Json;
-use std::fmt::Display;
 use std;
+use std::fmt::Display;
 
 pub mod auth;
 pub mod deck;
 pub mod static_file;
+#[cfg(test)]
+mod test_utils;
 
 /// The uniform error type that all of the JSON API calls return. We define this
 /// as a newtype so that we can implement `Into` for it.

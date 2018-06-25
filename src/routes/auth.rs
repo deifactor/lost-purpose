@@ -153,6 +153,7 @@ mod tests {
     use rocket;
     use rocket::http::ContentType;
     use rocket::local::Client;
+    use routes::test_utils;
 
     fn new_client() -> Client {
         let rocket = rocket::ignite()
@@ -174,28 +175,16 @@ mod tests {
         assert!(response.body_string().unwrap().parse::<i32>().is_ok())
     }
 
-    fn register(client: &Client) -> i32 {
-        client
-            .post("/register")
-            .header(ContentType::JSON)
-            .body("{}")
-            .dispatch()
-            .body_string()
-            .unwrap()
-            .parse::<i32>()
-            .unwrap()
-    }
-
     #[test]
     fn multiple_registrations_return_different_ids() {
         let client = new_client();
-        assert_ne!(register(&client), register(&client))
+        assert_ne!(test_utils::register(&client), test_utils::register(&client))
     }
 
     #[test]
     fn register_then_login() {
         let client = new_client();
-        let id = register(&client);
+        let id = test_utils::register(&client);
         let mut response = client
             .post("/login")
             .header(ContentType::JSON)

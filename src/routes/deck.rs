@@ -70,8 +70,9 @@ mod tests {
     use db_test::setup_connection;
     use rocket;
     use rocket::http::{ContentType, Cookie, Status};
-    use rocket::local::{Client, LocalRequest};
+    use rocket::local::Client;
     use routes;
+    use routes::test_utils::*;
     use serde_json;
 
     fn new_client() -> Client {
@@ -79,29 +80,6 @@ mod tests {
             .manage(Mutex::new(setup_connection()))
             .mount("/", routes![get_decks, new_deck, routes::auth::register]);
         Client::new(rocket).expect("unable to construct client")
-    }
-
-    fn register(client: &Client) -> i32 {
-        client
-            .post("/register")
-            .header(ContentType::JSON)
-            .body("{}")
-            .dispatch()
-            .body_string()
-            .unwrap()
-            .parse::<i32>()
-            .unwrap()
-    }
-
-    trait PrivateCookieExt {
-        fn private_cookie(self, cookie: Cookie<'static>) -> Self;
-    }
-
-    impl<'a> PrivateCookieExt for LocalRequest<'a> {
-        fn private_cookie(self, cookie: Cookie<'static>) -> Self {
-            self.inner().cookies().add_private(cookie);
-            self
-        }
     }
 
     #[test]
