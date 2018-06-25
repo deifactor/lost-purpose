@@ -45,7 +45,7 @@ fn main() {
         .manage(routes::static_file::StaticFileConfig {
             root_path: opt.static_dir.into(),
         })
-        .mount("/", routes![routes::deck::get_deck, routes::deck::new_deck])
+        .mount("/", routes![routes::deck::get_decks, routes::deck::new_deck])
         .mount("/auth", routes![routes::auth::login, routes::auth::register])
         .mount("/static", routes![routes::static_file::static_file])
         .launch();

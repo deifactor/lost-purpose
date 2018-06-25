@@ -11,6 +11,7 @@ use rocket::request::Request;
 use rocket::response::{status, Responder, Response};
 use rocket_contrib::Json;
 use std::fmt::Display;
+use std;
 
 pub mod auth;
 pub mod deck;
@@ -28,6 +29,12 @@ pub trait HasStatus {
 }
 
 impl HasStatus for diesel::result::Error {
+    fn status(&self) -> Status {
+        Status::InternalServerError
+    }
+}
+
+impl<T> HasStatus for std::sync::PoisonError<T> {
     fn status(&self) -> Status {
         Status::InternalServerError
     }

@@ -68,7 +68,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
             let conn_guard = request
                 .guard::<State<Mutex<PgConnection>>>()
                 .success_or_else(|| InternalError)?;
-            let conn = conn_guard.lock().expect("connection lock poisoned");
+            let conn = conn_guard.lock().map_err(|_| InternalError)?;
             match users::table
                 .find(user_id)
                 .first(&*conn)
@@ -76,7 +76,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
                 .map_err(|_| InternalError)?
             {
                 Some(user) => Ok(user),
-                None => Err(UserNotFound { id: user_id }),
+                None => Err(UserNotFound { id: user_id }.into()),
             }
         };
         match inner() {
@@ -110,7 +110,7 @@ pub fn login(
     let login_request = login_json
         .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid login request"))))?;
     // XXX: implement actual password authentication
-    let conn = conn_guard.lock().expect("connection lock poisoned");
+    let conn = conn_guard.lock()?;
     if let Some(user) = users::table
         .find(login_request.id)
         .get_result::<User>(&*conn)
@@ -138,7 +138,7 @@ pub fn register(
 ) -> Result<Json<i32>, ApiError> {
     let _register_request = request_json
         .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid register request"))))?;
-    let conn = conn_guard.lock().expect("connection lock poisoned");
+    let conn = conn_guard.lock()?;
     let user: User = diesel::insert_into(users::table)
         .default_values()
         .get_result(&*conn)?;
