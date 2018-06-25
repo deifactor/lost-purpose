@@ -10,6 +10,7 @@ use rocket::http::Status;
 use rocket::request::Request;
 use rocket::response::{status, Responder, Response};
 use rocket_contrib::Json;
+use std::fmt::Display;
 
 pub mod auth;
 pub mod deck;
@@ -20,18 +21,30 @@ pub mod static_file;
 #[derive(Debug)]
 pub struct ApiError(status::Custom<Json>);
 
+/// Any internal error should implement this trait so that it can be easily and
+/// uniformly converted to an ApiError.
+pub trait HasStatus {
+    fn status(&self) -> Status;
+}
+
+impl HasStatus for diesel::result::Error {
+    fn status(&self) -> Status {
+        Status::InternalServerError
+    }
+}
+
 impl ApiError {
     pub fn new(status: Status, payload: Json) -> ApiError {
         ApiError(status::Custom(status, payload))
     }
 }
 
-impl From<diesel::result::Error> for ApiError {
-    fn from(err: diesel::result::Error) -> Self {
-        ApiError::new(
-            Status::InternalServerError,
-            Json(json!(format!("database error: {}", &err))),
-        )
+impl<T> From<T> for ApiError
+where
+    T: HasStatus + Display,
+{
+    fn from(err: T) -> Self {
+        ApiError::new(err.status(), Json(json!(err.to_string())))
     }
 }
 

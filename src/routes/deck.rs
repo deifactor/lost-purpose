@@ -8,6 +8,18 @@ use routes::ApiError;
 use schema::decks;
 use std::sync::Mutex;
 
+#[get("/deck/<id>")]
+fn get_deck(
+    id: i32,
+    user_guard: Result<UserGuard, ApiError>,
+    conn_guard: State<Mutex<PgConnection>>,
+) -> Result<Json<Deck>, ApiError> {
+    let user = user_guard?.0;
+    let conn = conn_guard.lock().expect("connection lock poisoned");
+    let deck = Deck::belonging_to(&user).find(id).first(&*conn)?;
+    Ok(Json(deck))
+}
+
 #[derive(Debug, PartialEq, Eq, Deserialize)]
 enum NewDeckType {
     Standard,
@@ -15,30 +27,18 @@ enum NewDeckType {
 }
 
 #[derive(Debug, Deserialize)]
-struct NewDeck {
+struct NewDeckRequest {
     name: String,
     type_: NewDeckType,
 }
 
-#[get("/deck/<id>")]
-fn get_deck(
-    id: i32,
-    user_guard: UserGuard,
-    conn_guard: State<Mutex<PgConnection>>,
-) -> Result<Json<Deck>, ApiError> {
-    let user = user_guard.0;
-    let conn = conn_guard.lock().expect("connection lock poisoned");
-    let deck = Deck::belonging_to(&user).find(id).first(&*conn)?;
-    Ok(Json(deck))
-}
-
 #[post("/deck", format = "application/json", data = "<deck_json>")]
 fn new_deck(
-    deck_json: Json<NewDeck>,
-    user_guard: UserGuard,
+    deck_json: Json<NewDeckRequest>,
+    user_guard: Result<UserGuard, ApiError>,
     conn_guard: State<Mutex<PgConnection>>,
 ) -> Result<Json<Deck>, ApiError> {
-    let user = user_guard.0;
+    let user = user_guard?.0;
     let pile = match deck_json.type_ {
         NewDeckType::Standard => Pile::standard(),
         NewDeckType::SiliconDawn => Pile::silicon_dawn(),

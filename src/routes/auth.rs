@@ -5,13 +5,17 @@ use rocket::http::{Cookie, Cookies, Status};
 use rocket::request::{self, FromRequest, Request};
 use rocket::{Outcome, State};
 use rocket_contrib::Json;
-use routes::ApiError;
+use routes::{ApiError, HasStatus};
 use schema::users;
 use std::fmt::{self, Debug};
 use std::num;
 use std::sync::Mutex;
 
-/// Guards that there must be an `id` cookie with a valid user ID.
+/// Guards that there must be an `id` cookie with a valid user ID. Note that for
+/// API calls, you'll want to add a parameter of type `Result<UserGuard,
+/// ApiError>` and immediately invoke the `?` operator on it to ensure that
+/// failure will send JSON back and not just fall back to the default Rocket
+/// handlers.
 #[derive(Debug)]
 pub struct UserGuard(pub User);
 
@@ -35,31 +39,50 @@ pub enum UserGuardError {
     InternalError,
 }
 
-impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
-    type Error = UserGuardError;
+impl HasStatus for UserGuardError {
+    fn status(&self) -> Status {
+        match self {
+            UserGuardError::InternalError => Status::InternalServerError,
+            _ => Status::BadRequest,
+        }
+    }
+}
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, UserGuardError> {
-        let mut cookies = request.cookies();
-        let id_cookie = cookies
-            .get_private("id")
-            .ok_or(Err((Status::Forbidden, UserGuardError::NoUserCookie)))?;
-        let user_id: i32 = id_cookie.value().parse().map_err(|err| {
-            Err((
-                Status::BadRequest,
-                UserGuardError::UserCookieParseError { err },
-            ))
-        })?;
-        let conn_guard = request
-            .guard::<State<Mutex<PgConnection>>>()
-            .map_failure(|_| (Status::InternalServerError, UserGuardError::InternalError))?;
-        let conn = conn_guard.lock().expect("connection lock poisoned");
-        let user = users::table.find(user_id).first(&*conn).map_err(|_| {
-            Err((
-                Status::NotFound,
-                UserGuardError::UserNotFound { id: user_id },
-            ))
-        })?;
-        Outcome::Success(UserGuard(user))
+impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
+    type Error = ApiError;
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<UserGuard, ApiError> {
+        // We implement things using this slightly weird approach (including
+        // defining our own error struct) to ensure consistency between the
+        // status codes you get if you request a `UserGuard` and the status codes
+        // contained in the `ApiError` if you request a `Result<UserGuard,
+        // ApiError>`.
+        let inner = || -> Result<User, UserGuardError> {
+            use self::UserGuardError::*;
+            let mut cookies = request.cookies();
+            let id_cookie = cookies.get_private("id").ok_or(NoUserCookie)?;
+            let user_id: i32 = id_cookie
+                .value()
+                .parse()
+                .map_err(|err| UserCookieParseError { err })?;
+            let conn_guard = request
+                .guard::<State<Mutex<PgConnection>>>()
+                .success_or_else(|| InternalError)?;
+            let conn = conn_guard.lock().expect("connection lock poisoned");
+            match users::table
+                .find(user_id)
+                .first(&*conn)
+                .optional()
+                .map_err(|_| InternalError)?
+            {
+                Some(user) => Ok(user),
+                None => Err(UserNotFound { id: user_id }),
+            }
+        };
+        match inner() {
+            Ok(user) => Outcome::Success(UserGuard(user)),
+            Err(err) => Outcome::Failure((err.status(), err.into())),
+        }
     }
 }
 
@@ -84,10 +107,8 @@ pub fn login(
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let login_request = login_json.ok_or_else(|| ApiError::new(
-        Status::BadRequest,
-        Json(json!("invalid login request")),
-    ))?;
+    let login_request = login_json
+        .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid login request"))))?;
     // XXX: implement actual password authentication
     let conn = conn_guard.lock().expect("connection lock poisoned");
     if let Some(user) = users::table
@@ -115,10 +136,8 @@ pub fn register(
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let _register_request = request_json.ok_or_else(|| ApiError::new(
-        Status::BadRequest,
-        Json(json!("invalid register request")),
-    ))?;
+    let _register_request = request_json
+        .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid register request"))))?;
     let conn = conn_guard.lock().expect("connection lock poisoned");
     let user: User = diesel::insert_into(users::table)
         .default_values()
