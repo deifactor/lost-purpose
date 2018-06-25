@@ -28,6 +28,7 @@ enum NewDeckType {
 #[derive(Debug, Deserialize)]
 struct NewDeckRequest {
     name: String,
+    #[serde(rename = "type")]
     type_: NewDeckType,
 }
 
@@ -61,4 +62,86 @@ fn new_deck(
         .filter(decks::position.eq(position))
         .first(&*conn)?;
     Ok(Json(deck))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use db_test::setup_connection;
+    use rocket;
+    use rocket::http::{ContentType, Cookie, Status};
+    use rocket::local::{Client, LocalRequest};
+    use routes;
+    use serde_json;
+
+    fn new_client() -> Client {
+        let rocket = rocket::ignite()
+            .manage(Mutex::new(setup_connection()))
+            .mount("/", routes![get_decks, new_deck, routes::auth::register]);
+        Client::new(rocket).expect("unable to construct client")
+    }
+
+    fn register(client: &Client) -> i32 {
+        client
+            .post("/register")
+            .header(ContentType::JSON)
+            .body("{}")
+            .dispatch()
+            .body_string()
+            .unwrap()
+            .parse::<i32>()
+            .unwrap()
+    }
+
+    trait PrivateCookieExt {
+        fn private_cookie(self, cookie: Cookie<'static>) -> Self;
+    }
+
+    impl<'a> PrivateCookieExt for LocalRequest<'a> {
+        fn private_cookie(self, cookie: Cookie<'static>) -> Self {
+            self.inner().cookies().add_private(cookie);
+            self
+        }
+    }
+
+    #[test]
+    fn no_decks() {
+        let client = new_client();
+        let id = register(&client);
+        let body = client
+            .get("/deck")
+            .private_cookie(Cookie::new("id", id.to_string()))
+            .dispatch()
+            .body_string()
+            .unwrap();
+        let decks: Vec<Deck> = serde_json::from_str(&body).unwrap();
+        assert!(decks.is_empty())
+    }
+
+    #[test]
+    fn single_deck() {
+        let client = new_client();
+        let user_id = register(&client);
+        let auth_cookie = Cookie::new("id", user_id.to_string());
+        let response = client
+            .post("/deck")
+            .header(ContentType::JSON)
+            .body(json!({"name": "foo", "type": "SiliconDawn"}).to_string())
+            .private_cookie(auth_cookie.clone())
+            .dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        let body = client
+            .get("/deck")
+            .private_cookie(auth_cookie.clone())
+            .dispatch()
+            .body_string()
+            .unwrap();
+        let decks: Vec<Deck> = serde_json::from_str(&body).unwrap();
+        assert_eq!(decks.len(), 1);
+        let deck = &decks[0];
+        assert_eq!(deck.name, "foo");
+        assert_eq!(deck.position, 0);
+        assert_eq!(deck.user_id, user_id);
+        assert_eq!(deck.pile.cards.len(), 94)
+    }
 }

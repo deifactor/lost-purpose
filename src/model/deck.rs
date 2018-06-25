@@ -14,7 +14,7 @@ use std::io::Write;
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize, AsExpression, FromSqlRow)]
 #[sql_type = "Jsonb"]
 pub struct Pile {
-    cards: Vec<Card>,
+    pub cards: Vec<Card>,
 }
 
 impl Pile {
@@ -192,7 +192,7 @@ impl serialize::ToSql<Jsonb, Pg> for Pile where {
     }
 }
 
-#[derive(Debug, Identifiable, Associations, Queryable, PartialEq, Eq, Serialize)]
+#[derive(Debug, Identifiable, Associations, Queryable, PartialEq, Eq, Serialize, Deserialize)]
 #[belongs_to(User)]
 pub struct Deck {
     pub id: i32,
