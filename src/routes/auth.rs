@@ -1,9 +1,7 @@
 use diesel;
 use diesel::prelude::*;
 use model::auth::User;
-use rocket;
 use rocket::http::{Cookie, Cookies, Status};
-use rocket::local::Client;
 use rocket::request::{self, FromRequest, Request};
 use rocket::{Outcome, State};
 use rocket_contrib::Json;
@@ -55,7 +53,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
             .guard::<State<Mutex<PgConnection>>>()
             .map_failure(|_| (Status::InternalServerError, UserGuardError::InternalError))?;
         let conn = conn_guard.lock().expect("connection lock poisoned");
-        let user = users::table.find(user_id).first(&*conn).map_err(|e| {
+        let user = users::table.find(user_id).first(&*conn).map_err(|_| {
             Err((
                 Status::NotFound,
                 UserGuardError::UserNotFound { id: user_id },
@@ -86,7 +84,7 @@ pub fn login(
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let login_request = login_json.ok_or(ApiError::new(
+    let login_request = login_json.ok_or_else(|| ApiError::new(
         Status::BadRequest,
         Json(json!("invalid login request")),
     ))?;
@@ -117,7 +115,7 @@ pub fn register(
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let register_request = request_json.ok_or(ApiError::new(
+    let _register_request = request_json.ok_or_else(|| ApiError::new(
         Status::BadRequest,
         Json(json!("invalid register request")),
     ))?;
@@ -133,7 +131,9 @@ pub fn register(
 mod tests {
     use super::*;
     use db_test::setup_connection;
+    use rocket;
     use rocket::http::ContentType;
+    use rocket::local::Client;
 
     fn new_client() -> Client {
         let rocket = rocket::ignite()

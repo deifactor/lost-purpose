@@ -92,9 +92,7 @@ impl Pile {
             let chunk_size = rng.gen_range(2, 4);
             let left_chunks = self.cards[..cut_point].chunks(chunk_size);
             let right_chunks = self.cards[cut_point..].chunks(chunk_size);
-            right_chunks
-                .interleave(left_chunks)
-                .flatten()
+            Itertools::flatten(right_chunks.interleave(left_chunks))
                 .cloned()
                 .collect()
         };

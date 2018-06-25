@@ -1,14 +1,11 @@
 use diesel;
 use diesel::prelude::*;
 use model::deck::*;
-use rocket::http::Status;
-use rocket::response::status;
 use rocket::State;
 use rocket_contrib::Json;
 use routes::auth::UserGuard;
 use routes::ApiError;
 use schema::decks;
-use std::fmt::{Debug, Display};
 use std::sync::Mutex;
 
 #[derive(Debug, PartialEq, Eq, Deserialize)]
