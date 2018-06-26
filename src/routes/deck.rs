@@ -2,7 +2,7 @@ use diesel;
 use diesel::prelude::*;
 use model::deck::*;
 use rocket::State;
-use rocket_contrib::Json;
+use rocket_contrib::{Json, SerdeError};
 use routes::auth::UserGuard;
 use routes::ApiError;
 use schema::decks;
@@ -32,14 +32,15 @@ struct NewDeckRequest {
     type_: NewDeckType,
 }
 
-#[post("/deck", format = "application/json", data = "<deck_json>")]
+#[post("/deck", format = "application/json", data = "<request>")]
 fn new_deck(
-    deck_json: Json<NewDeckRequest>,
+    request: Result<Json<NewDeckRequest>, SerdeError>,
     user_guard: Result<UserGuard, ApiError>,
     conn_guard: State<Mutex<PgConnection>>,
 ) -> Result<Json<Deck>, ApiError> {
     let user = user_guard?.0;
-    let pile = match deck_json.type_ {
+    let request = request?;
+    let pile = match request.type_ {
         NewDeckType::Standard => Pile::standard(),
         NewDeckType::SiliconDawn => Pile::silicon_dawn(),
     };
@@ -53,7 +54,7 @@ fn new_deck(
         .values((
             decks::user_id.eq(user.id),
             decks::position.eq(position),
-            decks::name.eq(&deck_json.name),
+            decks::name.eq(&request.name),
             decks::pile.eq(pile),
         ))
         .execute(&*conn)?;

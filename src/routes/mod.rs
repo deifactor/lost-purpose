@@ -9,7 +9,7 @@ use diesel;
 use rocket::http::Status;
 use rocket::request::Request;
 use rocket::response::{status, Responder, Response};
-use rocket_contrib::Json;
+use rocket_contrib::{Json, SerdeError};
 use std;
 use std::fmt::Display;
 
@@ -33,6 +33,12 @@ pub trait HasStatus {
 impl HasStatus for diesel::result::Error {
     fn status(&self) -> Status {
         Status::InternalServerError
+    }
+}
+
+impl HasStatus for SerdeError {
+    fn status(&self) -> Status {
+        Status::BadRequest
     }
 }
 

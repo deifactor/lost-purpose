@@ -4,7 +4,7 @@ use model::auth::User;
 use rocket::http::{Cookie, Cookies, Status};
 use rocket::request::{self, FromRequest, Request};
 use rocket::{Outcome, State};
-use rocket_contrib::Json;
+use rocket_contrib::{Json, SerdeError};
 use routes::{ApiError, HasStatus};
 use schema::users;
 use std::fmt::{self, Debug};
@@ -101,18 +101,17 @@ impl Debug for LoginRequest {
 /// Attempts to log in. 404s if the user does not exist; 403s if the password is
 /// incorrect. If successful, sets a login cookie and replies with the ID of the
 /// logged-in user.
-#[post("/login", data = "<login_json>")]
+#[post("/login", data = "<request>")]
 pub fn login(
-    login_json: Option<Json<LoginRequest>>,
+    request: Result<Json<LoginRequest>, SerdeError>,
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let login_request = login_json
-        .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid login request"))))?;
+    let request = request?;
     // XXX: implement actual password authentication
     let conn = conn_guard.lock()?;
     if let Some(user) = users::table
-        .filter(users::email.eq(&login_request.email))
+        .filter(users::email.eq(&request.email))
         .first::<User>(&*conn)
         .optional()?
     {
@@ -121,7 +120,7 @@ pub fn login(
     } else {
         Err(ApiError::new(
             Status::BadRequest,
-            Json(json!(format!("unknown user {}", login_request.email))),
+            Json(json!(format!("unknown user {}", request.email))),
         ))
     }
 }
@@ -132,17 +131,16 @@ pub struct RegisterRequest {
 }
 
 /// Registers a new user. Replies with the new user's ID.
-#[post("/register", data = "<request_json>")]
+#[post("/register", data = "<request>")]
 pub fn register(
-    request_json: Option<Json<RegisterRequest>>,
+    request: Result<Json<RegisterRequest>, SerdeError>,
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let register_request = request_json
-        .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid register request"))))?;
+    let request = request?;
     let conn = conn_guard.lock()?;
     let user: User = diesel::insert_into(users::table)
-        .values(users::email.eq(&register_request.email))
+        .values(users::email.eq(&request.email))
         .get_result(&*conn)?;
     cookies.add_private(Cookie::new("id", user.id.to_string()));
     Ok(Json(user.id))
