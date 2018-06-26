@@ -1,4 +1,5 @@
 import * as React from "react";
+import DeckList from "./deck_list";
 import Login from "./login";
 
 interface Props {
@@ -46,6 +47,7 @@ export default class App extends React.Component<Props, State> {
       return <div>
         {login}
         <div>Your e-mail address is {this.state.user.email}</div>
+         <DeckList apiBase={this.props.apiBase} />
       </div>
     }
   }

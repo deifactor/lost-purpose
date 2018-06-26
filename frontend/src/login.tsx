@@ -33,9 +33,10 @@ export default class Login extends React.Component<Props, State> {
       return;
     }
 
-    console.trace("Logging in as", this.state.email);
+    console.info("Logging in as", this.state.email);
     const response = await fetch(`${this.props.apiBase}/login`, {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
