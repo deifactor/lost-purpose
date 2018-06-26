@@ -29,6 +29,9 @@ mod model;
 mod routes;
 mod schema;
 
+use diesel::prelude::*;
+use std::env;
+use std::sync::Mutex;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -41,18 +44,18 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
+    let url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let conn = PgConnection::establish(&url).expect(&format!("Could not connect to {:?}", url));
     rocket::ignite()
         .manage(routes::static_file::StaticFileConfig {
             root_path: opt.static_dir.into(),
         })
+        .manage(Mutex::new(conn))
         .mount(
             "/",
             routes![routes::deck::get_decks, routes::deck::new_deck],
         )
-        .mount(
-            "/auth",
-            routes![routes::auth::login, routes::auth::register],
-        )
+        .mount("/", routes![routes::auth::login, routes::auth::register])
         .mount("/static", routes![routes::static_file::static_file])
         .launch();
 }

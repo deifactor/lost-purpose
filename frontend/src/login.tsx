@@ -2,13 +2,13 @@ import * as React from "react";
 
 interface Props {
   // A callback to invoke when we get an proper ID.
-  onIdCallback: (name: {id: string; falseName: string}) => any;
+  onLogin: (name: { id: string; email: string }) => any;
   apiBase: string;
 }
 
 interface State {
-  // The currently-entered false name.
-  falseName: string;
+  // The currently-entered email.
+  email: string;
   // The latest error we got when trying to get the ID, if any.
   error: string | null;
 }
@@ -16,34 +16,38 @@ interface State {
 export default class Login extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { falseName: "", error: null };
+    this.state = { email: "", error: null };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ falseName: e.currentTarget.value });
+    this.setState({ email: e.currentTarget.value });
   }
 
   async handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const falseName = this.state.falseName;
-    if (falseName == '') {
+    const email = this.state.email;
+    if (email == '') {
       return;
     }
 
-    console.trace("Requesting false name", this.state.falseName);
-    const response = await fetch(`${this.props.apiBase}/id/${this.state.falseName}`);
+    console.trace("Logging in as", this.state.email);
+    const response = await fetch(`${this.props.apiBase}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
     if (response.ok) {
-      this.setState({error: null});
+      this.setState({ error: null });
       const id: string = await response.json();
       console.log("Got id", id);
-      this.props.onIdCallback({id, falseName});
+      this.props.onLogin({ id, email });
     } else {
-      const error: {err: string}  = await response.json();
-      console.error("Error retrieving id", error);
-      this.setState({error: error.err});
+      const error: string = await response.json();
+      console.error("Error retrieving id: ", error);
+      this.setState({ error: error });
     }
   }
 
@@ -51,12 +55,12 @@ export default class Login extends React.Component<Props, State> {
     return (
       <form onSubmit={this.handleSubmit}>
         <input type="text"
-          placeholder="False name"
+          placeholder="E-mail address"
           onChange={this.handleChange}
-          value={this.state.falseName}
+          value={this.state.email}
         />
         <button type="submit">
-          speak thy name
+          login
         </button>
         {this.state.error && <div>{this.state.error}</div>}
       </form>

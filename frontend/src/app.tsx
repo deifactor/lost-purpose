@@ -5,47 +5,47 @@ interface Props {
   apiBase: string;
 }
 
-interface Name {
+interface User {
   id: string;
-  falseName: string;
+  email: string;
 }
 
 
 interface State {
-  name?: Name;
+  user?: User;
 }
 
-const nameStorageKey = 'name';
+const userStorageKey = 'user';
 
 export default class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const savedName = localStorage.getItem(nameStorageKey);
-    if (savedName != null) {
-      this.state = { name: JSON.parse(savedName) };
+    const savedUser = localStorage.getItem(userStorageKey);
+    if (savedUser != null) {
+      this.state = { user: JSON.parse(savedUser) };
     } else {
       this.state = {};
     }
-    this.handleIdCallback = this.handleIdCallback.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  handleIdCallback(name: Name) {
-    this.setState({ name });
-    localStorage.setItem(nameStorageKey, JSON.stringify(name));
+  handleLogin(user: User) {
+    this.setState({ user });
+    localStorage.setItem(userStorageKey, JSON.stringify(user));
   }
 
   render() {
     const login =
       <Login
         apiBase={this.props.apiBase}
-        onIdCallback={this.handleIdCallback}
+        onLogin={this.handleLogin}
       />;
-    if (!this.state.name) {
+    if (!this.state.user) {
       return <div>{login}</div>;
     } else {
       return <div>
         {login}
-        <div>Your false name is {this.state.name.falseName}</div>
+        <div>Your e-mail address is {this.state.user.email}</div>
       </div>
     }
   }
