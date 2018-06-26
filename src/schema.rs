@@ -1,5 +1,6 @@
 table! {
     use diesel::sql_types::*;
+
     decks (id) {
         id -> Int4,
         user_id -> Int4,
@@ -11,8 +12,10 @@ table! {
 
 table! {
     use diesel::sql_types::*;
+
     users (id) {
         id -> Int4,
+        email -> Text,
         created_at -> Timestamptz,
     }
 }

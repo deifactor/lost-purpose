@@ -1,4 +1,3 @@
-use rocket;
 use rocket::http::{ContentType, Cookie};
 use rocket::local::{Client, LocalRequest};
 
@@ -15,14 +14,18 @@ impl<'a> PrivateCookieExt for LocalRequest<'a> {
     }
 }
 
-pub fn register(client: &Client) -> i32 {
+pub fn register_with_email(email: &str, client: &Client) -> i32 {
     client
         .post("/register")
         .header(ContentType::JSON)
-        .body("{}")
+        .body(json!({ "email": email }).to_string())
         .dispatch()
         .body_string()
         .unwrap()
         .parse::<i32>()
         .unwrap()
+}
+
+pub fn register(client: &Client) -> i32 {
+    register_with_email("fake@fake.fake", client)
 }

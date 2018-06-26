@@ -88,13 +88,13 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
-    id: i32,
+    email: String,
 }
 
 // Manual Debug implementation so we don't leak passwords.
 impl Debug for LoginRequest {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "LoginRequest {{ id: {:?} }}", &self.id)
+        write!(f, "LoginRequest {{ email: {:?} }}", &self.email)
     }
 }
 
@@ -112,8 +112,8 @@ pub fn login(
     // XXX: implement actual password authentication
     let conn = conn_guard.lock()?;
     if let Some(user) = users::table
-        .find(login_request.id)
-        .get_result::<User>(&*conn)
+        .filter(users::email.eq(&login_request.email))
+        .first::<User>(&*conn)
         .optional()?
     {
         cookies.add_private(Cookie::new("id", user.id.to_string()));
@@ -121,13 +121,15 @@ pub fn login(
     } else {
         Err(ApiError::new(
             Status::BadRequest,
-            Json(json!(format!("unknown user id {}", login_request.id))),
+            Json(json!(format!("unknown user {}", login_request.email))),
         ))
     }
 }
 
 #[derive(Deserialize)]
-pub struct RegisterRequest {}
+pub struct RegisterRequest {
+    email: String,
+}
 
 /// Registers a new user. Replies with the new user's ID.
 #[post("/register", data = "<request_json>")]
@@ -136,11 +138,11 @@ pub fn register(
     conn_guard: State<Mutex<PgConnection>>,
     mut cookies: Cookies,
 ) -> Result<Json<i32>, ApiError> {
-    let _register_request = request_json
+    let register_request = request_json
         .ok_or_else(|| ApiError::new(Status::BadRequest, Json(json!("invalid register request"))))?;
     let conn = conn_guard.lock()?;
     let user: User = diesel::insert_into(users::table)
-        .default_values()
+        .values(users::email.eq(&register_request.email))
         .get_result(&*conn)?;
     cookies.add_private(Cookie::new("id", user.id.to_string()));
     Ok(Json(user.id))
@@ -168,7 +170,7 @@ mod tests {
         let mut response = client
             .post("/register")
             .header(ContentType::JSON)
-            .body("{}")
+            .body(json!({"email": "test@test.test"}).to_string())
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert!(response.headers().contains("Set-Cookie"));
@@ -178,17 +180,20 @@ mod tests {
     #[test]
     fn multiple_registrations_return_different_ids() {
         let client = new_client();
-        assert_ne!(test_utils::register(&client), test_utils::register(&client))
+        assert_ne!(
+            test_utils::register_with_email("foo@prodigy.net", &client),
+            test_utils::register_with_email("bar@gmail.com", &client)
+        )
     }
 
     #[test]
     fn register_then_login() {
         let client = new_client();
-        let id = test_utils::register(&client);
+        let id = test_utils::register_with_email("foo@foo.foo", &client);
         let mut response = client
             .post("/login")
             .header(ContentType::JSON)
-            .body(json!({ "id": id }).to_string())
+            .body(json!({ "email": "foo@foo.foo" }).to_string())
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert!(response.headers().contains("Set-Cookie"));
