@@ -1,40 +1,33 @@
-export class Deck {
-  cards: Array<OrientedCard>;
-  constructor(cards: Array<OrientedCard>) {
-    this.cards = cards;
+export function standard(): Array<OrientedCard> {
+  const cards: Array<OrientedCard> = [];
+  for (const major of MajorArcana.standard()) {
+    cards.push({ kind: CardKind.Major, arcana: major, reversed: false });
   }
-
-  static standard() {
-    const cards: Array<OrientedCard> = [];
-    for (const major of MajorArcana.standard()) {
-      cards.push({ kind: CardKind.Major, arcana: major, reversed: false });
+  for (const rank of Rank.standard()) {
+    for (const suit of Suit.standard()) {
+      cards.push({ kind: CardKind.Minor, rank, suit, reversed: false });
     }
-    for (const rank of Rank.standard()) {
-      for (const suit of Suit.standard()) {
-        cards.push({ kind: CardKind.Minor, rank, suit, reversed: false });
-      }
-    }
-    return new Deck(cards);
   }
+  return cards;
+}
 
-  static siliconDawn() {
-    const deck = Deck.standard();
-    deck.cards = deck.cards.concat([
-      { kind: CardKind.Extra, color: Color.Black, reversed: false },
-      { kind: CardKind.Extra, color: Color.White, reversed: false }
-    ])
-    const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-    const voids = voidRanks.map((rank) => ({ kind: CardKind.Minor, rank: rank, suit: Suit.VOID }));
-    const ninetyNines = Suit.standard().map((suit) => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit }));
-    const extraArcana = MajorArcana.siliconDawn().map((arcana) => ({ kind: CardKind.Major, arcana, reversed: false}));
-    deck.cards = deck.cards
-      .concat(extraArcana as Array<OrientedCard>)
-      .concat(voids as Array<OrientedCard>)
-      .concat(ninetyNines as Array<OrientedCard>);
+export function siliconDawn(): Array<OrientedCard> {
+  let cards = standard();
+  cards = cards.concat([
+    { kind: CardKind.Extra, color: Color.Black, reversed: false },
+    { kind: CardKind.Extra, color: Color.White, reversed: false }
+  ])
+  const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
+  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.VOID, reversed: false }));
+  const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false }));
+  const extraArcana = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false }));
+  cards = cards
+    .concat(extraArcana)
+    .concat(voids)
+    .concat(ninetyNines);
 
-    return deck;
-  }
-};
+  return cards;
+}
 
 enum CardKind {
   Major,
