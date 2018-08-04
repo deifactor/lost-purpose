@@ -11,15 +11,26 @@ interface State {
   decks: Array<Cards.Deck>,
 }
 
-const userStorageKey = 'user';
+const decksStorageKey = 'decks';
 
 export default class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { decks: [] };
+    const savedDecks = localStorage.getItem(decksStorageKey);
+    const decks = savedDecks ? JSON.parse(savedDecks) : [];
+    this.state = { decks };
 
     this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
     this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
+    this.saveState = this.saveState.bind(this);
+
+    // Needed since componentWillUnmount isn't called if the user is reloading the page.
+    window.addEventListener("beforeunload", this.saveState);
+  }
+
+  componentWillUnmount() {
+    this.saveState();
+    window.removeEventListener("beforeunload", this.saveState);
   }
 
   handleNewDeckRequest(newDeckName: string) {
@@ -39,6 +50,11 @@ export default class App extends React.Component<Props, State> {
       newDecks.splice(index, 1);
       return { decks: newDecks }
     });
+  }
+
+  saveState() {
+    console.log("Saving state to localStorage");
+    window.localStorage.setItem(decksStorageKey, JSON.stringify(this.state.decks));
   }
 
   render() {
