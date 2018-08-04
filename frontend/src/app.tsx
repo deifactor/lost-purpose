@@ -1,19 +1,14 @@
 import * as React from "react";
+import * as Cards from "./cards";
 import DeckList from "./deck_list";
 import Login from "./login";
+import * as uuid from "uuid";
 
 interface Props {
-  apiBase: string;
 }
-
-interface User {
-  id: string;
-  email: string;
-}
-
 
 interface State {
-  user?: User;
+  decks: Array<Cards.Deck>,
 }
 
 const userStorageKey = 'user';
@@ -21,34 +16,36 @@ const userStorageKey = 'user';
 export default class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const savedUser = localStorage.getItem(userStorageKey);
-    if (savedUser != null) {
-      this.state = { user: JSON.parse(savedUser) };
-    } else {
-      this.state = {};
-    }
-    this.handleLogin = this.handleLogin.bind(this);
+    this.state = { decks: [] };
+
+    this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
+    this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
   }
 
-  handleLogin(user: User) {
-    this.setState({ user });
-    localStorage.setItem(userStorageKey, JSON.stringify(user));
+  handleNewDeckRequest(newDeckName: string) {
+    const newDeck = {
+      cards: Cards.standard(),
+      name: newDeckName,
+      id: uuid.v4()
+    };
+    this.setState((state) => ({
+      decks: [...state.decks, newDeck]
+    }));
+  }
+
+  handleDeleteDeckRequest(index: number) {
+    this.setState((state) => {
+      const newDecks = state.decks;
+      newDecks.splice(index, 1);
+      return { decks: newDecks }
+    });
   }
 
   render() {
-    const login =
-      <Login
-        apiBase={this.props.apiBase}
-        onLogin={this.handleLogin}
-      />;
-    if (!this.state.user) {
-      return <div>{login}</div>;
-    } else {
-      return <div>
-        {login}
-        <div>Your e-mail address is {this.state.user.email}</div>
-         <DeckList apiBase={this.props.apiBase} />
-      </div>
-    }
+    return (
+      <DeckList decks={this.state.decks}
+        onNewDeckRequest={this.handleNewDeckRequest}
+        onDeleteDeckRequest={this.handleDeleteDeckRequest} />
+    );
   }
 }

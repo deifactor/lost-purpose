@@ -1,3 +1,10 @@
+export interface Deck {
+  cards: Array<OrientedCard>,
+  name: string,
+  /** UUIDv4 format ID. */
+  id: string
+}
+
 export function standard(): Array<OrientedCard> {
   const cards: Array<OrientedCard> = [];
   for (const major of MajorArcana.standard()) {
@@ -55,8 +62,8 @@ export interface ExtraCard {
   color: Color
 }
 
-type Card = MajorCard | MinorCard | ExtraCard;
-type OrientedCard = Card & { reversed: boolean };
+export type Card = MajorCard | MinorCard | ExtraCard;
+export type OrientedCard = Card & { reversed: boolean };
 
 export function cardName(card: Card): string {
   switch (card.kind) {
