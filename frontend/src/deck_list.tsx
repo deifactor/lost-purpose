@@ -45,7 +45,7 @@ export default class DeckList extends React.Component<Props, State> {
 
   render() {
     const deckItems = this.props.decks.map((deck, index) =>
-      <li>
+      <li key={deck.id}>
         <a href="#" onClick={(e) => this.handleDeckClick(e, index)}>{deck.name}</a>
         <button onClick={() => this.props.onDeleteDeckRequest(index)}>Delete</button>
       </li>);
