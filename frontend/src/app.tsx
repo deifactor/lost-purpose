@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Cards from "./cards";
+import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
 import * as uuid from "uuid";
@@ -8,6 +9,8 @@ interface Props {
 }
 
 interface State {
+  // This is null if and only if there are no decks.
+  currentDeckIndex: number | null,
   decks: Array<Cards.Deck>,
 }
 
@@ -18,10 +21,11 @@ export default class App extends React.Component<Props, State> {
     super(props);
     const savedDecks = localStorage.getItem(decksStorageKey);
     const decks = savedDecks ? JSON.parse(savedDecks) : [];
-    this.state = { decks };
+    this.state = { decks, currentDeckIndex: decks.length != 0 ? 0 : null };
 
     this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
     this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
+    this.handleChangeRequest = this.handleChangeRequest.bind(this);
     this.saveState = this.saveState.bind(this);
 
     // Needed since componentWillUnmount isn't called if the user is reloading the page.
@@ -39,12 +43,14 @@ export default class App extends React.Component<Props, State> {
       name: newDeckName,
       id: uuid.v4()
     };
+    console.debug(`Creating new deck named ${newDeckName}`);
     this.setState((state) => ({
       decks: [...state.decks, newDeck]
     }));
   }
 
   handleDeleteDeckRequest(index: number) {
+    console.debug(`Deleting deck ${index}`);
     this.setState((state) => {
       const newDecks = state.decks;
       newDecks.splice(index, 1);
@@ -52,16 +58,37 @@ export default class App extends React.Component<Props, State> {
     });
   }
 
+  handleChangeRequest(index: number) {
+    console.debug(`Selecting deck ${index}`);
+    this.setState((state) => ({
+      currentDeckIndex: index
+    }));
+  }
+
   saveState() {
     console.log("Saving state to localStorage");
     window.localStorage.setItem(decksStorageKey, JSON.stringify(this.state.decks));
   }
 
+  currentDeck(): Cards.Deck | null {
+    if (this.state.currentDeckIndex !== null) {
+      return this.state.decks[this.state.currentDeckIndex];
+    } else {
+      return null;
+    }
+  }
+
   render() {
+    const currentDeck = this.currentDeck();
     return (
-      <DeckList decks={this.state.decks}
-        onNewDeckRequest={this.handleNewDeckRequest}
-        onDeleteDeckRequest={this.handleDeleteDeckRequest} />
+      <div>
+        <DeckList decks={this.state.decks}
+          onNewDeckRequest={this.handleNewDeckRequest}
+          onDeleteDeckRequest={this.handleDeleteDeckRequest}
+          onChangeRequest={this.handleChangeRequest}
+        />
+        {currentDeck && <Deck deck={currentDeck} />}
+      </div>
     );
   }
 }

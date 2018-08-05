@@ -4,9 +4,11 @@ import * as Cards from "./cards";
 interface Props {
   decks: Array<Cards.Deck>,
   // Called whenever the user wants to create a new deck.
-  onNewDeckRequest: (newDeckName: string) => void
+  onNewDeckRequest: (newDeckName: string) => void,
   // Called whenever the user wants to delete the deck with the given index.
-  onDeleteDeckRequest: (index: number) => void
+  onDeleteDeckRequest: (index: number) => void,
+  // Called when the user selects a given deck.
+  onChangeRequest: (index: number) => void
 }
 
 interface State {
@@ -36,9 +38,17 @@ export default class DeckList extends React.Component<Props, State> {
     this.setState({ newDeckName: '' });
   }
 
+  handleDeckClick(e: React.MouseEvent, index: number) {
+    e.preventDefault();
+    this.props.onChangeRequest(index);
+  }
+
   render() {
     const deckItems = this.props.decks.map((deck, index) =>
-      <li>{deck.name} <button onClick={() => this.props.onDeleteDeckRequest(index)}>Delete</button></li>);
+      <li>
+        <a href="#" onClick={(e) => this.handleDeckClick(e, index)}>{deck.name}</a>
+        <button onClick={() => this.props.onDeleteDeckRequest(index)}>Delete</button>
+      </li>);
     return (
       <div>
         <ul>{deckItems}</ul>
