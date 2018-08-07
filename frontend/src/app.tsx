@@ -1,9 +1,11 @@
 import * as React from "react";
 import * as Cards from "./cards";
+import { shuffle } from "./shuffle";
 import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
 import * as uuid from "uuid";
+import update from "immutability-helper";
 
 interface Props {
 }
@@ -11,7 +13,7 @@ interface Props {
 interface State {
   // This is null if and only if there are no decks.
   currentDeckIndex: number | null,
-  decks: Array<Cards.Deck>,
+  decks: ReadonlyArray<Cards.Deck>,
 }
 
 const decksStorageKey = 'decks';
@@ -26,6 +28,8 @@ export default class App extends React.Component<Props, State> {
     this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
     this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
     this.handleChangeRequest = this.handleChangeRequest.bind(this);
+    this.handleDraw = this.handleDraw.bind(this);
+    this.handleShuffle = this.handleShuffle.bind(this);
     this.saveState = this.saveState.bind(this);
 
     // Needed since componentWillUnmount isn't called if the user is reloading the page.
@@ -51,11 +55,9 @@ export default class App extends React.Component<Props, State> {
 
   handleDeleteDeckRequest(index: number) {
     console.debug(`Deleting deck ${index}`);
-    this.setState((state) => {
-      const newDecks = state.decks;
-      newDecks.splice(index, 1);
-      return { decks: newDecks }
-    });
+    this.setState((state) =>
+      update(state, { decks: { $splice: [[index, 1]] } })
+    );
   }
 
   handleChangeRequest(index: number) {
@@ -78,6 +80,36 @@ export default class App extends React.Component<Props, State> {
     }
   }
 
+  private handleDraw() {
+    console.debug("Drawing from deck");
+    this.setState((state) => {
+      const index = this.state.currentDeckIndex;
+      if (index === null) {
+        throw new Error("null currentDeckIndex");
+      }
+      const topCard = state.decks[index].cards[0];
+      console.info("Drew", topCard);
+      const numCards = state.decks[index].cards.length;
+      let newDecks = update(state.decks,
+        { [index]: { cards: { $splice: [[0, 1]] } } });
+      newDecks = update(newDecks,
+        { [index]: { cards: { $push: [topCard] } } });
+      return { decks: newDecks }
+    });
+  }
+
+  private handleShuffle() {
+    console.debug("Shuffling deck");
+    this.setState((state) => {
+      const index = this.state.currentDeckIndex;
+      if (index === null) {
+        throw new Error("null currentDeckIndex");
+      }
+      return update(state,
+        { decks: { [index]: { cards: shuffle } } });
+    });
+  }
+
   render() {
     const currentDeck = this.currentDeck();
     return (
@@ -87,7 +119,10 @@ export default class App extends React.Component<Props, State> {
           onDeleteDeckRequest={this.handleDeleteDeckRequest}
           onChangeRequest={this.handleChangeRequest}
         />
-        {currentDeck && <Deck deck={currentDeck} />}
+        {currentDeck &&
+          <Deck onDraw={this.handleDraw}
+            onShuffle={this.handleShuffle}
+            deck={currentDeck} />}
       </div>
     );
   }

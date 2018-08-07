@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Cards from "./cards";
 
 interface Props {
-  decks: Array<Cards.Deck>,
+  decks: ReadonlyArray<Cards.Deck>,
   // Called whenever the user wants to create a new deck.
   onNewDeckRequest: (newDeckName: string) => void,
   // Called whenever the user wants to delete the deck with the given index.
