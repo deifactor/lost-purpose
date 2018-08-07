@@ -25,7 +25,7 @@ export function siliconDawn(): Array<OrientedCard> {
     { kind: CardKind.Extra, color: Color.White, reversed: false }
   ])
   const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.VOID, reversed: false }));
+  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false }));
   const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false }));
   const extraArcana = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false }));
   cards = cards
@@ -36,7 +36,7 @@ export function siliconDawn(): Array<OrientedCard> {
   return cards;
 }
 
-enum CardKind {
+export enum CardKind {
   Major,
   Minor,
   Extra
@@ -77,6 +77,7 @@ export function cardName(card: Card): string {
 }
 
 export function isStandardMajorArcana(majorArcana: MajorArcana) {
+  return majorArcana <= MajorArcana.World;
 }
 
 // The Arcana are the means by which all is revealed.
@@ -148,6 +149,10 @@ export namespace MajorArcana {
       MajorArcana.AlephFour
     ];
   }
+
+  export function isStandard(arcana: MajorArcana): boolean {
+    return arcana <= MajorArcana.World;
+  }
 }
 
 export enum Rank {
@@ -198,7 +203,7 @@ export enum Suit {
   Swords,
   Pentacles,
   // Silicon Dawn only. Has a 0, Progeny, Cavalier, Queen, and King, but nothing else.
-  VOID
+  Void
 }
 
 export namespace Suit {

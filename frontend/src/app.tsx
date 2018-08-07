@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Cards from "./cards";
 import { shuffle } from "./shuffle";
+import {CardFormatter} from "./card_formatter";
 import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
@@ -13,6 +14,7 @@ interface Props {
 interface State {
   // This is null if and only if there are no decks.
   currentDeckIndex: number | null,
+  currentCard: string | null,
   decks: ReadonlyArray<Cards.Deck>,
 }
 
@@ -23,7 +25,7 @@ export default class App extends React.Component<Props, State> {
     super(props);
     const savedDecks = localStorage.getItem(decksStorageKey);
     const decks = savedDecks ? JSON.parse(savedDecks) : [];
-    this.state = { decks, currentDeckIndex: decks.length != 0 ? 0 : null };
+    this.state = { decks, currentDeckIndex: decks.length != 0 ? 0 : null, currentCard: null };
 
     this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
     this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
@@ -81,7 +83,6 @@ export default class App extends React.Component<Props, State> {
   }
 
   private handleDraw() {
-    console.debug("Drawing from deck");
     this.setState((state) => {
       const index = this.state.currentDeckIndex;
       if (index === null) {
@@ -89,12 +90,13 @@ export default class App extends React.Component<Props, State> {
       }
       const topCard = state.decks[index].cards[0];
       console.info("Drew", topCard);
+      const currentCard =new CardFormatter().format(topCard);
       const numCards = state.decks[index].cards.length;
       let newDecks = update(state.decks,
         { [index]: { cards: { $splice: [[0, 1]] } } });
       newDecks = update(newDecks,
         { [index]: { cards: { $push: [topCard] } } });
-      return { decks: newDecks }
+      return { decks: newDecks, currentCard }
     });
   }
 
@@ -119,6 +121,7 @@ export default class App extends React.Component<Props, State> {
           onDeleteDeckRequest={this.handleDeleteDeckRequest}
           onChangeRequest={this.handleChangeRequest}
         />
+        {this.state.currentCard}
         {currentDeck &&
           <Deck onDraw={this.handleDraw}
             onShuffle={this.handleShuffle}
