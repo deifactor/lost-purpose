@@ -1,5 +1,5 @@
 import { MajorArcana, Card, OrientedCard, CardKind, Rank, Suit, Color } from "./cards";
-import { romanize } from "romanize";
+import romanize = require('romanize');
 
 export enum NumberFormat {
   Roman,
@@ -30,7 +30,10 @@ export class CardFormatter {
 
   format(card: OrientedCard): string {
     const unoriented = this.formatUnoriented(card);
-    if (card.reversed) {
+    const kind = card.kind;
+    // The (VOID) cards and the 'extras' cannot be reversed.
+    const shouldIndicateReversal = card.kind == CardKind.Major || (card.kind == CardKind.Minor && card.suit != Suit.Void);
+    if (card.reversed && shouldIndicateReversal) {
       return `${unoriented}, reversed`;
     } else {
       return unoriented;
@@ -42,7 +45,7 @@ export class CardFormatter {
       case CardKind.Major:
         return this.formatMajor(card.arcana);
       case CardKind.Minor:
-        return `${this.formatRank(card.rank)} of ${this.formatSuit(card.suit)}`;
+        return `the ${this.formatRank(card.rank)} of ${this.formatSuit(card.suit)}`;
       case CardKind.Extra:
         return this.formatExtra(card.color);
     }
@@ -51,7 +54,7 @@ export class CardFormatter {
   private formatMajor(arcana: MajorArcana): string {
     const name = this.majorName(arcana);
     if (this.options.romanNumeralMajorArcana && MajorArcana.isStandard(arcana)) {
-      return `${romanize(arcana)}, ${name}`;
+      return `${zeroAwareRomanize(arcana)}, ${name}`;
     } else {
       return name;
     }
@@ -91,7 +94,7 @@ export class CardFormatter {
 
   private formatRank(rank: Rank): string {
     switch (this.options.minorArcanaRankFormat) {
-      case NumberFormat.Roman: return romanize(rank);
+      case NumberFormat.Roman: return zeroAwareRomanize(rank);
       case NumberFormat.Numerals: return String(rank);
       case NumberFormat.Words:
         switch (rank) {
@@ -123,7 +126,7 @@ export class CardFormatter {
       case Suit.Cups: return "Cups";
       case Suit.Swords: return "Swords";
       case Suit.Pentacles: return "Pentacles";
-      case Suit.Void: return "VOID";
+      case Suit.Void: return "(VOID)";
     }
   }
 
@@ -133,5 +136,8 @@ export class CardFormatter {
       case Color.Black: return "The card with two backs";
     }
   }
+}
 
+function zeroAwareRomanize(n: number): string {
+  return n == 0 ? "0" : romanize(n);
 }

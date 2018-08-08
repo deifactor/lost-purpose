@@ -1,3 +1,4 @@
 declare module 'romanize' {
-  export function romanize(arabic: number): string
+  function romanize(arabic: number): string;
+  export = romanize;
 }

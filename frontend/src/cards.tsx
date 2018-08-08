@@ -65,17 +65,6 @@ export interface ExtraCard {
 export type Card = MajorCard | MinorCard | ExtraCard;
 export type OrientedCard = Card & { reversed: boolean };
 
-export function cardName(card: Card): string {
-  switch (card.kind) {
-    case CardKind.Major:
-      return MajorArcana[card.arcana];
-    case CardKind.Minor:
-      return `${Rank[card.rank]} of ${Suit[card.suit]}`;
-    case CardKind.Extra:
-      return Color[card.color];
-  }
-}
-
 export function isStandardMajorArcana(majorArcana: MajorArcana) {
   return majorArcana <= MajorArcana.World;
 }
