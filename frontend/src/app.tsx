@@ -132,11 +132,11 @@ export default class App extends React.Component<Props, State> {
           onDeleteDeckRequest={this.handleDeleteDeckRequest}
           onChangeRequest={this.handleChangeRequest}
         />
-        {this.state.currentCard}
         {currentDeck &&
           <Deck onDraw={this.handleDraw}
             onShuffle={this.handleShuffle}
             deck={currentDeck} />}
+        {this.state.currentCard}
       </div>
     );
   }
