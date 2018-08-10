@@ -52,7 +52,8 @@ export default class App extends React.Component<Props, State> {
     };
     console.debug(`Creating new deck named ${newDeckName}`);
     this.setState((state) => ({
-      decks: [...state.decks, newDeck]
+      decks: [...state.decks, newDeck],
+      currentDeckIndex: state.decks.length
     }));
   }
 
