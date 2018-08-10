@@ -5,6 +5,7 @@ import {CardFormatter} from "./card_formatter";
 import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
+import { LFSR } from "./lfsr";
 import * as uuid from "uuid";
 import update from "immutability-helper";
 
@@ -100,7 +101,8 @@ export default class App extends React.Component<Props, State> {
     });
   }
 
-  private handleShuffle() {
+  private handleShuffle(fingerprint: number) {
+    const lfsr = new LFSR(fingerprint);
     console.debug("Shuffling deck");
     this.setState((state) => {
       const index = this.state.currentDeckIndex;
