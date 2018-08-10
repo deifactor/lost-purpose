@@ -48,7 +48,6 @@ export class Prompter extends React.Component<Props, State> {
     const start = new Date().getTime();
     let fingerprint = CRC32.str(this.state.input);
     while (new Date().getTime() - start < this.props.duration) {
-      console.debug("Stretch loop");
       for (let i = 0; i < 100; i++) {
         fingerprint = CRC32.str(fingerprint.toString(16));
         if (fingerprint < 0) {
