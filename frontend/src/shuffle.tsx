@@ -14,7 +14,7 @@ export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): nu
 
   // We'll cut the pile so that the left/top half has cut_point cards in it.
   const midpoint = Math.floor(cards.length / 2);
-  const offset = Math.floor(cards.length / 6);
+  const offset = Math.floor(cards.length / 5);
   const cutPoint = generateInteger(
     Math.max(midpoint - offset, 1),
     Math.min(midpoint + offset + 1, cards.length),
@@ -23,7 +23,7 @@ export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): nu
   for (const card of cards.slice(cutPoint)) {
     card.reversed = !card.reversed;
   }
-  const chunker = () => generateInteger(2, 4, rng);
+  const chunker = () => generateInteger(1, 4, rng);
   const leftChunks = chunk(cards.slice(0, cutPoint), chunker);
   const rightChunks = chunk(cards.slice(cutPoint), chunker);
 

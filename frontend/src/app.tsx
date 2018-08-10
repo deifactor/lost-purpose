@@ -111,8 +111,8 @@ export default class App extends React.Component<Props, State> {
         throw new Error("null currentDeckIndex");
       }
       let repeatedShuffle = function <T>(cards: Array<Cards.OrientedCard>) {
-        // Five times is enough to get some actual mixing, but not enough to be completely random.
-        for (let i = 0; i < 5; i++) {
+        // Ten times is enough to get some actual mixing.
+        for (let i = 0; i < 10; i++) {
           cards = shuffle(cards, lfsr);
         }
         return cards;

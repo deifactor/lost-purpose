@@ -16,11 +16,6 @@ describe("shuffling", () => {
         .toEqual([1, 0]);
     });
 
-    it("should swap the halves in a four-card deck", () => {
-      expect(shuffle(faceUpDeck([0, 1, 2, 3])).map((x) => x.value))
-        .toEqual([2, 3, 0, 1]);
-    });
-
     it("should leave the elements in a hundred-card deck the same", () => {
       const shuffled = shuffle(faceUpDeck(_.range(100)));
       expect(shuffled).toHaveLength(100);
