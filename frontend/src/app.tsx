@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Cards from "./cards";
 import { shuffle } from "./shuffle";
-import {CardFormatter} from "./card_formatter";
+import { CardFormatter } from "./card_formatter";
 import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
@@ -91,7 +91,7 @@ export default class App extends React.Component<Props, State> {
       }
       const topCard = state.decks[index].cards[0];
       console.info("Drew", topCard);
-      const currentCard =new CardFormatter().format(topCard);
+      const currentCard = new CardFormatter().format(topCard);
       const numCards = state.decks[index].cards.length;
       let newDecks = update(state.decks,
         { [index]: { cards: { $splice: [[0, 1]] } } });
@@ -109,8 +109,16 @@ export default class App extends React.Component<Props, State> {
       if (index === null) {
         throw new Error("null currentDeckIndex");
       }
+      let repeatedShuffle = function <T>(cards: Array<Cards.OrientedCard>) {
+        // Five times is enough to get some actual mixing, but not enough to be completely random.
+        for (let i = 0; i < 5; i++) {
+          cards = shuffle(cards, lfsr);
+        }
+        return cards;
+      }
+
       return update(state,
-        { decks: { [index]: { cards: shuffle } } });
+        { decks: { [index]: { cards: repeatedShuffle } } });
     });
   }
 

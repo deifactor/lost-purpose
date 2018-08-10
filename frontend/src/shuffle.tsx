@@ -7,7 +7,7 @@ interface Oriented {
  * splitting it in two, turning the bottom half upside-down, and then
  * interleaving the cards in chunks starting from the bottom half.
  */
-export function shuffle<T extends Oriented>(cards: Array<T>): Array<T>{
+export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): number } = Math): Array<T> {
   if (cards.length == 1) {
     return cards;
   }
@@ -17,12 +17,13 @@ export function shuffle<T extends Oriented>(cards: Array<T>): Array<T>{
   const offset = Math.floor(cards.length / 6);
   const cutPoint = generateInteger(
     Math.max(midpoint - offset, 1),
-    Math.min(midpoint + offset + 1, cards.length)
+    Math.min(midpoint + offset + 1, cards.length),
+    rng
   );
   for (const card of cards.slice(cutPoint)) {
     card.reversed = !card.reversed;
   }
-  const chunker = () => generateInteger(2, 4);
+  const chunker = () => generateInteger(2, 4, rng);
   const leftChunks = chunk(cards.slice(0, cutPoint), chunker);
   const rightChunks = chunk(cards.slice(cutPoint), chunker);
 
@@ -41,8 +42,8 @@ export function shuffle<T extends Oriented>(cards: Array<T>): Array<T>{
 /**
  * Generates an integer in the range [low, high).
  */
-function generateInteger(low: number, high: number): number {
-  return Math.floor(low + Math.random() * (high - low));
+function generateInteger(low: number, high: number, rng: { random(): number }): number {
+  return Math.floor(low + rng.random() * (high - low));
 }
 
 /**
