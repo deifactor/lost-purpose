@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as Cards from "./cards";
+import * as ReactModal from 'react-modal';
 import { Prompter } from "./prompter";
+import './styles/modal.css';
 
 interface Props {
   deck: Cards.Deck,
@@ -30,16 +32,20 @@ export default class Deck extends React.Component<Props, State> {
   }
 
   render() {
-    const prompter =
-      <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={1000}>
-        <div>input query</div>
-      </Prompter>;
     return (
       <div>
         <h3>{this.props.deck.name}</h3>
         <button onClick={this.props.onDraw}>Draw</button>
         <button onClick={this.startShuffle}>Shuffle</button>
-        {this.state.showPrompter && prompter}
+        <ReactModal
+          isOpen={this.state.showPrompter}
+          className="modal"
+          overlayClassName="overlay"
+          style={{content: {width: "500px"}}}>
+          <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={1000}>
+            <div className="modal-title">input query</div>
+          </Prompter>
+        </ReactModal>
       </div>
     );
   }

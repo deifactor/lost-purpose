@@ -1,0 +1,24 @@
+.modal {
+  background-color: inherit;
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  border: 1px solid white;
+  padding: 2em;
+  margin: 3em auto;
+  width: 960px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal .modal-title {
+  font-size: 200%;
+  font-weight: bold;
+}
