@@ -25,5 +25,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin(),
         new CheckerPlugin()
-    ]
+    ],
+
+    mode: "development"
 };
