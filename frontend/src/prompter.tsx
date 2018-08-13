@@ -1,17 +1,20 @@
 import * as React from "react";
 import CRC32 = require('crc-32');
+import './styles/prompter.css';
+import classNames = require('classnames');
 
 interface Props {
   // Invoked when we've computed a fingerprint from the user's input.
   onFingerprintComputed: (fingerprint: number) => void,
   // Number of milliseconds to fingerprint the input for.
   duration: number,
-  children: React.ReactNode
 }
 
 interface State {
   // If we're currently in the middle of stretching the fingerprint, the intermediate fingerprint.
   fingerprint: number | null,
+  // Whether the current fingerprint has finished being computed.
+  finished: boolean,
   input: string
 }
 
@@ -27,6 +30,7 @@ export class Prompter extends React.Component<Props, State> {
     }
     this.state = {
       fingerprint: null,
+      finished: false,
       input: ""
     };
 
@@ -43,7 +47,7 @@ export class Prompter extends React.Component<Props, State> {
     if (this.state.input == "") {
       return;
     }
-    this.setState({input: ""});
+    this.setState({ input: "" });
     console.log(`User asked: ${this.state.input}`);
     const start = new Date().getTime();
     let fingerprint = CRC32.str(this.state.input);
@@ -54,26 +58,39 @@ export class Prompter extends React.Component<Props, State> {
           fingerprint += Math.pow(2, 32);
         }
       }
-      this.setState({fingerprint});
+      this.setState({ fingerprint });
       await delay(50);
     }
     console.debug(`Done stretching; result is ${fingerprint}`);
-    this.setState({fingerprint: null});
+    this.setState({ finished: true });
     this.props.onFingerprintComputed(fingerprint);
+    // No need to clear the state since we'll get unmounted when the modal closes.
   }
 
   render() {
-    if (this.state.fingerprint !== null) {
-      return <div className="fingerprint">{formatFingerprint(this.state.fingerprint)}</div>;
-    } else {
-      return <div>
-        {this.props.children}
-        <form onSubmit={this.handleInputSubmit}>
-          <input type="text" onChange={this.handleInputChange} value={this.state.input} />
-          <button type="submit">Ask</button>
-        </form>
+    const fingerprinting = this.state.fingerprint !== null;
+    const title = this.state.finished ? "entropy extracted" :
+      fingerprinting ? "contemplating..." :
+        "input query";
+    const formClasses = classNames({ visible: !fingerprinting, invisible: fingerprinting });
+    const fingerprintClasses = classNames(
+      'fingerprint',
+      { visible: fingerprinting, invisible: !fingerprinting },
+      { finished: this.state.finished });
+    return (
+      <div className="prompter">
+        <div className="modal-title">{title}</div>
+        <div className="body">
+          <form onSubmit={this.handleInputSubmit} className={classNames(formClasses)}>
+            <input type="text" onChange={this.handleInputChange} value={this.state.input} />
+            <button type="submit">Ask</button>
+          </form>
+          <div className={classNames(fingerprintClasses)}>
+            {formatFingerprint(this.state.fingerprint || 0)}
+          </div>
+        </div>
       </div>
-    }
+    );
   }
 }
 

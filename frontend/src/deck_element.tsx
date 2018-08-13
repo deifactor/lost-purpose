@@ -17,18 +17,18 @@ interface State {
 export default class Deck extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {showPrompter: false};
+    this.state = { showPrompter: false };
     this.startShuffle = this.startShuffle.bind(this);
     this.handleFingerprintComputed = this.handleFingerprintComputed.bind(this);
   }
 
   private startShuffle() {
-    this.setState({showPrompter: true});
+    this.setState({ showPrompter: true });
   }
 
   private handleFingerprintComputed(fingerprint: number) {
-    this.setState({showPrompter: false});
     this.props.onShuffle(fingerprint);
+    setTimeout(() => this.setState({ showPrompter: false }), 4000);
   }
 
   render() {
@@ -41,10 +41,9 @@ export default class Deck extends React.Component<Props, State> {
           isOpen={this.state.showPrompter}
           className="modal"
           overlayClassName="overlay"
-          style={{content: {width: "500px"}}}>
-          <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={1000}>
-            <div className="modal-title">input query</div>
-          </Prompter>
+          style={{ content: { width: "500px" } }}
+          closeTimeoutMS={200}>
+          <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />
         </ReactModal>
       </div>
     );

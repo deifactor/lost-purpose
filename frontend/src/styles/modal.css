@@ -15,10 +15,28 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;  background-color: rgba(0, 0, 0, 0.8);
+  bottom: 0;
+  /* 200ms matches the closeTimeoutMS property */
+  transition: opacity 200ms ease-in-out;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal .modal-title {
   font-size: 200%;
   font-weight: bold;
+
+  padding-bottom: 0.5em;
+  text-align: center;
+}
+
+.ReactModalPortal > div {
+  opacity: 0;
+}
+
+.ReactModalPortal .ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModalPortal .ReactModal__Overlay--before-close {
+  opacity: 0;
 }
