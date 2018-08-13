@@ -1,7 +1,8 @@
 import * as React from "react";
 import CRC32 = require('crc-32');
-import './styles/prompter.css';
 import classNames = require('classnames');
+
+import './styles/prompter.css';
 
 interface Props {
   // Invoked when we've computed a fingerprint from the user's input.
@@ -47,11 +48,11 @@ export class Prompter extends React.Component<Props, State> {
     if (this.state.input == "") {
       return;
     }
-    this.setState({ input: "" });
     console.log(`User asked: ${this.state.input}`);
     const start = new Date().getTime();
     let fingerprint = CRC32.str(this.state.input);
     while (new Date().getTime() - start < this.props.duration) {
+      // We only hash 100 times per 'block' of 50ms so we don't use up CPU.
       for (let i = 0; i < 100; i++) {
         fingerprint = CRC32.str(fingerprint.toString(16));
         if (fingerprint < 0) {
@@ -68,10 +69,12 @@ export class Prompter extends React.Component<Props, State> {
   }
 
   render() {
-    const fingerprinting = this.state.fingerprint !== null;
+    const fingerprint = this.state.fingerprint;
+    const fingerprinting = fingerprint !== null;
     const title = this.state.finished ? "entropy extracted" :
       fingerprinting ? "contemplating..." :
         "input query";
+    // We show the form when the user hasn't input their query and the fingerprint when they have.
     const formClasses = classNames({ visible: !fingerprinting, invisible: fingerprinting });
     const fingerprintClasses = classNames(
       'fingerprint',
@@ -86,7 +89,7 @@ export class Prompter extends React.Component<Props, State> {
             <button type="submit">Ask</button>
           </form>
           <div className={classNames(fingerprintClasses)}>
-            {formatFingerprint(this.state.fingerprint || 0)}
+            {fingerprint && formatFingerprint(fingerprint)}
           </div>
         </div>
       </div>
@@ -98,6 +101,9 @@ async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Formats the fingerprint as a hex number left-padded to 8 characters.
+ */
 function formatFingerprint(fingerprint: number): string {
   let str = fingerprint.toString(16);
   while (str.length < 8) {
