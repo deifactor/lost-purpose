@@ -14,11 +14,13 @@
     "@types/react-dom": "^16.0.6",
     "@types/uuid": "^3.4.3",
     "crc-32": "^1.2.0",
+    "css-loader": "^1.0.0",
     "immutability-helper": "^2.7.1",
     "lodash": "^4.17.10",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "romanize": "^1.1.1",
+    "style-loader": "^0.22.1",
     "typescript-formatter": "^7.2.2",
     "uuid": "^3.3.2"
   },

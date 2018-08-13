@@ -1,0 +1,27 @@
+body {
+  background: #000000;
+  color: #ffffff;
+  font-family: monospace;
+  font-size: 20px;
+
+  max-width: 960px;
+  margin: 0px auto;
+}
+
+button, input {
+  background-color: inherit !important;
+  color: inherit !important;
+  font: inherit !important;
+}
+
+button {
+  margin: 0 0.5em !important;
+}
+
+input {
+  border: 1px solid white !important;
+}
+
+a {
+  color: white;
+}

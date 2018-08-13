@@ -9,6 +9,8 @@ import { LFSR } from "./lfsr";
 import * as uuid from "uuid";
 import update from "immutability-helper";
 
+import './styles/app.css';
+
 interface Props {
 }
 
