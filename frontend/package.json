@@ -1,8 +1,8 @@
 {
-  "name": "skarot-frontend",
+  "name": "lost-purpose-frontend",
   "version": "1.0.0",
-  "description": "The frontend for the skarot tarot simulator.",
-  "repository": "https://github.com/deifacted/skarot",
+  "description": "The frontend for the Tarot of the Lost Purpose.",
+  "repository": "https://github.com/deifacted/lost-purpose",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

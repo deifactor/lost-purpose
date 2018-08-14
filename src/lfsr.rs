@@ -1,9 +1,9 @@
 /// An implementation of a [linear-feedback shift
 /// register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register).
-/// **Do not use this for actual cryptography**! skarot only uses this because
-/// it's *intentionally* not high-quality and LFSRs have personal significance
-/// to the author (they were one of the first random number generators she
-/// remembers reading about).
+/// **Do not use this for actual cryptography**! Lost Purpose only uses this
+/// because it's *intentionally* not high-quality and LFSRs have personal
+/// significance to the author (they were one of the first random number
+/// generators she remembers reading about).
 use rand_core::{impls, Error, RngCore};
 
 #[derive(Clone, Debug)]

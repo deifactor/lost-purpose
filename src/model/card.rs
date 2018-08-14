@@ -1,5 +1,5 @@
-/// Skarot supports the Rider-Waite tarot deck as its 'basic' deck. In addition,
-/// it also supports the [Tarot of the Silicon
+/// Lost Purpose supports the Rider-Waite tarot deck as its 'basic' deck. In
+/// addition, it also supports the [Tarot of the Silicon
 /// Dawn](http://egypt.urnash.com/tarot/) by [Egypt
 /// Urnash](http://egypt.urnash.com). The Silicon Dawn deck adds 21 extra cards:
 /// four 99s in each suit, five cards in the new (VOID) suit, nine new major

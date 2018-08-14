@@ -35,7 +35,7 @@ use std::sync::Mutex;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
-#[structopt(name = "skarot")]
+#[structopt(name = "lost-purpose")]
 struct Opt {
     /// Path to the directory containing the static files.
     #[structopt(long = "static_dir")]

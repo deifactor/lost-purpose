@@ -1,4 +1,4 @@
-/// Handlers for all of the API calls defined for Skarot.
+/// Handlers for all of the API calls defined for Lost Purpose.
 ///
 /// We use a convention where success is defined by returning a JSON object (or
 /// a number or string, which technically isn't valid JSON at the top level) and
