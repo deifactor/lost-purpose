@@ -1,0 +1,6 @@
+[package]
+name = "ascender"
+version = "0.1.0"
+authors = ["Ash <relativistic.policeman@gmail.com>"]
+
+[dependencies]
