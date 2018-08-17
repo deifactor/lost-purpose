@@ -1,7 +1,9 @@
 extern crate ascender;
 extern crate image;
+extern crate rusttype;
 
 use std::env;
+use std::fs;
 
 fn main() {
     let args = env::args().collect::<Vec<_>>();
@@ -10,4 +12,7 @@ fn main() {
         .to_rgb();
     let chaxels = ascender::to_chaxels(&image, 60);
     print!("{}", ascender::output::to_256_terminal(&chaxels));
+    let bitmap = ascender::output::to_bitmap(&chaxels, 10.0).unwrap();
+
+    bitmap.save(&args[2]).unwrap();
 }

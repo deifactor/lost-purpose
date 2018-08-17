@@ -1,7 +1,9 @@
 extern crate ansi_term;
+extern crate failure;
 extern crate image;
 extern crate itertools;
 extern crate palette;
+extern crate rusttype;
 
 pub mod output;
 
@@ -13,6 +15,12 @@ use image::imageops;
 pub struct Chaxel {
     pub character: char,
     pub fg: palette::Srgb,
+}
+
+impl Chaxel {
+    pub fn vec_to_string(chaxels: &[Chaxel]) -> String {
+        chaxels.iter().map(|chax| chax.character).collect()
+    }
 }
 
 /// Converts the image to a series of chaxels. The returned two-dimensional
