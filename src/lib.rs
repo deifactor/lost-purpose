@@ -65,6 +65,8 @@ fn pixel_to_chaxel<P: image::Pixel<Subpixel = u8>>(pixel: &P) -> Chaxel {
     static CHARS: [char; 14] = [
         '.', ',', ':', ';', 'n', 'o', 'x', 'd', '0', 'K', 'X', 'M', 'W', '@',
     ];
-    let character = CHARS[(fg_hsv.value * (CHARS.len() - 1) as f32).round() as usize];
+    // We apply a 'gamma' to the character selection, since darker input colors
+    // will result in both darker output colors *and* fewer set pixels.
+    let character = CHARS[(fg_hsv.value.powf(0.75) * (CHARS.len() - 1) as f32).round() as usize];
     Chaxel { character, fg }
 }
