@@ -3,7 +3,7 @@ use chaxel::Chaxel;
 use failure;
 use image;
 use itertools::Itertools;
-use palette;
+use palette::{self, Pixel, Shade};
 use rusttype;
 
 pub fn to_256_terminal(chaxels: &[Vec<Chaxel>]) -> String {
@@ -53,11 +53,8 @@ pub fn to_bitmap(
         for (index, g) in glyphs.iter().enumerate() {
             if let Some(bb) = g.pixel_bounding_box() {
                 g.draw(|x, y, v| {
-                    let color_hsv: palette::Hsv = row[index].fg.into();
-                    let color: palette::Srgb = (palette::Hsv {
-                        value: color_hsv.value * v,
-                        ..color_hsv
-                    }).into();
+                    let color: palette::Hsv = row[index].fg;
+                    let color: palette::Srgb = color.darken((1.0 - v) * color.value).into();
                     let x = x as i32 + bb.min.x;
                     let y = y as i32 + bb.min.y + row_offset as i32;
                     // There's still a possibility that the glyph clips the boundaries of the bitmap
@@ -65,11 +62,7 @@ pub fn to_bitmap(
                         image.put_pixel(
                             x as u32,
                             y as u32,
-                            image::Rgb([
-                                (color.red * 255.0) as u8,
-                                (color.green * 255.0) as u8,
-                                (color.blue * 255.0) as u8,
-                            ]),
+                            image::Rgb(color.into_format().into_raw()),
                         )
                     }
                 })
@@ -81,7 +74,7 @@ pub fn to_bitmap(
 }
 
 fn to_256_term(chaxel: &Chaxel) -> String {
-    Colour::Fixed(to_256_terminal_color(chaxel.fg))
+    Colour::Fixed(to_256_terminal_color(chaxel.fg.into()))
         .paint(chaxel.character.to_string())
         .to_string()
 }

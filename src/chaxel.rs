@@ -1,14 +1,14 @@
 /// This module takes an image and converts it into chaxels. A chaxel is a
 /// single element of the output ASCII art and is defined in the `Chaxel` type.
 use image;
-use palette;
+use palette::{self, Pixel};
 
 /// A chaxel contains the character to render at a given position as well as its
 /// foreground and (optionally) its background. The word 'chaxel' is derived
 /// from a combination of 'character' and 'pixel'.
 pub struct Chaxel {
     pub character: char,
-    pub fg: palette::Srgb,
+    pub fg: palette::Hsv,
 }
 
 impl Chaxel {
@@ -50,17 +50,12 @@ pub fn to_chaxels<P: image::Pixel<Subpixel = u8> + 'static>(
 
 fn pixel_to_chaxel<P: image::Pixel<Subpixel = u8>>(pixel: &P) -> Chaxel {
     let rgb = pixel.to_rgb();
-    let fg = palette::Srgb::new(
-        f32::from(rgb[0]) / 255.0,
-        f32::from(rgb[1]) / 255.0,
-        f32::from(rgb[2]) / 255.0,
-    );
-    let fg_hsv: palette::Hsv<_, _> = fg.into();
+    let fg: palette::Hsv = palette::Srgb::from_raw(&rgb.data).into_format().into();
     static CHARS: [char; 14] = [
         '.', ',', ':', ';', 'n', 'o', 'x', 'd', '0', 'K', 'X', 'M', 'W', '@',
     ];
     // We apply a 'gamma' to the character selection, since darker input colors
     // will result in both darker output colors *and* fewer set pixels.
-    let character = CHARS[(fg_hsv.value.powf(0.75) * (CHARS.len() - 1) as f32).round() as usize];
+    let character = CHARS[(fg.value.powf(0.75) * (CHARS.len() - 1) as f32).round() as usize];
     Chaxel { character, fg }
 }
