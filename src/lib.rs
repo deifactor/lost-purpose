@@ -10,4 +10,4 @@ mod output;
 
 pub use chaxel::to_chaxels;
 pub use output::to_256_terminal;
-pub use output::to_bitmap;
+pub use output::BitmapRenderer;

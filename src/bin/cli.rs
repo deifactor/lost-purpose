@@ -13,6 +13,10 @@ struct Opt {
     #[structopt(name = "FILE", parse(from_os_str))]
     input: PathBuf,
 
+    /// Path to the font file. Must be a .ttc or .ttf file.
+    #[structopt(short = "f", long = "font", parse(from_os_str))]
+    font: PathBuf,
+
     /// How many characters wide to make the image.
     #[structopt(short = "w", long = "ascii-width", default_value = "60")]
     ascii_width: u32,
@@ -34,7 +38,8 @@ fn main() {
     let chaxels = ascender::to_chaxels(&image, opt.ascii_width);
     print!("{}", ascender::to_256_terminal(&chaxels));
     if let Some(output) = opt.output {
-        let bitmap = ascender::to_bitmap(&chaxels, opt.font_height).unwrap();
+        let renderer = ascender::BitmapRenderer::new_from_path(opt.font, opt.font_height).unwrap();
+        let bitmap = renderer.render(&chaxels).unwrap();
         bitmap.save(output).unwrap();
     }
 }

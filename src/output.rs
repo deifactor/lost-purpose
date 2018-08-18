@@ -5,6 +5,8 @@ use image;
 use itertools::Itertools;
 use palette::{self, Pixel, Shade};
 use rusttype;
+use std::fs;
+use std::path::Path;
 
 pub fn to_256_terminal(chaxels: &[Vec<Chaxel>]) -> String {
     chaxels
@@ -13,64 +15,107 @@ pub fn to_256_terminal(chaxels: &[Vec<Chaxel>]) -> String {
         .join("")
 }
 
-pub fn to_bitmap(
-    chaxels: &[Vec<Chaxel>],
+/// A `BitmapRenderer` renders two-dimensional arrays of chaxels onto images.
+pub struct BitmapRenderer<'a> {
+    font: rusttype::Font<'a>,
     height: f32,
-) -> Result<image::ImageBuffer<image::Rgb<u8>, Vec<u8>>, failure::Error> {
-    let scale = rusttype::Scale {
-        x: height,
-        y: height,
-    };
-    let font_data = include_bytes!("/System/Library/Fonts/Menlo.ttc");
-    let collection = rusttype::FontCollection::from_bytes(font_data as &[u8])?;
-    let font = collection.font_at(0)?;
-    let metrics = font.v_metrics(scale);
-    let offset = rusttype::point(0.0, metrics.ascent);
-    // Height of each line, including any gaps. i.e., the distance between the
-    // top of one line and the top of the next.
-    let line_height = metrics.ascent - metrics.descent;
+}
 
-    let glyphs: Vec<rusttype::PositionedGlyph> = font
-        .layout(&Chaxel::vec_to_string(&chaxels[0]), scale, offset)
-        .collect();
-    let width = glyphs
-        .iter()
-        .rev()
-        .map(|g| g.position().x as f32 + g.unpositioned().h_metrics().advance_width)
-        .next()
-        .unwrap_or(0.0);
+impl<'a> BitmapRenderer<'a> {
+    pub fn new(font: rusttype::Font, height: f32) -> BitmapRenderer {
+        BitmapRenderer { font, height }
+    }
+    pub fn new_from_path<P: AsRef<Path>>(
+        path: P,
+        height: f32,
+    ) -> Result<BitmapRenderer<'static>, failure::Error> {
+        let bytes = fs::read(path)?;
+        let collection = rusttype::FontCollection::from_bytes(bytes)?;
+        let font = collection.font_at(0)?;
+        Ok(BitmapRenderer::new(font, height))
+    }
 
-    let mut image = image::ImageBuffer::new(
-        width.ceil() as u32,
-        line_height as u32 * chaxels.len() as u32,
-    );
+    pub fn render(
+        &self,
+        chaxels: &[Vec<Chaxel>],
+    ) -> Result<image::ImageBuffer<image::Rgb<u8>, Vec<u8>>, failure::Error> {
+        let glyphs: Vec<rusttype::PositionedGlyph> = self
+            .font
+            .layout(
+                &Chaxel::vec_to_string(&chaxels[0]),
+                self.scale(),
+                self.offset(),
+            ).collect();
+        let width = glyphs
+            .iter()
+            .rev()
+            .map(|g| g.position().x as f32 + g.unpositioned().h_metrics().advance_width)
+            .next()
+            .unwrap_or(0.0);
 
-    for (row_num, row) in chaxels.iter().enumerate() {
-        let row_offset = line_height * row_num as f32;
-        let glyphs: Vec<rusttype::PositionedGlyph> = font
-            .layout(&Chaxel::vec_to_string(&row), scale, offset)
-            .collect();
-        for (index, g) in glyphs.iter().enumerate() {
-            if let Some(bb) = g.pixel_bounding_box() {
-                g.draw(|x, y, v| {
-                    let color: palette::Hsv = row[index].fg;
-                    let color: palette::Srgb = color.darken((1.0 - v) * color.value).into();
-                    let x = x as i32 + bb.min.x;
-                    let y = y as i32 + bb.min.y + row_offset as i32;
-                    // There's still a possibility that the glyph clips the boundaries of the bitmap
-                    if x >= 0 && x < image.width() as i32 && y >= 0 && y < image.height() as i32 {
-                        image.put_pixel(
-                            x as u32,
-                            y as u32,
-                            image::Rgb(color.into_format().into_raw()),
-                        )
-                    }
-                })
+        let mut image = image::ImageBuffer::new(
+            width.ceil() as u32,
+            self.line_height() as u32 * chaxels.len() as u32,
+        );
+
+        self.render_to(chaxels, &mut image)?;
+        Ok(image)
+    }
+
+    pub fn render_to(
+        &self,
+        chaxels: &[Vec<Chaxel>],
+        image: &mut impl image::GenericImage<Pixel = image::Rgb<u8>>,
+    ) -> Result<(), failure::Error> {
+        for (row_num, row) in chaxels.iter().enumerate() {
+            let row_offset = self.line_height() * row_num as f32;
+            let glyphs: Vec<rusttype::PositionedGlyph> = self
+                .font
+                .layout(&Chaxel::vec_to_string(&row), self.scale(), self.offset())
+                .collect();
+            for (index, g) in glyphs.iter().enumerate() {
+                if let Some(bb) = g.pixel_bounding_box() {
+                    g.draw(|x, y, v| {
+                        let color: palette::Hsv = row[index].fg;
+                        let color: palette::Srgb = color.darken((1.0 - v) * color.value).into();
+                        let x = x as i32 + bb.min.x;
+                        let y = y as i32 + bb.min.y + row_offset as i32;
+                        // There's still a possibility that the glyph clips the boundaries of the bitmap
+                        if x >= 0 && x < image.width() as i32 && y >= 0 && y < image.height() as i32
+                        {
+                            image.put_pixel(
+                                x as u32,
+                                y as u32,
+                                image::Rgb(color.into_format().into_raw()),
+                            )
+                        }
+                    })
+                }
             }
+        }
+
+        Ok(())
+    }
+
+    fn scale(&self) -> rusttype::Scale {
+        rusttype::Scale {
+            x: self.height,
+            y: self.height,
         }
     }
 
-    Ok(image)
+    fn metrics(&self) -> rusttype::VMetrics {
+        self.font.v_metrics(self.scale())
+    }
+
+    fn offset(&self) -> rusttype::Point<f32> {
+        rusttype::point(0.0, self.metrics().ascent)
+    }
+
+    fn line_height(&self) -> f32 {
+        let metrics = self.metrics();
+        metrics.ascent - metrics.descent
+    }
 }
 
 fn to_256_term(chaxel: &Chaxel) -> String {
