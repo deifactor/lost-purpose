@@ -32,3 +32,9 @@ with:
 The deck is worth a shot if you're queer/transhuman/generally Weird, but sadly
 out of print (as of August 2018) and unreasonably expensive to buy second-hand.
 Egypt Urnash has kindly given me permission to use the card lists.
+
+## Licensing
+
+All of my own work (everything outside of `frontend/assets`) is licensed under
+the MIT license found in `LICENSE`. The art assets are licensed using the
+per-directory `LICENSE` files.
