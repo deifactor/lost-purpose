@@ -1,10 +1,10 @@
 use ansi_term::Colour;
+use chaxel::Chaxel;
 use failure;
 use image;
 use itertools::Itertools;
 use palette;
 use rusttype;
-use Chaxel;
 
 pub fn to_256_terminal(chaxels: &[Vec<Chaxel>]) -> String {
     chaxels

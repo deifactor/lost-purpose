@@ -33,9 +33,9 @@ fn main() {
         .expect("failed to load image")
         .to_rgb();
     let chaxels = ascender::to_chaxels(&image, opt.ascii_width);
-    print!("{}", ascender::output::to_256_terminal(&chaxels));
+    print!("{}", ascender::to_256_terminal(&chaxels));
     if let Some(output) = opt.output {
-        let bitmap = ascender::output::to_bitmap(&chaxels, opt.font_height).unwrap();
+        let bitmap = ascender::to_bitmap(&chaxels, opt.font_height).unwrap();
         bitmap.save(output).unwrap();
     }
 }
