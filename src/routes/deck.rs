@@ -70,16 +70,16 @@ mod tests {
     use super::*;
     use db_test::setup_connection;
     use rocket;
+    use routes::auth;
     use rocket::http::{ContentType, Cookie, Status};
     use rocket::local::Client;
-    use routes;
     use routes::test_utils::*;
     use serde_json;
 
     fn new_client() -> Client {
         let rocket = rocket::ignite()
             .manage(Mutex::new(setup_connection()))
-            .mount("/", routes![get_decks, new_deck, routes::auth::register]);
+            .mount("/", routes![get_decks, new_deck, auth::register]);
         Client::new(rocket).expect("unable to construct client")
     }
 
