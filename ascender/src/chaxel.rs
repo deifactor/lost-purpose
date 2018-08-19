@@ -51,8 +51,8 @@ pub fn to_chaxels<P: image::Pixel<Subpixel = u8> + 'static>(
 fn pixel_to_chaxel<P: image::Pixel<Subpixel = u8>>(pixel: &P) -> Chaxel {
     let rgb = pixel.to_rgb();
     let fg: palette::Hsv = palette::Srgb::from_raw(&rgb.data).into_format().into();
-    static CHARS: [char; 14] = [
-        '.', ',', ':', ';', 'n', 'o', 'x', 'd', '0', 'K', 'X', 'M', 'W', '@',
+    static CHARS: [char; 11] = [
+        '.', ':', ';', 'n', 'o', 'x', 'd', 'K', 'X', 'M', '@',
     ];
     let character = CHARS[(fg.value * (CHARS.len() - 1) as f32).round() as usize];
     // We apply a gamma to the foreground color, since darker input colors will
@@ -62,7 +62,7 @@ fn pixel_to_chaxel<P: image::Pixel<Subpixel = u8>>(pixel: &P) -> Chaxel {
     let target_value = if fg.value < 0.05 {
         0.0
     } else {
-        fg.value.powf(0.5)
+        fg.value.powf(0.7)
     };
     let fg_gamma = fg.lighten(target_value - fg.value);
     Chaxel {
