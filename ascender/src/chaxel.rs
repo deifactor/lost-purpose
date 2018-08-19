@@ -1,7 +1,7 @@
 /// This module takes an image and converts it into chaxels. A chaxel is a
 /// single element of the output ASCII art and is defined in the `Chaxel` type.
 use image;
-use palette::{self, Pixel};
+use palette::{self, Pixel, Shade};
 
 /// A chaxel contains the character to render at a given position as well as its
 /// foreground and (optionally) its background. The word 'chaxel' is derived
@@ -54,8 +54,19 @@ fn pixel_to_chaxel<P: image::Pixel<Subpixel = u8>>(pixel: &P) -> Chaxel {
     static CHARS: [char; 14] = [
         '.', ',', ':', ';', 'n', 'o', 'x', 'd', '0', 'K', 'X', 'M', 'W', '@',
     ];
-    // We apply a 'gamma' to the character selection, since darker input colors
-    // will result in both darker output colors *and* fewer set pixels.
-    let character = CHARS[(fg.value.powf(0.75) * (CHARS.len() - 1) as f32).round() as usize];
-    Chaxel { character, fg }
+    let character = CHARS[(fg.value * (CHARS.len() - 1) as f32).round() as usize];
+    // We apply a gamma to the foreground color, since darker input colors will
+    // result in both darker output colors *and* fewer set pixels. We also
+    // threshold the value from below to prevent dark gray from showing up. All
+    // of this is very subjective.
+    let target_value = if fg.value < 0.05 {
+        0.0
+    } else {
+        fg.value.powf(0.5)
+    };
+    let fg_gamma = fg.lighten(target_value - fg.value);
+    Chaxel {
+        character,
+        fg: fg_gamma,
+    }
 }
