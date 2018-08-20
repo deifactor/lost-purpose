@@ -8,6 +8,6 @@ extern crate rusttype;
 mod chaxel;
 mod output;
 
-pub use chaxel::to_chaxels;
+pub use chaxel::ChaxelConverter;
 pub use output::to_256_terminal;
 pub use output::BitmapRenderer;
