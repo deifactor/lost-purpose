@@ -8,6 +8,8 @@ use rusttype;
 use std::fs;
 use std::path::Path;
 
+// TODO: Change from Vec<Vec<Chaxel>> to Vec<Chaxel>
+
 pub fn to_256_terminal(chaxels: &[Vec<Chaxel>]) -> String {
     chaxels
         .iter()
