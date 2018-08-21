@@ -1,5 +1,6 @@
 .draw-result {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
 }
 
 .draw-result .card-name {
@@ -8,7 +9,7 @@
 
 .draw-result img.card {
   border: 1px solid white;
-  margin: 10px;
+  margin: 10px auto;
 }
 
 .draw-result img.reversed {
