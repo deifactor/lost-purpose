@@ -16,13 +16,13 @@ for i in frontend/assets/silicon-dawn/*.jpg
   ./target/release/cli \
     --font $font \
     --ascii-width 60 \
-    --font-height 12 \
+    --font-height 10 \
     $i frontend/assets/silicon-dawn-ascii/(string replace jpg png (basename $i)) \
     > /dev/null
   ./target/release/cli \
     --font $font \
     --ascii-width 30 \
-    --font-height 12 \
+    --font-height 10 \
     $i frontend/assets/silicon-dawn-ascii/thumbs/(string replace jpg png (basename $i)) \
     > /dev/null
   echo $i
