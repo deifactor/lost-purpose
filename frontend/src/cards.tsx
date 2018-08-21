@@ -7,12 +7,13 @@ export interface Deck {
 
 export function standard(): Array<OrientedCard> {
   const cards: Array<OrientedCard> = [];
+  const art = Art.SiliconDawn;
   for (const major of MajorArcana.standard()) {
-    cards.push({ kind: CardKind.Major, arcana: major, reversed: false });
+    cards.push({ kind: CardKind.Major, arcana: major, reversed: false, art });
   }
   for (const rank of Rank.standard()) {
     for (const suit of Suit.standard()) {
-      cards.push({ kind: CardKind.Minor, rank, suit, reversed: false });
+      cards.push({ kind: CardKind.Minor, rank, suit, reversed: false, art });
     }
   }
   return cards;
@@ -20,14 +21,15 @@ export function standard(): Array<OrientedCard> {
 
 export function siliconDawn(): Array<OrientedCard> {
   let cards = standard();
+  const art = Art.SiliconDawn;
   cards = cards.concat([
-    { kind: CardKind.Extra, color: Color.Black, reversed: false },
-    { kind: CardKind.Extra, color: Color.White, reversed: false }
+    { kind: CardKind.Extra, color: Color.Black, reversed: false, art },
+    { kind: CardKind.Extra, color: Color.White, reversed: false, art }
   ])
   const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false }));
-  const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false }));
-  const extraArcana = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false }));
+  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false, art }));
+  const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false, art }));
+  const extraArcana = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false, art }));
   cards = cards
     .concat(extraArcana)
     .concat(voids)
@@ -62,7 +64,11 @@ export interface ExtraCard {
   color: Color
 }
 
-export type Card = MajorCard | MinorCard | ExtraCard;
+export enum Art {
+  SiliconDawn
+};
+
+export type Card = (MajorCard | MinorCard | ExtraCard) & { art: Art };
 export type OrientedCard = Card & { reversed: boolean };
 
 export function isStandardMajorArcana(majorArcana: MajorArcana) {
