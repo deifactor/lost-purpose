@@ -7,12 +7,12 @@ import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from "./cards";
 
 const siliconDawnAscii = require.context("../assets/silicon-dawn-ascii", true, /\.png$/);
 
-export function path(art: Art, card: Card) {
-  return context(art)(`./${fileName(card)}.png`);
+export function path(card: Card) {
+  return context(card.art)(`./${fileName(card)}.png`);
 }
 
-export function thumbnail(art: Art, card: Card) {
-  return context(art)(`./thumbs/${fileName(card)}.png`);
+export function thumbnail(card: Card) {
+  return context(card.art)(`./thumbs/${fileName(card)}.png`);
 }
 
 /**
