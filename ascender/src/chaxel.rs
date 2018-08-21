@@ -50,10 +50,11 @@ impl ChaxelConverter {
             return vec![];
         }
 
-        // The factor of 2.0 is because in general monospace fonts are about twice
-        // as tall as they are wide.
+        // Monospace fonts are about twice as tall as they're wide, but we want
+        // to compress the line-height a bit to make the art look more solid. So
+        // 2.0 * 80% = 1.6.
         let ascii_height = ((image.height() as f32) * (ascii_width as f32)
-            / (2.0 * image.width() as f32))
+            / (1.6 * image.width() as f32))
             .round() as u32;
 
         // Each pixel in this image will correspond to one chaxel in the output.

@@ -57,7 +57,7 @@ impl<'a> BitmapRenderer<'a> {
 
         let mut image = image::ImageBuffer::new(
             width.ceil() as u32,
-            self.line_height() as u32 * chaxels.len() as u32,
+            (self.line_height() * chaxels.len() as f32) as u32
         );
 
         self.render_to(chaxels, &mut image)?;
@@ -116,7 +116,8 @@ impl<'a> BitmapRenderer<'a> {
 
     fn line_height(&self) -> f32 {
         let metrics = self.metrics();
-        metrics.ascent - metrics.descent
+        // We round to avoid having some lines having more spacing than others.
+        ((metrics.ascent - metrics.descent) * 0.8).round()
     }
 }
 
