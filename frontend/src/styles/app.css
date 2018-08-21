@@ -25,3 +25,11 @@ input {
 a {
   color: white;
 }
+
+#draw-result-container {
+  display: flex;
+}
+
+#draw-result-container .draw-result {
+  margin: 0 auto;
+}

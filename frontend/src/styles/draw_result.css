@@ -1,0 +1,16 @@
+.draw-result {
+  display: inline-block;
+}
+
+.draw-result .card-name {
+  text-align: center;
+}
+
+.draw-result img.card {
+  border: 1px solid white;
+  margin: 10px;
+}
+
+.draw-result img.reversed {
+  transform: rotate(180deg);
+}

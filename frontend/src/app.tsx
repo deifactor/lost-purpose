@@ -139,7 +139,9 @@ export default class App extends React.Component<Props, State> {
           <Deck onDraw={this.handleDraw}
             onShuffle={this.handleShuffle}
             deck={currentDeck} />}
-        <DrawResult card={this.state.currentCard} />
+        <div id="draw-result-container">
+          <DrawResult card={this.state.currentCard} />
+        </div>
       </div>
     );
   }
