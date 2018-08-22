@@ -18,6 +18,12 @@ interface Props {
 }
 
 interface State {
+  facedown: boolean,
+  /**
+   * The image that we're *actually* currently displaying. This doesn't change
+   * when src changes until after the card's been flipped face-down.
+   */
+  displayedSrc: string | undefined
 }
 
 export default class CardArtViewer extends React.Component<Props, State> {
@@ -29,21 +35,42 @@ export default class CardArtViewer extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    this.state = { facedown: true, displayedSrc: undefined };
+    this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
+  }
+
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (!state.displayedSrc && props.src) {
+      // Initial transformation showing the first card.
+      return { facedown: false, displayedSrc: props.src };
+    } else if (state.displayedSrc != props.src) {
+      return { facedown: true };
+    }
+  }
+
+  private handleTransitionEnd() {
+    if (this.state.facedown) {
+      this.setState({
+        facedown: false,
+        displayedSrc: this.props.src
+      });
+    }
   }
 
   render() {
     const imageClassName = classNames("front", { reversed: this.props.reversed });
-    const imgSrc = this.props.src || this.props.back;
-    const className = classNames('card-art-viewer', {facedown: !this.props.src});
+    const { displayedSrc } = this.state;
+    const className = classNames('card-art-viewer', { facedown: this.state.facedown });
     return (
-      <div className={className}>
-        {this.props.src &&
+      <div className={className}
+        onTransitionEnd={this.handleTransitionEnd}>
+        {displayedSrc &&
           <img
             className={imageClassName}
             width={this.props.width}
             height={this.props.height}
             alt={this.props.alt}
-            src={this.props.src} />}
+            src={displayedSrc} />}
         <img
           className="back"
           width={this.props.width}
