@@ -32,18 +32,24 @@ export default class CardArtViewer extends React.Component<Props, State> {
   }
 
   render() {
-    const imageClassName = classNames({ reversed: this.props.reversed });
+    const imageClassName = classNames("front", { reversed: this.props.reversed });
     const imgSrc = this.props.src || this.props.back;
+    const className = classNames('card-art-viewer', {facedown: !this.props.src});
     return (
-      <div className="card-art-viewer">
-        <div className="container">
+      <div className={className}>
+        {this.props.src &&
           <img
+            className={imageClassName}
             width={this.props.width}
             height={this.props.height}
             alt={this.props.alt}
-            className={imageClassName}
-            src={this.props.src || this.props.back} />
-        </div>
+            src={this.props.src} />}
+        <img
+          className="back"
+          width={this.props.width}
+          height={this.props.height}
+          alt="card back"
+          src={this.props.back} />
       </div>
     );
   }

@@ -1,7 +1,25 @@
-.card-art-viewer img {
-  border: 1px solid white;
+.card-art-viewer {
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
 }
 
-.card-art-viewer img.reversed:not(:hover) {
+.card-art-viewer.facedown {
+  transform: rotateY(180deg);
+}
+
+.card-art-viewer img {
+  border: 1px solid white;
+  backface-visibility: hidden;
+}
+
+.card-art-viewer img.front {
+  position: absolute;
+}
+
+.card-art-viewer img.front.reversed:not(:hover) {
   transform: rotate(180deg);
+}
+
+.card-art-viewer img.back {
+  transform: translateZ(-1px) rotateY(180deg);
 }
