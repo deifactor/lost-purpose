@@ -23,7 +23,7 @@ interface State {
    * The image that we're *actually* currently displaying. This doesn't change
    * when src changes until after the card's been flipped face-down.
    */
-  displayedSrc: string | undefined
+  displayed: { src: string, reversed: boolean } | undefined
 }
 
 export default class CardArtViewer extends React.Component<Props, State> {
@@ -35,42 +35,43 @@ export default class CardArtViewer extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { facedown: true, displayedSrc: undefined };
+    this.state = { facedown: true, displayed: undefined };
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (!state.displayedSrc && props.src) {
+    const { displayed } = state;
+    if (!displayed && props.src) {
       // Initial transformation showing the first card.
-      return { facedown: false, displayedSrc: props.src };
-    } else if (state.displayedSrc != props.src) {
+      return { facedown: false, displayed: { src: props.src, reversed: props.reversed } }
+    } else if (displayed && displayed.src != props.src) {
       return { facedown: true };
     }
   }
 
-  private handleTransitionEnd() {
-    if (this.state.facedown) {
+  private async handleTransitionEnd() {
+    await delay(50);
+    if (this.state.facedown && this.props.src) {
       this.setState({
         facedown: false,
-        displayedSrc: this.props.src
+        displayed: { src: this.props.src, reversed: this.props.reversed || false }
       });
     }
   }
 
   render() {
-    const imageClassName = classNames("front", { reversed: this.props.reversed });
-    const { displayedSrc } = this.state;
+    const { displayed } = this.state;
     const className = classNames('card-art-viewer', { facedown: this.state.facedown });
     return (
       <div className={className}
         onTransitionEnd={this.handleTransitionEnd}>
-        {displayedSrc &&
+        {displayed &&
           <img
-            className={imageClassName}
+            className={classNames("front", { reversed: displayed.reversed })}
             width={this.props.width}
             height={this.props.height}
             alt={this.props.alt}
-            src={displayedSrc} />}
+            src={displayed.src} />}
         <img
           className="back"
           width={this.props.width}
@@ -80,4 +81,8 @@ export default class CardArtViewer extends React.Component<Props, State> {
       </div>
     );
   }
+}
+
+async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
