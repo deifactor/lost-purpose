@@ -40,13 +40,15 @@ export default class CardArtViewer extends React.Component<Props, State> {
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
   }
 
-  static getDerivedStateFromProps(props: Props, state: State) {
+  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
     const { displayed } = state;
     if (!displayed && props.src) {
       // Initial transformation showing the first card.
-      return { facedown: false, displayed: { src: props.src, reversed: props.reversed } }
+      return { facedown: false, displayed: { src: props.src, reversed: props.reversed || false } }
     } else if (displayed && displayed.src != props.src) {
       return { facedown: true };
+    } else {
+      return null;
     }
   }
 
