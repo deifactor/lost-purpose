@@ -39,9 +39,12 @@ export default class CardArtViewer extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
-    const { displayed } = state;
-    if (!displayed && props.src) {
-      // Initial transformation showing the first card.
+    const { displayed, facedown } = state;
+    if (facedown && props.src) {
+      // If we're face down and the user draws again, just flip us up. This
+      // should only happen either on the first draw or if the user draws in the
+      // small delay between facedown and faceup, but it also avoids a bug where we
+      // somehow forget to turn faceup and we get stuck.
       return { facedown: false, displayed: { src: props.src, reversed: props.reversed || false } }
     } else if (displayed && displayed.src != props.src) {
       return { facedown: true };
@@ -51,8 +54,11 @@ export default class CardArtViewer extends React.Component<Props, State> {
   }
 
   private async handleTransitionEnd() {
+    if (!this.state.facedown) {
+      return;
+    }
     await delay(50);
-    if (this.state.facedown && this.props.src) {
+    if (this.props.src) {
       this.setState({
         facedown: false,
         displayed: { src: this.props.src, reversed: this.props.reversed || false }
