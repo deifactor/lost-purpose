@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Cards from "./cards";
 import * as ArtFinder from "./art_finder";
 import { CardFormatter } from "./card_formatter";
-import classNames = require('classnames');
+import CardArtViewer from "./card_art_viewer";
 
 import './styles/draw_result.css';
 
@@ -22,10 +22,14 @@ export default class DrawResult extends React.Component<Props, {}> {
     const formatter = new CardFormatter();
     const cardName = formatter.format(this.props.card);
     const imagePath = ArtFinder.path(this.props.card);
-    const imageClassName = classNames('card', { reversed: this.props.card.reversed });
     return (
       <div className="draw-result">
-        <img className={imageClassName} src={imagePath} alt={cardName} />
+        <CardArtViewer
+          src={imagePath}
+          alt={cardName}
+          reversed={this.props.card.reversed}
+          width={311}
+          height={528} />
         <div className="card-name">{cardName}</div>
       </div>
     );

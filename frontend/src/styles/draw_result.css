@@ -7,11 +7,6 @@
   text-align: center;
 }
 
-.draw-result img.card {
-  border: 1px solid white;
+.draw-result .card-art-viewer {
   margin: 10px auto;
-}
-
-.draw-result img.reversed {
-  transform: rotate(180deg);
 }

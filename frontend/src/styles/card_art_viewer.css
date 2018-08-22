@@ -1,0 +1,7 @@
+.card-art-viewer img {
+  border: 1px solid white;
+}
+
+.card-art-viewer img.reversed:not(:hover) {
+  transform: rotate(180deg);
+}
