@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Cards from "./cards";
 import classNames = require('classnames');
+import delay from "delay";
 
 import './styles/card_art_viewer.css';
 
@@ -81,8 +82,4 @@ export default class CardArtViewer extends React.Component<Props, State> {
       </div>
     );
   }
-}
-
-async function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }

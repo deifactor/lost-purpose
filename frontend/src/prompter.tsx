@@ -1,6 +1,7 @@
 import * as React from "react";
 import CRC32 = require('crc-32');
 import classNames = require('classnames');
+import delay from "delay";
 
 import './styles/prompter.css';
 
@@ -95,10 +96,6 @@ export class Prompter extends React.Component<Props, State> {
       </div>
     );
   }
-}
-
-async function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**

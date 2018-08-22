@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/classnames": "^2.2.6",
+    "@types/delay": "^2.0.1",
     "@types/lodash": "^4.14.116",
     "@types/react": "^16.4.7",
     "@types/react-dom": "^16.0.6",
@@ -18,6 +19,7 @@
     "classnames": "^2.2.6",
     "crc-32": "^1.2.0",
     "css-loader": "^1.0.0",
+    "delay": "^3.1.0",
     "immutability-helper": "^2.7.1",
     "lodash": "^4.17.10",
     "react": "^16.4.2",
