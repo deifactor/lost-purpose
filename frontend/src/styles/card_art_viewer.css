@@ -24,4 +24,10 @@
 
 .card-art-viewer img.back {
   transform: translateZ(-1px) rotateY(180deg);
+  transition: filter 0.5s;
+  filter: brightness(0%);
+}
+
+.card-art-viewer img.back.has-back {
+  filter: brightness(100%);
 }

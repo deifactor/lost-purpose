@@ -30,8 +30,6 @@ interface State {
 export default class CardArtViewer extends React.Component<Props, State> {
   static defaultProps = {
     reversed: false,
-    // A 1x1 default gif.
-    back: "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=",
   }
 
   constructor(props: Props) {
@@ -65,6 +63,9 @@ export default class CardArtViewer extends React.Component<Props, State> {
   render() {
     const { displayed } = this.state;
     const className = classNames('card-art-viewer', { facedown: this.state.facedown });
+    const backClass = classNames('back', { 'has-back': this.props.back });
+    const backSrc = this.props.back ||
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
     return (
       <div className={className}
         onTransitionEnd={this.handleTransitionEnd}>
@@ -76,11 +77,11 @@ export default class CardArtViewer extends React.Component<Props, State> {
             alt={this.props.alt}
             src={displayed.src} />}
         <img
-          className="back"
+          className={backClass}
           width={this.props.width}
           height={this.props.height}
           alt="card back"
-          src={this.props.back} />
+          src={backSrc} />
       </div>
     );
   }
