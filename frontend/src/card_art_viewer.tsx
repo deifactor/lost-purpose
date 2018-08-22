@@ -7,9 +7,9 @@ import './styles/card_art_viewer.css';
 
 interface Props {
   /** The currently-displayed image. If null, the card back is displayed. */
-  src: string | undefined,
+  src?: string,
   /** Alt text for the image. */
-  alt: string | undefined,
+  alt?: string,
   /** If true, the card should be displayed reversed (upside-down). */
   reversed?: boolean,
   width: number,

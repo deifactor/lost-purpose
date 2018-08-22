@@ -17,15 +17,20 @@ export default class DrawResult extends React.Component<Props, {}> {
 
   render() {
     const formatter = new CardFormatter();
-    const cardName = this.props.card ? formatter.format(this.props.card) : undefined;
-    const imagePath = this.props.card ? ArtFinder.path(this.props.card) : undefined;
+    const { card } = this.props;
+    const cardName = card ? formatter.format(card) : undefined;
+    const props = card ?
+      {
+        src: ArtFinder.path(card),
+        alt: cardName,
+        back: ArtFinder.back(card),
+        reversed: card.reversed
+      } : {};
     // XXX: Don't hardcode the width and the height.
     return (
       <div className="draw-result">
         <CardArtViewer
-          src={imagePath}
-          alt={cardName}
-          reversed={this.props.card ? this.props.card.reversed : undefined}
+          {...props}
           width={311}
           height={528} />
         <div className="card-name">{cardName}</div>

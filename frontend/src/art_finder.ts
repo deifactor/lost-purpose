@@ -15,6 +15,12 @@ export function thumbnail(card: Card) {
   return context(card.art)(`./thumbs/${fileName(card)}.png`);
 }
 
+export function back(card: Card) {
+  switch (card.art) {
+    case Art.SiliconDawn: return siliconDawnAscii("./black.png");
+  }
+}
+
 /**
  * Finds the filename of the card in the repository/as the input to file-loader.
  */
