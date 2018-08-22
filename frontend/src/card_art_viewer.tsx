@@ -57,7 +57,8 @@ export default class CardArtViewer extends React.Component<Props, State> {
     if (!this.state.facedown) {
       return;
     }
-    await delay(50);
+    // Aesthetic delay. Not necessary, but it looks nice.
+    await delay(100);
     if (this.props.src) {
       this.setState({
         facedown: false,
