@@ -10,7 +10,7 @@ interface Props {
   /** Alt text for the image. */
   alt: string | undefined,
   /** If true, the card should be displayed reversed (upside-down). */
-  reversed: boolean,
+  reversed?: boolean,
   width: number,
   height: number,
   /** What to use for the card back. If null, uses solid black. */
@@ -25,7 +25,6 @@ export default class CardArtViewer extends React.Component<Props, State> {
     reversed: false,
     // A 1x1 default gif.
     back: "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=",
-    duration: 250
   }
 
   constructor(props: Props) {
