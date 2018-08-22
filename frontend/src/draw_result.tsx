@@ -22,6 +22,7 @@ export default class DrawResult extends React.Component<Props, {}> {
     const formatter = new CardFormatter();
     const cardName = formatter.format(this.props.card);
     const imagePath = ArtFinder.path(this.props.card);
+    // XXX: Don't hardcode the width and the height.
     return (
       <div className="draw-result">
         <CardArtViewer
