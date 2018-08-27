@@ -8,7 +8,8 @@ body {
   margin: 0px auto;
 }
 
-button, input {
+button,
+input {
   background-color: inherit !important;
   color: inherit !important;
   font: inherit !important;

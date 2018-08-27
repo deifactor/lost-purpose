@@ -29,7 +29,7 @@
   text-align: center;
 }
 
-.ReactModalPortal > div {
+.ReactModalPortal>div {
   opacity: 0;
 }
 
