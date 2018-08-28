@@ -3,7 +3,7 @@ import * as Cards from "./cards";
 import classNames = require('classnames');
 import delay from "delay";
 
-import './styles/card_art_viewer.css';
+import './styles/card_art_viewer.scss';
 
 interface Props {
   /** The currently-displayed image. If null, the card back is displayed. */

@@ -1,0 +1,12 @@
+.draw-result {
+  display: flex;
+  flex-direction: column;
+
+  .card-name {
+    text-align: center;
+  }
+
+  .card-art-viewer {
+    margin: 10px auto;
+  }
+}

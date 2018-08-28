@@ -4,7 +4,7 @@ import * as ArtFinder from "./art_finder";
 import { CardFormatter } from "./card_formatter";
 import CardArtViewer from "./card_art_viewer";
 
-import './styles/draw_result.css';
+import './styles/draw_result.scss';
 
 interface Props {
   card: Cards.OrientedCard | null

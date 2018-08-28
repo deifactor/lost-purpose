@@ -1,0 +1,32 @@
+.card-art-viewer {
+  transform-style: preserve-3d;
+  transition: transform 0.35s;
+  transition-timing-function: ease-out;
+
+  &.facedown {
+    transition-timing-function: ease-in;
+    transform: rotateY(180deg);
+  }
+
+  img {
+    border: 1px solid white;
+    backface-visibility: hidden;
+
+    &.front {
+      position: absolute;
+      &.reversed:not(:hover) {
+        transform: rotate(180deg);
+      }
+    }
+
+    &.back {
+      transform: translateZ(-1px) rotateY(180deg);
+      transition: filter 0.5s;
+      filter: brightness(0%);
+
+      &.has-back {
+        filter: brightness(100%);
+      }
+    }
+  }
+}

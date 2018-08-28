@@ -1,0 +1,58 @@
+.prompter {
+
+  >.body {
+    font-size: 150%;
+    position: relative;
+    /* It's too much work to compute the height with two elements that 'swap'. */
+    height: 1.5em;
+  }
+
+  form,
+  .fingerprint {
+    position: absolute;
+  }
+
+  form {
+    display: flex;
+    opacity: 1;
+
+    input {
+      flex: 1 1;
+    }
+  }
+
+  .fingerprint {
+    font-size: 150%;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+
+    .finished {
+      animation: pulse 1s infinite ease-in-out;
+    }
+  }
+
+  .invisible {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .visible {
+    opacity: 1;
+    pointer-events: initial;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  @keyframes pulse {
+    20% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.1;
+    }
+    80% {
+      opacity: 1;
+    }
+  }
+}

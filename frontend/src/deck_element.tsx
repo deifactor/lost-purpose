@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Cards from "./cards";
 import * as ReactModal from 'react-modal';
 import { Prompter } from "./prompter";
-import './styles/modal.css';
+import './styles/modal.scss';
 
 interface Props {
   deck: Cards.Deck,

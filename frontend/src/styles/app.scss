@@ -29,8 +29,8 @@ a {
 
 #draw-result-container {
   display: flex;
-}
 
-#draw-result-container .draw-result {
-  margin: 0 auto;
+  .draw-result {
+    margin: 0 auto;
+  }
 }

@@ -8,6 +8,14 @@
   padding: 2em;
   margin: 3em auto;
   width: 960px;
+
+  .modal-title {
+    font-size: 200%;
+    font-weight: bold;
+
+    padding-bottom: 0.5em;
+    text-align: center;
+  }
 }
 
 .overlay {
@@ -21,22 +29,16 @@
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.modal .modal-title {
-  font-size: 200%;
-  font-weight: bold;
+.ReactModalPortal {
+  &>div {
+    opacity: 0;
+  }
 
-  padding-bottom: 0.5em;
-  text-align: center;
-}
+  .ReactModal__Overlay--after-open {
+    opacity: 1;
+  }
 
-.ReactModalPortal>div {
-  opacity: 0;
-}
-
-.ReactModalPortal .ReactModal__Overlay--after-open {
-  opacity: 1;
-}
-
-.ReactModalPortal .ReactModal__Overlay--before-close {
-  opacity: 0;
+  .ReactModal__Overlay--before-close {
+    opacity: 0;
+  }
 }
