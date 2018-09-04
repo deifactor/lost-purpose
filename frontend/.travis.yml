@@ -1,0 +1,7 @@
+cache:
+  directories:
+    - "node_modules"
+    - "typings"
+language: "node_js"
+node_js:
+  - "node"

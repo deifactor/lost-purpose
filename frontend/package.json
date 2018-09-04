@@ -4,7 +4,7 @@
   "description": "The frontend for the Tarot of the Lost Purpose.",
   "repository": "https://github.com/deifacted/lost-purpose",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Astra",
   "license": "MIT",
