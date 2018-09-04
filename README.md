@@ -1,5 +1,7 @@
 # Tarot of the Lost Purpose
 
+[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose)
+
 ***IN PROGRESS; NOT FINISHED YET***
 
 Tarot of the Lost Purpose (or just Lost Purpose) is a
