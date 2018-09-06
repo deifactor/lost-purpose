@@ -47,7 +47,8 @@ export default class App extends React.Component<Props, State> {
     window.removeEventListener("beforeunload", this.saveState);
   }
 
-  handleNewDeckRequest(newDeckName: string) {
+  handleNewDeckRequest(newDeckName: string, art: Cards.Art) {
+    // XXX: art is currently unused!
     const newDeck = {
       cards: Cards.standard(),
       name: newDeckName,

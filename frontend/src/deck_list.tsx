@@ -6,7 +6,7 @@ import { NewDeckDialog } from './new_deck_dialog';
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,
   // Called whenever the user wants to create a new deck.
-  onNewDeckRequest: (newDeckName: string) => void,
+  onNewDeckRequest: (newDeckName: string, art: Cards.Art) => void,
   // Called whenever the user wants to delete the deck with the given index.
   onDeleteDeckRequest: (index: number) => void,
   // Called when the user selects a given deck.
@@ -36,9 +36,9 @@ export default class DeckList extends React.Component<Props, State> {
     this.props.onChangeRequest(index);
   }
 
-  handleNewDeck(name: string) {
+  handleNewDeck(name: string, art: Cards.Art) {
     this.setState({ showNewDeckDialog: false });
-    this.props.onNewDeckRequest(name);
+    this.props.onNewDeckRequest(name, art);
   }
 
   render() {
