@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as Cards from "./cards";
+import * as ReactModal from 'react-modal';
+import { NewDeckDialog } from './new_deck_dialog';
 
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,
@@ -12,30 +14,20 @@ interface Props {
 }
 
 interface State {
-  newDeckName: string
+  showNewDeckDialog: boolean
 }
 
 export default class DeckList extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { newDeckName: '' };
+    this.state = { showNewDeckDialog: false };
 
     this.handleNewDeckButton = this.handleNewDeckButton.bind(this);
-    this.handleNewDeckNameChange = this.handleNewDeckNameChange.bind(this);
+    this.handleDeckClick = this.handleDeckClick.bind(this);
   }
 
-  handleNewDeckNameChange(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ newDeckName: e.currentTarget.value });
-  }
-
-  handleNewDeckButton(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!this.state.newDeckName) {
-      console.error('Cannot create a deck with an empty name');
-      return;
-    }
-    this.props.onNewDeckRequest(this.state.newDeckName);
-    this.setState({ newDeckName: '' });
+  handleNewDeckButton(e: React.FormEvent) {
+    this.setState({showNewDeckDialog: true});
   }
 
   handleDeckClick(e: React.MouseEvent, index: number) {
@@ -51,15 +43,15 @@ export default class DeckList extends React.Component<Props, State> {
       </li>);
     return (
       <div>
+        <ReactModal
+          isOpen={this.state.showNewDeckDialog}
+          className="modal"
+          overlayClassName="overlay"
+          closeTimeoutMS={200}>
+          <NewDeckDialog />
+        </ReactModal>
         <ul>{deckItems}</ul>
-        <form onSubmit={this.handleNewDeckButton}>
-          <input type="text"
-            placeholder="Deck name"
-            onChange={this.handleNewDeckNameChange}
-            value={this.state.newDeckName}
-          />
-          <button type="submit">Add new deck</button>
-        </form>
+        <button onClick={this.handleNewDeckButton}>Add new deck</button>
       </div>
     );
   }
