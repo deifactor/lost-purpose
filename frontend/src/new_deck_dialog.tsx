@@ -2,6 +2,7 @@ import * as React from "react";
 import update from "immutability-helper";
 
 interface Props {
+  onNewDeck: (name: string) => void
 }
 
 interface State {
@@ -31,11 +32,18 @@ export class NewDeckDialog extends React.Component<Props, State> {
         this.setState((state) =>
           update(state, { form: { name: { $set: name } } }));
         break;
+      default:
+        throw new Error(`unknown input name ${target.name}`);
     }
   }
 
   handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!this.state.form.name) {
+      console.error("Cannot create a deck with an empty name");
+      return;
+    }
+    this.props.onNewDeck(this.state.form.name);
   }
 
   render() {
@@ -50,6 +58,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
             type="text"
             onChange={this.handleChange}
             value={this.state.form.name} />
+          <button type="submit">Add new deck</button>
         </form>
       </div>
     );

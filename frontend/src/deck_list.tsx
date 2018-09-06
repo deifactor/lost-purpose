@@ -23,16 +23,22 @@ export default class DeckList extends React.Component<Props, State> {
     this.state = { showNewDeckDialog: false };
 
     this.handleNewDeckButton = this.handleNewDeckButton.bind(this);
+    this.handleNewDeck = this.handleNewDeck.bind(this);
     this.handleDeckClick = this.handleDeckClick.bind(this);
   }
 
   handleNewDeckButton(e: React.FormEvent) {
-    this.setState({showNewDeckDialog: true});
+    this.setState({ showNewDeckDialog: true });
   }
 
   handleDeckClick(e: React.MouseEvent, index: number) {
     e.preventDefault();
     this.props.onChangeRequest(index);
+  }
+
+  handleNewDeck(name: string) {
+    this.setState({ showNewDeckDialog: false });
+    this.props.onNewDeckRequest(name);
   }
 
   render() {
@@ -48,7 +54,7 @@ export default class DeckList extends React.Component<Props, State> {
           className="modal"
           overlayClassName="overlay"
           closeTimeoutMS={200}>
-          <NewDeckDialog />
+          <NewDeckDialog onNewDeck={this.handleNewDeck} />
         </ReactModal>
         <ul>{deckItems}</ul>
         <button onClick={this.handleNewDeckButton}>Add new deck</button>
