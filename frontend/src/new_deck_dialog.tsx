@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Art } from "./cards";
+import * as Cards from "./cards";
 import update from "immutability-helper";
+import * as uuid from "uuid";
 
 interface Props {
-  onNewDeck: (name: string, art: Art) => void
+  onNewDeck: (deck: Cards.Deck) => void
 }
 
 interface State {
@@ -14,7 +15,7 @@ interface State {
 }
 
 const DECK_TO_ART = {
-  "silicon-dawn": Art.SiliconDawn
+  "silicon-dawn": Cards.Art.SiliconDawn
 };
 
 export class NewDeckDialog extends React.Component<Props, State> {
@@ -53,7 +54,12 @@ export class NewDeckDialog extends React.Component<Props, State> {
       console.error("Cannot create a deck with an empty name");
       return;
     }
-    this.props.onNewDeck(this.state.form.name, DECK_TO_ART[this.state.form.deck]);
+    const deck = {
+      cards: Cards.standard(),
+      name: this.state.form.name,
+      id: uuid.v4()
+    };
+    this.props.onNewDeck(deck);
   }
 
   render() {
