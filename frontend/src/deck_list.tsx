@@ -4,11 +4,11 @@ import * as Cards from "./cards";
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,
   // Called whenever the user wants to create a new deck.
-  onNewDeckRequest: (newDeckName: string) => void,
+  onNewDeck: (newDeckName: string) => void,
   // Called whenever the user wants to delete the deck with the given index.
-  onDeleteDeckRequest: (index: number) => void,
+  onDeleteDeck: (index: number) => void,
   // Called when the user selects a given deck.
-  onChangeRequest: (index: number) => void
+  onChange: (index: number) => void
 }
 
 interface State {
@@ -34,20 +34,20 @@ export default class DeckList extends React.Component<Props, State> {
       console.error('Cannot create a deck with an empty name');
       return;
     }
-    this.props.onNewDeckRequest(this.state.newDeckName);
+    this.props.onNewDeck(this.state.newDeckName);
     this.setState({ newDeckName: '' });
   }
 
   handleDeckClick(e: React.MouseEvent, index: number) {
     e.preventDefault();
-    this.props.onChangeRequest(index);
+    this.props.onChange(index);
   }
 
   render() {
     const deckItems = this.props.decks.map((deck, index) =>
       <li key={deck.id}>
         <a href="#" onClick={(e) => this.handleDeckClick(e, index)}>{deck.name}</a>
-        <button onClick={() => this.props.onDeleteDeckRequest(index)}>Delete</button>
+        <button onClick={() => this.props.onDeleteDeck(index)}>Delete</button>
       </li>);
     return (
       <div>
