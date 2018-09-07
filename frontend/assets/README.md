@@ -30,3 +30,9 @@ end
 ```
 
 from the repository root.
+
+This also works for `rider-waite-smith`; just modify the `set dir` line
+accordingly. You then need to crop the borders using
+
+    mogrify -shave 61x61 crop -0-45 *.jpg
+
