@@ -30,9 +30,9 @@ export default class App extends React.Component<Props, State> {
     const decks = savedDecks ? JSON.parse(savedDecks) : [];
     this.state = { decks, currentDeckIndex: decks.length != 0 ? 0 : null, currentCard: null };
 
-    this.handleNewDeckRequest = this.handleNewDeckRequest.bind(this);
-    this.handleDeleteDeckRequest = this.handleDeleteDeckRequest.bind(this);
-    this.handleChangeRequest = this.handleChangeRequest.bind(this);
+    this.handleNewDeck = this.handleNewDeck.bind(this);
+    this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
     this.saveState = this.saveState.bind(this);
@@ -46,8 +46,7 @@ export default class App extends React.Component<Props, State> {
     window.removeEventListener("beforeunload", this.saveState);
   }
 
-  handleNewDeckRequest(deck: Cards.Deck) {
-    // XXX: art is currently unused!
+  handleNewDeck(deck: Cards.Deck) {
     console.debug(`Creating new deck named ${deck.name}`);
     this.setState((state) => ({
       decks: [...state.decks, deck],
@@ -55,14 +54,14 @@ export default class App extends React.Component<Props, State> {
     }));
   }
 
-  handleDeleteDeckRequest(index: number) {
+  handleDeleteDeck(index: number) {
     console.debug(`Deleting deck ${index}`);
     this.setState((state) =>
       update(state, { decks: { $splice: [[index, 1]] } })
     );
   }
 
-  handleChangeRequest(index: number) {
+  handleChange(index: number) {
     console.debug(`Selecting deck ${index}`);
     this.setState((state) => ({
       currentDeckIndex: index
@@ -126,9 +125,9 @@ export default class App extends React.Component<Props, State> {
     return (
       <div>
         <DeckList decks={this.state.decks}
-          onNewDeckRequest={this.handleNewDeckRequest}
-          onDeleteDeckRequest={this.handleDeleteDeckRequest}
-          onChangeRequest={this.handleChangeRequest}
+          onNewDeck={this.handleNewDeck}
+          onDeleteDeck={this.handleDeleteDeck}
+          onChange={this.handleChange}
         />
         {currentDeck &&
           <Deck onDraw={this.handleDraw}

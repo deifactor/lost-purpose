@@ -6,11 +6,11 @@ import { NewDeckDialog } from './new_deck_dialog';
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,
   // Called whenever the user created a new deck.
-  onNewDeckRequest: (deck: Cards.Deck) => void,
+  onNewDeck: (deck: Cards.Deck) => void,
   // Called whenever the user wants to delete the deck with the given index.
-  onDeleteDeckRequest: (index: number) => void,
+  onDeleteDeck: (index: number) => void,
   // Called when the user selects a given deck.
-  onChangeRequest: (index: number) => void
+  onChange: (index: number) => void
 }
 
 interface State {
@@ -33,19 +33,19 @@ export default class DeckList extends React.Component<Props, State> {
 
   handleDeckClick(e: React.MouseEvent, index: number) {
     e.preventDefault();
-    this.props.onChangeRequest(index);
+    this.props.onChange(index);
   }
 
   handleNewDeck(deck: Cards.Deck) {
     this.setState({ showNewDeckDialog: false });
-    this.props.onNewDeckRequest(deck);
+    this.props.onNewDeck(deck);
   }
 
   render() {
     const deckItems = this.props.decks.map((deck, index) =>
       <li key={deck.id}>
         <a href="#" onClick={(e) => this.handleDeckClick(e, index)}>{deck.name}</a>
-        <button onClick={() => this.props.onDeleteDeckRequest(index)}>Delete</button>
+        <button onClick={() => this.props.onDeleteDeck(index)}>Delete</button>
       </li>);
     return (
       <div>
