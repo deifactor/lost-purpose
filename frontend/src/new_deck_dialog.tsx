@@ -10,7 +10,10 @@ interface Props {
 interface State {
   form: {
     name: string,
-    deck: "silicon-dawn"
+    deck: "silicon-dawn",
+    voidSuit: boolean,
+    ninetyNines: boolean,
+    extraArcana: boolean
   }
 }
 
@@ -24,7 +27,10 @@ export class NewDeckDialog extends React.Component<Props, State> {
     this.state = {
       form: {
         name: '',
-        deck: "silicon-dawn"
+        deck: "silicon-dawn",
+        voidSuit: true,
+        ninetyNines: true,
+        extraArcana: true
       }
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,6 +49,12 @@ export class NewDeckDialog extends React.Component<Props, State> {
         const deck = (target as HTMLSelectElement).value;
         this.setState((state) =>
           update(state, { form: { name: { $set: deck } } }));
+      case "voidSuit":
+      case "ninetyNines":
+      case "extraArcana":
+        const checked = (target as HTMLInputElement).checked;
+        this.setState((state) =>
+          update(state, { form: { [target.name]: { $set: checked } } }));
       default:
         throw new Error(`unknown input name ${target.name}`);
     }
@@ -55,7 +67,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
       return;
     }
     const deck = {
-      cards: Cards.standard(),
+      cards: Cards.siliconDawn(this.state.form),
       name: this.state.form.name,
       id: uuid.v4()
     };
@@ -86,6 +98,14 @@ export class NewDeckDialog extends React.Component<Props, State> {
               value={this.state.form.deck}>
               <option value="silicon-dawn">Silicon Dawn</option>
             </select>
+          </div>
+          <div>
+            <label htmlFor="voidSuit">VOID suit</label>
+            <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit}/>
+            <label htmlFor="ninetyNines">99 of [suit]</label>
+            <input id="ninetyNines" name="ninetyNines" type="checkbox" defaultChecked={this.state.form.ninetyNines}/>
+            <label htmlFor="extraArcana">Extra arcana</label>
+            <input id="extraArcana" name="extraArcana" type="checkbox" defaultChecked={this.state.form.extraArcana}/>
           </div>
         </form>
       </div>
