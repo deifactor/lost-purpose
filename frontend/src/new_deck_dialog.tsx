@@ -3,6 +3,8 @@ import * as Cards from "./cards";
 import update from "immutability-helper";
 import * as uuid from "uuid";
 
+import './styles/dialog_form.scss';
+
 interface Props {
   onNewDeck: (deck: Cards.Deck) => void
 }
@@ -78,34 +80,34 @@ export class NewDeckDialog extends React.Component<Props, State> {
     return (
       <div className="new-deck">
         <div className="modal-title">New deck</div>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              onChange={this.handleChange}
-              value={this.state.form.name} />
+        <form className="dialog-form" onSubmit={this.handleSubmit}>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            onChange={this.handleChange}
+            value={this.state.form.name} />
+          <label htmlFor="deck">Deck</label>
+          <select
+            id="deck"
+            name="deck"
+            onChange={this.handleChange}
+            value={this.state.form.deck}>
+            <option value="silicon-dawn">Silicon Dawn</option>
+          </select>
+
+          <label htmlFor="voidSuit">VOID suit</label>
+          <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit}/>
+
+          <label htmlFor="ninetyNines">99 of [suit]</label>
+          <input id="ninetyNines" name="ninetyNines" type="checkbox" defaultChecked={this.state.form.ninetyNines}/>
+
+          <label htmlFor="extraArcana">Extra arcana</label>
+          <input id="extraArcana" name="extraArcana" type="checkbox" defaultChecked={this.state.form.extraArcana}/>
+
+          <div className="button-row">
             <button type="submit">Add new deck</button>
-          </div>
-          <div>
-            <label htmlFor="deck">Deck</label>
-            <select
-              id="deck"
-              name="deck"
-              onChange={this.handleChange}
-              value={this.state.form.deck}>
-              <option value="silicon-dawn">Silicon Dawn</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="voidSuit">VOID suit</label>
-            <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit}/>
-            <label htmlFor="ninetyNines">99 of [suit]</label>
-            <input id="ninetyNines" name="ninetyNines" type="checkbox" defaultChecked={this.state.form.ninetyNines}/>
-            <label htmlFor="extraArcana">Extra arcana</label>
-            <input id="extraArcana" name="extraArcana" type="checkbox" defaultChecked={this.state.form.extraArcana}/>
           </div>
         </form>
       </div>
