@@ -57,7 +57,7 @@ function suitComponent(suit: Suit) {
     case Suit.Pentacles: return "pent";
     case Suit.Swords: return "swords";
     case Suit.Wands: return "wands";
-    case Suit.Void: return "VOID';"
+    case Suit.Void: return "VOID"
   }
 }
 
