@@ -41,7 +41,6 @@ export default class Deck extends React.Component<Props, State> {
           isOpen={this.state.showPrompter}
           className="modal"
           overlayClassName="overlay"
-          style={{ content: { width: "500px" } }}
           closeTimeoutMS={200}>
           <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />
         </ReactModal>

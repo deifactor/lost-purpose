@@ -23,6 +23,13 @@ input {
   border: 1px solid white !important;
 }
 
+select {
+  font: inherit;
+  background: inherit;
+  color: inherit;
+  border: 1px solid white;
+}
+
 a {
   color: white;
 }

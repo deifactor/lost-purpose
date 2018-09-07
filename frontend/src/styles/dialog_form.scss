@@ -1,0 +1,12 @@
+form.dialog-form {
+  display: grid;
+  grid-template-columns: 8em auto;
+  grid-row-gap: .7em;
+
+  .button-row {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: center;
+    grid-column: 1 / -1;
+  }
+}

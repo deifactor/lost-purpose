@@ -7,7 +7,6 @@ import Deck from "./deck_element";
 import DeckList from "./deck_list";
 import Login from "./login";
 import { LFSR } from "./lfsr";
-import * as uuid from "uuid";
 import update from "immutability-helper";
 
 import './styles/app.scss';
@@ -47,15 +46,10 @@ export default class App extends React.Component<Props, State> {
     window.removeEventListener("beforeunload", this.saveState);
   }
 
-  handleNewDeck(newDeckName: string) {
-    const newDeck = {
-      cards: Cards.standard(),
-      name: newDeckName,
-      id: uuid.v4()
-    };
-    console.debug(`Creating new deck named ${newDeckName}`);
+  handleNewDeck(deck: Cards.Deck) {
+    console.debug(`Creating new deck named ${deck.name}`);
     this.setState((state) => ({
-      decks: [...state.decks, newDeck],
+      decks: [...state.decks, deck],
       currentDeckIndex: state.decks.length
     }));
   }
