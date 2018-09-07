@@ -19,22 +19,34 @@ export function standard(): Array<OrientedCard> {
   return cards;
 }
 
-export function siliconDawn(): Array<OrientedCard> {
+/**
+ * Creates a new Tarot of the Silicon Dawn deck.
+ * @param voidSuit Whether to include the VOID suit.
+ * @param ninetyNines  Whether to include the 99 rank of each suit.
+ * @param extraArcana A list of the nonstandard major arcana to use. Defaults to all of them.
+ */
+export function siliconDawn(
+  options = { voidSuit: true, ninetyNines: true, extraArcana: true })
+  : Array<OrientedCard> {
   let cards = standard();
   const art = Art.SiliconDawn;
-  cards = cards.concat([
-    { kind: CardKind.Extra, color: Color.Black, reversed: false, art },
-    { kind: CardKind.Extra, color: Color.White, reversed: false, art }
-  ])
-  const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-  const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false, art }));
-  const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false, art }));
-  const extraArcana = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false, art }));
-  cards = cards
-    .concat(extraArcana)
-    .concat(voids)
-    .concat(ninetyNines);
-
+  if (options.voidSuit) {
+    const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
+    const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false, art }));
+    cards = cards.concat(voids);
+  }
+  if (options.ninetyNines) {
+    const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false, art }));
+    cards = cards.concat(ninetyNines)
+  }
+  if (options.extraArcana) {
+    const extraCards = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false, art }));
+    cards = cards.concat(extraCards);
+    cards = cards.concat([
+      { kind: CardKind.Extra, color: Color.Black, reversed: false, art },
+      { kind: CardKind.Extra, color: Color.White, reversed: false, art }
+    ]);
+  }
   return cards;
 }
 
