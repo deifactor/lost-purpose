@@ -15,13 +15,13 @@ cargo build -p ascender --release --bin cli
 for i in frontend/assets/silicon-dawn/*.jpg
   ./target/release/cli \
     --font $font \
-    --ascii-width 60 \
+    --ascii-width 70 \
     --font-height 10 \
     $i frontend/assets/silicon-dawn-ascii/(string replace jpg png (basename $i)) \
     > /dev/null
   ./target/release/cli \
     --font $font \
-    --ascii-width 30 \
+    --ascii-width 35 \
     --font-height 10 \
     $i frontend/assets/silicon-dawn-ascii/thumbs/(string replace jpg png (basename $i)) \
     > /dev/null
