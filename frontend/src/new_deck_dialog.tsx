@@ -110,14 +110,18 @@ export class NewDeckDialog extends React.Component<Props, State> {
             <option value="rider-waite-smith">Rider-Waite-Smith</option>
           </select>
 
-          <label htmlFor="voidSuit">VOID suit</label>
-          <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit}/>
+          {this.state.form.deck == "silicon-dawn" &&
+            <React.Fragment>
+              <label htmlFor="voidSuit">VOID suit</label>
+              <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit} />
 
-          <label htmlFor="ninetyNines">99 of [suit]</label>
-          <input id="ninetyNines" name="ninetyNines" type="checkbox" defaultChecked={this.state.form.ninetyNines}/>
+              <label htmlFor="ninetyNines">99 of [suit]</label>
+              <input id="ninetyNines" name="ninetyNines" type="checkbox" defaultChecked={this.state.form.ninetyNines} />
 
-          <label htmlFor="extraArcana">Extra arcana</label>
-          <input id="extraArcana" name="extraArcana" type="checkbox" defaultChecked={this.state.form.extraArcana}/>
+              <label htmlFor="extraArcana">Extra arcana</label>
+              <input id="extraArcana" name="extraArcana" type="checkbox" defaultChecked={this.state.form.extraArcana} />
+            </React.Fragment>
+          }
 
           <div className="button-row">
             <button type="submit">Add new deck</button>
