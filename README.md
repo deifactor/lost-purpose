@@ -39,4 +39,5 @@ Egypt Urnash has kindly given me permission to use the card lists.
 
 All of my own work (everything outside of `frontend/assets`) is licensed under
 the MIT license found in `LICENSE`. The art assets are licensed using the
-per-directory `LICENSE` files.
+per-directory `LICENSE` files. Note that some art assets are stored outside of
+the repository.

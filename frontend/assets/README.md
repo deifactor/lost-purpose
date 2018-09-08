@@ -6,8 +6,12 @@ The card art assets are stored using the following pattern:
 - `NN.jpg` for major arcana (e.g., `01.jpg` for the Magician, `13.png` for Death)
 - `rank-suit.jpg` for minor arcana (e.g., `08-pentacles.png`, `queen-wands.png`).
 
-Note that the *actual* ASCII-art assets used are not committed. Instead, I
-committed the original images from Tarot of the Silicon Dawn. In order to build the assets used in the frontend, run
+Note that the Silicon Dawn assets are not committed and won't be unless Egypt
+Urnash gives me the go-ahead.
+
+## ASCII generation
+
+To generate ASCII art assets, run
 
 ```fish
 set font /System/Library/Fonts/Menlo.ttc
