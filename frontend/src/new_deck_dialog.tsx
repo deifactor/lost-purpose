@@ -12,7 +12,7 @@ interface Props {
 interface State {
   form: {
     name: string,
-    deck: "silicon-dawn",
+    deck: "silicon-dawn" | "rider-waite-smith",
     voidSuit: boolean,
     ninetyNines: boolean,
     extraArcana: boolean
@@ -20,7 +20,8 @@ interface State {
 }
 
 const DECK_TO_ART = {
-  "silicon-dawn": Cards.Art.SiliconDawn
+  "silicon-dawn": Cards.Art.SiliconDawn,
+  "rider-waite-smith": Cards.Art.RiderWaiteSmith
 };
 
 export class NewDeckDialog extends React.Component<Props, State> {
@@ -50,13 +51,15 @@ export class NewDeckDialog extends React.Component<Props, State> {
       case "deck":
         const deck = (target as HTMLSelectElement).value;
         this.setState((state) =>
-          update(state, { form: { name: { $set: deck } } }));
+          update(state, { form: { deck: { $set: deck } } }));
+        break;
       case "voidSuit":
       case "ninetyNines":
       case "extraArcana":
         const checked = (target as HTMLInputElement).checked;
         this.setState((state) =>
           update(state, { form: { [target.name]: { $set: checked } } }));
+        break;
       default:
         throw new Error(`unknown input name ${target.name}`);
     }
@@ -68,8 +71,17 @@ export class NewDeckDialog extends React.Component<Props, State> {
       console.error("Cannot create a deck with an empty name");
       return;
     }
+    let cards: Cards.OrientedCard[] = [];
+    switch (this.state.form.deck) {
+      case "silicon-dawn":
+        cards = Cards.siliconDawn(this.state.form);
+        break;
+      case "rider-waite-smith":
+        cards = Cards.standard();
+        break;
+    }
     const deck = {
-      cards: Cards.siliconDawn(this.state.form),
+      cards,
       name: this.state.form.name,
       id: uuid.v4()
     };
@@ -95,6 +107,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
             onChange={this.handleChange}
             value={this.state.form.deck}>
             <option value="silicon-dawn">Silicon Dawn</option>
+            <option value="rider-waite-smith">Rider-Waite-Smith</option>
           </select>
 
           <label htmlFor="voidSuit">VOID suit</label>

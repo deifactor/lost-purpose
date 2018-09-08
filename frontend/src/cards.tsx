@@ -7,7 +7,7 @@ export interface Deck {
 
 export function standard(): Array<OrientedCard> {
   const cards: Array<OrientedCard> = [];
-  const art = Art.SiliconDawn;
+  const art = Art.RiderWaiteSmith;
   for (const major of MajorArcana.standard()) {
     cards.push({ kind: CardKind.Major, arcana: major, reversed: false, art });
   }
@@ -77,7 +77,8 @@ export interface ExtraCard {
 }
 
 export enum Art {
-  SiliconDawn
+  SiliconDawn,
+  RiderWaiteSmith
 };
 
 export type Card = (MajorCard | MinorCard | ExtraCard) & { art: Art };
