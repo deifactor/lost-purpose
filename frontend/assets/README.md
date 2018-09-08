@@ -12,18 +12,19 @@ committed the original images from Tarot of the Silicon Dawn. In order to build 
 ```fish
 set font /System/Library/Fonts/Menlo.ttc
 cargo build -p ascender --release --bin cli
-for i in frontend/assets/silicon-dawn/*.jpg
+set dir silicon-dawn
+for i in frontend/assets/$dir/*.jpg
   ./target/release/cli \
     --font $font \
     --ascii-width 70 \
     --font-height 10 \
-    $i frontend/assets/silicon-dawn-ascii/(string replace jpg png (basename $i)) \
+    $i frontend/assets/$dir-ascii/(string replace jpg png (basename $i)) \
     > /dev/null
   ./target/release/cli \
     --font $font \
     --ascii-width 35 \
     --font-height 10 \
-    $i frontend/assets/silicon-dawn-ascii/thumbs/(string replace jpg png (basename $i)) \
+    $i frontend/assets/$dir-ascii/thumbs/(string replace jpg png (basename $i)) \
     > /dev/null
   echo $i
 end
