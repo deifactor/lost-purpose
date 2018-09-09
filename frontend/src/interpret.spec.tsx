@@ -1,4 +1,4 @@
-import { interpret } from './meaning';
+import { interpret } from './interpret';
 import { Card, CardKind, MajorArcana, Rank, Suit, Art, standard, Color } from './cards';
 
 describe("RWS tarot meaning data", () => {
