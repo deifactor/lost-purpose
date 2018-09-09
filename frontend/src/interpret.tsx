@@ -1,4 +1,4 @@
-import { Card, CardKind, MajorArcana, Rank, Suit } from './cards';
+import { Art, Card, CardKind, MajorArcana, Rank, Suit } from './cards';
 import rawJson from '../assets/tarot_interpretations.json';
 
 export interface Interpretation {
@@ -17,6 +17,9 @@ export interface Interpretation {
  * and significantly altered meanings for several cards.
  */
 export function interpret(card: Card): Interpretation | undefined {
+  if (card.art == Art.SiliconDawn) {
+    return undefined;
+  }
   switch (card.kind) {
     case CardKind.Major:
       return majorInterpretations.get(card.arcana);
