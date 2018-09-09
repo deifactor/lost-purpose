@@ -30,6 +30,7 @@ export function siliconDawn(
   : Array<OrientedCard> {
   let cards = standard();
   const art = Art.SiliconDawn;
+  cards.forEach((card) => card.art = art);
   if (options.voidSuit) {
     const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
     const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false, art }));

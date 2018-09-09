@@ -1,10 +1,16 @@
-import { standard, siliconDawn, MajorArcana, Rank, Suit } from '../src/cards';
+import { standard, siliconDawn, Art, MajorArcana, Rank, Suit } from '../src/cards';
 
-describe("decks", () => {
-  it("should have the right number of cards in a standard deck", () => {
-    expect(standard().length).toBe(22 + 4 * 14);
+describe("Rider-Waite-Smith", () => {
+  it("should have all cards using Rider-Waite-Smith art", () => {
+    expect(standard().every((card) => card.art == Art.RiderWaiteSmith));
   });
 
+  it("should have the right number of cards", () => {
+    expect(standard().length).toBe(22 + 4 * 14);
+  });
+});
+
+describe("decks", () => {
   it("should start face-up", () => {
     expect(standard().filter((card) => card.reversed === false).length).toBe(78);
     expect(siliconDawn().filter((card) => card.reversed === false).length).toBe(94);
@@ -47,6 +53,9 @@ describe("decks", () => {
       expect(siliconDawn(options).length).toBe(standardCount + extraCount);
     });
 
+    it("should have all cards using Silicon Dawn art", () => {
+      expect(siliconDawn().every((card) => card.art == Art.SiliconDawn));
+    });
   });
 });
 
