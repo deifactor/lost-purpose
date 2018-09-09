@@ -56,7 +56,7 @@ function twoDigitNumber(n: number) {
 function suitComponent(suit: Suit) {
   switch (suit) {
     case Suit.Cups: return "cups";
-    case Suit.Pentacles: return "pent";
+    case Suit.Pentacles: return "pents";
     case Suit.Swords: return "swords";
     case Suit.Wands: return "wands";
     case Suit.Void: return "VOID"
