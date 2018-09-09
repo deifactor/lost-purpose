@@ -1,6 +1,6 @@
 # Tarot of the Lost Purpose
 
-[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose) [![Coverage Status](https://coveralls.io/repos/github/deifactor/lost-purpose/badge.svg?branch=master)](https://coveralls.io/github/deifactor/lost-purpose?branch=master)
+[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose) [![codecov](https://codecov.io/gh/deifactor/lost-purpose/branch/master/graph/badge.svg)](https://codecov.io/gh/deifactor/lost-purpose)
 
 ***IN PROGRESS; NOT FINISHED YET***
 
@@ -40,4 +40,4 @@ interpretations.
 
 All of my own work (everything outside of `frontend/assets`) is licensed under
 the MIT license found in `LICENSE`. The assets are licensed using the
-per-directory `LICENSE` files. 
+per-directory `LICENSE` files.

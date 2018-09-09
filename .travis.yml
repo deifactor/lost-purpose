@@ -9,7 +9,7 @@ node_js:
 before_install:
   - cd frontend
 
-scripts:
+script:
   - npm install -g codecov
 
 after_success:
