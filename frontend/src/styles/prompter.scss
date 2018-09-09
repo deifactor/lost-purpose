@@ -27,7 +27,7 @@
     text-align: center;
     width: 100%;
 
-    .finished {
+    &.finished {
       animation: pulse 1s infinite ease-in-out;
     }
   }
