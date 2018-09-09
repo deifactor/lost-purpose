@@ -4,6 +4,8 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
     "target": "es5",
     "jsx": "react",
