@@ -33,11 +33,11 @@ with:
 
 The deck is worth a shot if you're queer/transhuman/generally Weird, but sadly
 out of print (as of August 2018) and unreasonably expensive to buy second-hand.
-Egypt Urnash has kindly given me permission to use the card lists.
+Egypt Urnash has kindly given me permission to use the art assets and her
+interpretations.
 
 ## Licensing
 
 All of my own work (everything outside of `frontend/assets`) is licensed under
-the MIT license found in `LICENSE`. The art assets are licensed using the
-per-directory `LICENSE` files. Note that some art assets are stored outside of
-the repository.
+the MIT license found in `LICENSE`. The assets are licensed using the
+per-directory `LICENSE` files. 
