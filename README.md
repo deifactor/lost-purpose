@@ -1,6 +1,6 @@
 # Tarot of the Lost Purpose
 
-[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose)
+[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose) [![Coverage Status](https://coveralls.io/repos/github/deifactor/lost-purpose/badge.svg?branch=master)](https://coveralls.io/github/deifactor/lost-purpose?branch=master)
 
 ***IN PROGRESS; NOT FINISHED YET***
 
