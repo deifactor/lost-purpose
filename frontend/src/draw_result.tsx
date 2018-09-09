@@ -37,7 +37,7 @@ export default class DrawResult extends React.Component<Props, {}> {
         <div className="card-info">
           {card &&
            <React.Fragment>
-             <div className="card-name">{cardName}</div>
+             <h2 className="card-name">{cardName}</h2>
              <InterpretationView card={card} />
            </React.Fragment>
           }

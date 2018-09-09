@@ -27,13 +27,17 @@ export const InterpretationView: React.SFC<Props> = (props) => {
   return (
     <div className="interpretation">
       <h3>Fortune-telling</h3>
-      <div>{fortuneTelling.join(", ")}</div>
+      <div>{listify(fortuneTelling)}</div>
 
       <h3>Keywords</h3>
-      <div>{keywords.join(", ")}</div>
+      <div>{listify(keywords)}</div>
 
       <h3>{orientation} meanings</h3>
-      <div>{meanings.join(", ")}</div>
+      <div>{listify(meanings)}</div>
     </div>
   );
+}
+
+function listify(strings: string[]): string {
+  return strings.map((str) => str.toLocaleLowerCase()).join(" // ");
 }
