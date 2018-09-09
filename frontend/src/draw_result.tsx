@@ -3,6 +3,7 @@ import * as Cards from "./cards";
 import * as ArtFinder from "./art_finder";
 import { CardFormatter } from "./card_formatter";
 import CardArtViewer from "./card_art_viewer";
+import { InterpretationView } from "./interpretation_view";
 
 import './styles/draw_result.scss';
 
@@ -33,7 +34,14 @@ export default class DrawResult extends React.Component<Props, {}> {
           {...props}
           width={311}
           height={528} />
-        <div className="card-name">{cardName}</div>
+        <div className="card-info">
+          {card &&
+           <React.Fragment>
+             <h2 className="card-name">{cardName}</h2>
+             <InterpretationView card={card} />
+           </React.Fragment>
+          }
+        </div>
       </div>
     );
   }

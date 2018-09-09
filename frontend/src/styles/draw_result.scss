@@ -1,6 +1,12 @@
 .draw-result {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+
+  .card-info {
+    padding-left: 2em;
+    font-size: 80%;
+    max-width: 500px;
+  }
 
   .card-name {
     text-align: center;

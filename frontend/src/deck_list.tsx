@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Cards from "./cards";
-import * as ReactModal from 'react-modal';
+import ReactModal = require('react-modal');
 import { NewDeckDialog } from './new_deck_dialog';
 
 interface Props {

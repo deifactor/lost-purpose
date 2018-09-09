@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as ReactModal from 'react-modal';
+import ReactModal = require('react-modal');
 import App from "./app";
 
 const el = document.createElement("div");

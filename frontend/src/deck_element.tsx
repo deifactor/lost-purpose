@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Cards from "./cards";
-import * as ReactModal from 'react-modal';
+import ReactModal = require('react-modal');
 import { Prompter } from "./prompter";
 import './styles/modal.scss';
 
