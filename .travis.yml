@@ -1,17 +1,23 @@
-cache:
-  directories:
-    - "node_modules"
-    - "typings"
-language: "node_js"
-node_js:
-  - "node"
+matrix:
+  include:
+    - language: "node_js"
+      cache:
+        directories:
+          - "node_modules"
+          - "typings"
+      node_js:
+        - "node"
 
-before_install:
-  - cd frontend
+      before_install:
+        - cd frontend
 
-script:
-  - npm install -g codecov
-  - npm test
+      script:
+        - npm install -g codecov
+        - npm test
 
-after_success:
-  - codecov
+      after_success:
+        - codecov
+
+    - language: "rust"
+      rust:
+        - nightly
