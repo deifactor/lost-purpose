@@ -19,5 +19,4 @@ matrix:
         - codecov
 
     - language: "rust"
-      rust:
-        - nightly
+      rust: nightly
