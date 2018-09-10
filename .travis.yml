@@ -1,6 +1,7 @@
 matrix:
   include:
-    - language: "node_js"
+    - name: "Frnotend"
+      language: "node_js"
       cache:
         directories:
           - "node_modules"
@@ -18,5 +19,6 @@ matrix:
       after_success:
         - codecov
 
-    - language: "rust"
+    - name: "Backend (nightly)"
+      language: "rust"
       rust: nightly
