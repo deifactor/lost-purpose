@@ -4,13 +4,18 @@ matrix:
       language: "node_js"
       cache:
         directories:
-          - "node_modules"
-          - "typings"
+          - ".git/lfs"
       node_js:
         - "node"
+      git:
+        lfs_skip_smudge: true
 
       before_install:
         - cd frontend
+
+      install:
+        - git lfs pull
+        - npm ci
 
       script:
         - npm install -g codecov
