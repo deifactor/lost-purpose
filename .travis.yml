@@ -1,6 +1,6 @@
 matrix:
   include:
-    - name: "Frnotend"
+    - name: "Frontend"
       language: "node_js"
       cache:
         directories:
