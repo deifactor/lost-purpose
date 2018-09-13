@@ -1,5 +1,6 @@
-import { Art, Card, CardKind, MajorArcana, Rank, Suit } from './cards';
+import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from './cards';
 import rawJson from '../assets/tarot_interpretations.json';
+import siliconDawnJson from '../assets/silicon-dawn/interpretations.json';
 
 export interface RWSInterpretation {
   fortuneTelling: string[],
@@ -8,6 +9,12 @@ export interface RWSInterpretation {
     upright: string[],
     reversed: string[]
   }
+}
+
+export interface SiliconDawnInterpretation {
+  title: string,
+  // Each element of this list should be its own paragraph.
+  meaning: string[]
 }
 
 /**
@@ -28,6 +35,31 @@ export function rws(card: Card): RWSInterpretation | undefined {
     }
     default:
       return undefined;
+  }
+}
+
+export function siliconDawn(card: Card): SiliconDawnInterpretation | undefined {
+  if (card.art != Art.SiliconDawn) {
+    return undefined;
+  }
+  switch (card.kind) {
+    case CardKind.Major:
+      return siliconDawnJson.majors[card.arcana];
+    case CardKind.Minor:
+      const rank = card.rank == 99 ? 15 : card.rank;
+      const minor = siliconDawnJson.minors[rank][card.suit];
+      if (minor == null) {
+        // Should never happen. The only nulls are for rank 0, 'normal' suits.
+        throw new Error(`Unexpected null with card ${card}`)
+      }
+      return minor;
+    case CardKind.Extra:
+      switch (card.color) {
+        case Color.Black:
+          return siliconDawnJson.extras.black;
+        case Color.White:
+          return siliconDawnJson.extras.white;
+      }
   }
 }
 
