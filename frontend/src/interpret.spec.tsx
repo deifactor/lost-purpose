@@ -1,10 +1,10 @@
-import { interpret } from './interpret';
+import { rws } from './interpret';
 import { Card, CardKind, MajorArcana, Rank, Suit, Art, standard, Color } from './cards';
 
 describe("RWS tarot meaning data", () => {
   const table = standard().map((card) => [card]);
   describe.each(table)('%j', (card) => {
-    const interpretation = interpret(card);
+    const interpretation = rws(card);
     it("should have an interpretation", () => {
       expect(interpretation).toBeTruthy();
       expect(interpretation!.fortuneTelling).not.toHaveLength(0);
@@ -38,7 +38,7 @@ describe("RWS tarot meaning data", () => {
   };
   describe.each([aleph_four, ninety_nine_swords, queen_of_void, extra])('%j', (card) => {
     it("should not have an interpretation", () => {
-      expect(interpret(card)).toBeFalsy();
+      expect(rws(card)).toBeFalsy();
     })
   });
 });

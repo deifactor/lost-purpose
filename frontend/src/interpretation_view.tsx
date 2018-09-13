@@ -1,6 +1,6 @@
 import * as React from "react";
 import { OrientedCard } from './cards';
-import { interpret } from './interpret';
+import { rws } from './interpret';
 
 interface Props {
   card: OrientedCard
@@ -8,7 +8,7 @@ interface Props {
 
 export const InterpretationView: React.SFC<Props> = (props) => {
   const { card } = props;
-  let interpretation = interpret(card);
+  let interpretation = rws(card);
   if (!interpretation) {
     return (
       <div className="interpretation">

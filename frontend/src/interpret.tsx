@@ -1,7 +1,7 @@
 import { Art, Card, CardKind, MajorArcana, Rank, Suit } from './cards';
 import rawJson from '../assets/tarot_interpretations.json';
 
-export interface Interpretation {
+export interface RWSInterpretation {
   fortuneTelling: string[],
   keywords: string[],
   meanings: {
@@ -11,12 +11,11 @@ export interface Interpretation {
 }
 
 /**
- * An interpretation for the tarot card with the given rank and suit. Note
- * that this only supports Rider-Waite-Smith cards, and should *not* be used
- * with the Silicon Dawn deck, since that deck has cards with no RWS counterpart
- * and significantly altered meanings for several cards.
+ * An interpretation for the tarot card with the given rank and suit. Calling
+ * this with Silicon Dawn cards produces undefined behavior, as those cards use
+ * significantly different symbolism.
  */
-export function interpret(card: Card): Interpretation | undefined {
+export function rws(card: Card): RWSInterpretation | undefined {
   if (card.art == Art.SiliconDawn) {
     return undefined;
   }
@@ -32,8 +31,8 @@ export function interpret(card: Card): Interpretation | undefined {
   }
 }
 
-let majorInterpretations: Map<MajorArcana, Interpretation> = new Map();
-let minorInterpretations: Map<Rank, Map<Suit, Interpretation>> = new Map();
+let majorInterpretations: Map<MajorArcana, RWSInterpretation> = new Map();
+let minorInterpretations: Map<Rank, Map<Suit, RWSInterpretation>> = new Map();
 for (const raw of rawJson.tarot_interpretations) {
   const cleaned = {
     fortuneTelling: raw.fortune_telling,
