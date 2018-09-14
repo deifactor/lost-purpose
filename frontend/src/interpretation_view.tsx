@@ -1,6 +1,6 @@
 import * as React from "react";
-import { OrientedCard } from './cards';
-import { interpret } from './interpret';
+import { Art, OrientedCard } from './cards';
+import * as interpret from './interpret';
 
 interface Props {
   card: OrientedCard
@@ -8,7 +8,15 @@ interface Props {
 
 export const InterpretationView: React.SFC<Props> = (props) => {
   const { card } = props;
-  let interpretation = interpret(card);
+  if (card.art == Art.SiliconDawn) {
+    return renderSiliconDawn(card);
+  } else {
+    return renderRws(card);
+  }
+}
+
+function renderRws(card: OrientedCard): JSX.Element {
+  let interpretation = interpret.rws(card);
   if (!interpretation) {
     return (
       <div className="interpretation">
@@ -34,6 +42,26 @@ export const InterpretationView: React.SFC<Props> = (props) => {
 
       <h3>{orientation} meanings</h3>
       <div>{listify(meanings)}</div>
+    </div>
+  );
+}
+
+function renderSiliconDawn(card: OrientedCard): JSX.Element {
+  let interpretation = interpret.siliconDawn(card);
+  if (!interpretation) {
+    return (
+      <div className="interpretation">
+        Unable to interpret card
+      </div>
+    );
+  }
+
+  const { title, meaning } = interpretation;
+
+  return (
+    <div className="interpretation">
+      <h3>{title}</h3>
+      {meaning.map((line) => <p>{line}</p>)}
     </div>
   );
 }

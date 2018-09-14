@@ -1,7 +1,8 @@
-import { Art, Card, CardKind, MajorArcana, Rank, Suit } from './cards';
+import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from './cards';
 import rawJson from '../assets/tarot_interpretations.json';
+import siliconDawnJson from '../assets/silicon-dawn/interpretations.json';
 
-export interface Interpretation {
+export interface RWSInterpretation {
   fortuneTelling: string[],
   keywords: string[],
   meanings: {
@@ -10,13 +11,18 @@ export interface Interpretation {
   }
 }
 
+export interface SiliconDawnInterpretation {
+  title: string,
+  // Each element of this list should be its own paragraph.
+  meaning: string[]
+}
+
 /**
- * An interpretation for the tarot card with the given rank and suit. Note
- * that this only supports Rider-Waite-Smith cards, and should *not* be used
- * with the Silicon Dawn deck, since that deck has cards with no RWS counterpart
- * and significantly altered meanings for several cards.
+ * An interpretation for the tarot card with the given rank and suit. Calling
+ * this with Silicon Dawn cards produces undefined behavior, as those cards use
+ * significantly different symbolism.
  */
-export function interpret(card: Card): Interpretation | undefined {
+export function rws(card: Card): RWSInterpretation | undefined {
   if (card.art == Art.SiliconDawn) {
     return undefined;
   }
@@ -32,8 +38,33 @@ export function interpret(card: Card): Interpretation | undefined {
   }
 }
 
-let majorInterpretations: Map<MajorArcana, Interpretation> = new Map();
-let minorInterpretations: Map<Rank, Map<Suit, Interpretation>> = new Map();
+export function siliconDawn(card: Card): SiliconDawnInterpretation | undefined {
+  if (card.art != Art.SiliconDawn) {
+    return undefined;
+  }
+  switch (card.kind) {
+    case CardKind.Major:
+      return siliconDawnJson.majors[card.arcana];
+    case CardKind.Minor:
+      const rank = card.rank == 99 ? 15 : card.rank;
+      const minor = siliconDawnJson.minors[rank][card.suit];
+      if (minor == null) {
+        // Should never happen. The only nulls are for rank 0, 'normal' suits.
+        throw new Error(`Unexpected null with card ${card}`)
+      }
+      return minor;
+    case CardKind.Extra:
+      switch (card.color) {
+        case Color.Black:
+          return siliconDawnJson.extras.black;
+        case Color.White:
+          return siliconDawnJson.extras.white;
+      }
+  }
+}
+
+let majorInterpretations: Map<MajorArcana, RWSInterpretation> = new Map();
+let minorInterpretations: Map<Rank, Map<Suit, RWSInterpretation>> = new Map();
 for (const raw of rawJson.tarot_interpretations) {
   const cleaned = {
     fortuneTelling: raw.fortune_telling,

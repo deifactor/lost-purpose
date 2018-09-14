@@ -1,10 +1,10 @@
-import { interpret } from './interpret';
-import { Card, CardKind, MajorArcana, Rank, Suit, Art, standard, Color } from './cards';
+import * as interpret from './interpret';
+import { Card, CardKind, MajorArcana, Rank, Suit, Art, standard, Color, siliconDawn } from './cards';
 
 describe("RWS tarot meaning data", () => {
   const table = standard().map((card) => [card]);
   describe.each(table)('%j', (card) => {
-    const interpretation = interpret(card);
+    const interpretation = interpret.rws(card);
     it("should have an interpretation", () => {
       expect(interpretation).toBeTruthy();
       expect(interpretation!.fortuneTelling).not.toHaveLength(0);
@@ -38,7 +38,19 @@ describe("RWS tarot meaning data", () => {
   };
   describe.each([aleph_four, ninety_nine_swords, queen_of_void, extra])('%j', (card) => {
     it("should not have an interpretation", () => {
-      expect(interpret(card)).toBeFalsy();
+      expect(interpret.rws(card)).toBeFalsy();
     })
+  });
+});
+
+describe("Silicon Dawn tarot meaning data", () => {
+  const table = siliconDawn();
+  describe.each(siliconDawn())('%j', (card) => {
+    it("should have an interpretation", () => {
+      const interpretation = interpret.siliconDawn(card);
+      expect(interpretation).toBeTruthy();
+      expect(interpretation!.title).toBeTruthy();
+      expect(interpretation!.meaning).not.toHaveLength(0);
+    });
   });
 });
