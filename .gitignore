@@ -3,6 +3,3 @@
 /frontend/coverage
 /frontend/dist
 /frontend/node_modules
-/target
-**/*.rs.bk
-Cargo.lock

@@ -1,29 +1,22 @@
-matrix:
-  include:
-    - name: "Frontend"
-      language: "node_js"
-      cache:
-        directories:
-          - ".git/lfs"
-      node_js:
-        - "node"
-      git:
-        lfs_skip_smudge: true
+language: "node_js"
+cache:
+  directories:
+    - ".git/lfs"
+node_js:
+  - "node"
+git:
+  lfs_skip_smudge: true
 
-      before_install:
-        - cd frontend
+before_install:
+  - cd frontend
 
-      install:
-        - git lfs pull
-        - npm ci
+install:
+  - git lfs pull
+  - npm ci
 
-      script:
-        - npm install -g codecov
-        - npm test
+script:
+  - npm install -g codecov
+  - npm test
 
-      after_success:
-        - codecov
-
-    - name: "Backend (nightly)"
-      language: "rust"
-      rust: nightly
+after_success:
+  - codecov
