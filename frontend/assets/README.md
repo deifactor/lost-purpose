@@ -31,24 +31,18 @@ Urnash gives me the go-ahead.
 
 ### ASCII generation
 
-To generate ASCII art assets, run
+To generate ASCII art assets, build the `cli` binary from
+http://github.com/deifactor/ascender, then run
 
 ```fish
-set font /System/Library/Fonts/Menlo.ttc
-cargo build -p ascender --release --bin cli
 set dir silicon-dawn
+set font /System/Library/Fonts/Menlo.ttc
 for i in frontend/assets/$dir/*.jpg
-  ./target/release/cli \
+  /path/to/cli \
     --font $font \
     --ascii-width 70 \
     --font-height 10 \
     $i frontend/assets/$dir-ascii/(string replace jpg png (basename $i)) \
-    > /dev/null
-  ./target/release/cli \
-    --font $font \
-    --ascii-width 35 \
-    --font-height 10 \
-    $i frontend/assets/$dir-ascii/thumbs/(string replace jpg png (basename $i)) \
     > /dev/null
   echo $i
 end
