@@ -34,6 +34,8 @@ Urnash gives me the go-ahead.
 To generate ASCII art assets, build the `cli` binary from
 http://github.com/deifactor/ascender, then run
 
+    npm asciify -- /path/to/cli/binary
+
 ```fish
 set dir silicon-dawn
 set font /System/Library/Fonts/Menlo.ttc
