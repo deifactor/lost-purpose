@@ -3,10 +3,8 @@
  * separate from the card loic so that we don't have to mess around with
  * webpack's require.context when testing pure logic.
  */
-import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from "./cards";
-
-const riderWaiteSmithAscii = require.context("../../assets/rider-waite-smith-ascii", true, /\.png$/);
-const siliconDawnAscii = require.context("../../assets/silicon-dawn-ascii", true, /\.png$/);
+import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from './cards';
+import { context } from './artFinderContext';
 
 export function path(card: Card) {
   return context(card.art)(`./${fileName(card)}.png`);
@@ -18,8 +16,8 @@ export function thumbnail(card: Card) {
 
 export function back(card: Card) {
   switch (card.art) {
-    case Art.SiliconDawn: return siliconDawnAscii("./black.png");
-    case Art.RiderWaiteSmith: return riderWaiteSmithAscii("./back.png");
+    case Art.SiliconDawn: return context(card.art)("./black.png");
+    case Art.RiderWaiteSmith: return context(card.art)("./back.png");
   }
 }
 
@@ -60,12 +58,5 @@ function suitComponent(suit: Suit) {
     case Suit.Swords: return "swords";
     case Suit.Wands: return "wands";
     case Suit.Void: return "VOID"
-  }
-}
-
-function context(art: Art): (id: string) => string {
-  switch (art) {
-    case Art.SiliconDawn: return siliconDawnAscii;
-    case Art.RiderWaiteSmith: return riderWaiteSmithAscii;
   }
 }

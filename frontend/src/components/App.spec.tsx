@@ -2,7 +2,7 @@ import * as React from 'react';
 import App from './App';
 import { mount, shallow } from 'enzyme';
 
-jest.mock('../cards/artFinder');
+jest.mock('../cards/artFinderContext');
 
 describe("smoke tests", () => {
   it("renders shallowly", () => {
