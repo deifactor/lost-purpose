@@ -1,6 +1,6 @@
 import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from './cards';
-import rawJson from '../assets/tarot_interpretations.json';
-import siliconDawnJson from '../assets/silicon-dawn/interpretations.json';
+import rawJson from '../../assets/tarot_interpretations.json';
+import siliconDawnJson from '../../assets/silicon-dawn/interpretations.json';
 
 export interface RWSInterpretation {
   fortuneTelling: string[],

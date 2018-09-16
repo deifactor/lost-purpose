@@ -1,15 +1,14 @@
 import * as React from "react";
-import * as Cards from "./cards";
-import { shuffle } from "./shuffle";
-import DrawResult from "./draw_result";
-import * as ArtFinder from "./art_finder";
-import Deck from "./deck_element";
-import DeckList from "./deck_list";
-import Login from "./login";
-import { LFSR } from "./lfsr";
+import * as Cards from "../cards/cards";
+import { shuffle } from "../cards/shuffle";
+import DrawResult from "./DrawResult";
+import * as ArtFinder from "../cards/artFinder";
+import Deck from "./Deck";
+import DeckList from "./DeckList";
+import { LFSR } from "../cards/lfsr";
 import update from "immutability-helper";
 
-import './styles/app.scss';
+import '../styles/app.scss';
 
 interface Props {
 }

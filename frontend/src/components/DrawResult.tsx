@@ -1,11 +1,11 @@
 import * as React from "react";
-import * as Cards from "./cards";
-import * as ArtFinder from "./art_finder";
-import { CardFormatter } from "./card_formatter";
-import CardArtViewer from "./card_art_viewer";
-import { InterpretationView } from "./interpretation_view";
+import * as Cards from "../cards/cards";
+import * as ArtFinder from "../cards/artFinder";
+import { CardFormatter } from "../cards/cardFormatter";
+import CardArtViewer from "./CardArtViewer";
+import { InterpretationView } from "./InterpretationView";
 
-import './styles/draw_result.scss';
+import '../styles/draw_result.scss';
 
 interface Props {
   card: Cards.OrientedCard | null

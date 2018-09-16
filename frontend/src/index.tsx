@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import ReactModal = require('react-modal');
-import App from "./app";
+import App from "./components/app";
 
 const el = document.createElement("div");
 el.id = 'app';

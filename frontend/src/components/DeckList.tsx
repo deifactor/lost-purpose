@@ -1,7 +1,7 @@
 import * as React from "react";
-import * as Cards from "./cards";
+import * as Cards from "../cards/cards";
 import ReactModal = require('react-modal');
-import { NewDeckDialog } from './new_deck_dialog';
+import { NewDeckDialog } from './NewDeckDialog';
 
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,

@@ -1,8 +1,9 @@
 import * as React from "react";
-import * as Cards from "./cards";
+import * as Cards from "../cards/cards";
 import ReactModal = require('react-modal');
-import { Prompter } from "./prompter";
-import './styles/modal.scss';
+import { Prompter } from "./Prompter";
+
+import '../styles/modal.scss';
 
 interface Props {
   deck: Cards.Deck,

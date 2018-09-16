@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Art, OrientedCard } from './cards';
-import * as interpret from './interpret';
+import { Art, OrientedCard } from '../cards/cards';
+import * as interpret from '../cards/interpret';
 
 interface Props {
   card: OrientedCard

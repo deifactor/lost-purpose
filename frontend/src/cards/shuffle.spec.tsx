@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { shuffle } from '../src/shuffle';
+import { shuffle } from './shuffle';
 
 function faceUpDeck(values: Array<number>): Array<{ value: number, reversed: boolean }> {
   return values.map((value) => ({ value, reversed: false }));

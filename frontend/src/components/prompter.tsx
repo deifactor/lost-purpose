@@ -3,7 +3,7 @@ import CRC32 = require('crc-32');
 import classNames = require('classnames');
 import delay from "delay";
 
-import './styles/prompter.scss';
+import '../styles/prompter.scss';
 
 interface Props {
   // Invoked when we've computed a fingerprint from the user's input.

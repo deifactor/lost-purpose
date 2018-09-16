@@ -1,9 +1,9 @@
 import * as React from "react";
-import * as Cards from "./cards";
+import * as Cards from "../cards/cards";
 import update from "immutability-helper";
 import * as uuid from "uuid";
 
-import './styles/dialog_form.scss';
+import '../styles/dialog_form.scss';
 
 interface Props {
   onNewDeck: (deck: Cards.Deck) => void

@@ -1,4 +1,4 @@
-import { standard, siliconDawn, Art, MajorArcana, Rank, Suit } from '../src/cards';
+import { standard, siliconDawn, Art, MajorArcana, Rank, Suit } from './cards';
 
 describe("Rider-Waite-Smith", () => {
   it("should have all cards using Rider-Waite-Smith art", () => {

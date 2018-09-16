@@ -1,4 +1,4 @@
-import { CardFormatter, NumberFormat } from './card_formatter';
+import { CardFormatter, NumberFormat } from './cardFormatter';
 import { OrientedCard, Art, CardKind, MajorArcana, Rank, Suit, Color } from './cards';
 
 const art = Art.SiliconDawn;

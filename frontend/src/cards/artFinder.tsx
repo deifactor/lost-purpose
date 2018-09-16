@@ -5,8 +5,8 @@
  */
 import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from "./cards";
 
-const riderWaiteSmithAscii = require.context("../assets/rider-waite-smith-ascii", true, /\.png$/);
-const siliconDawnAscii = require.context("../assets/silicon-dawn-ascii", true, /\.png$/);
+const riderWaiteSmithAscii = require.context("../../assets/rider-waite-smith-ascii", true, /\.png$/);
+const siliconDawnAscii = require.context("../../assets/silicon-dawn-ascii", true, /\.png$/);
 
 export function path(card: Card) {
   return context(card.art)(`./${fileName(card)}.png`);
