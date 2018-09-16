@@ -89,6 +89,8 @@ export class NewDeckDialog extends React.Component<Props, State> {
   }
 
   render() {
+    const submissionDisabled = !this.state.form.name;
+
     return (
       <div className="new-deck">
         <div className="modal-title">New deck</div>
@@ -124,7 +126,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
           }
 
           <div className="button-row">
-            <button type="submit">Add new deck</button>
+            <button type="submit" disabled={submissionDisabled}>Add new deck</button>
           </div>
         </form>
       </div>

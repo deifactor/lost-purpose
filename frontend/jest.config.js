@@ -2,6 +2,9 @@ module.exports = {
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },
+  "moduleNameMapper": {
+    "\\.(css|scss|sass)$": "<rootDir>/__mocks__/styleMock.js"
+  },
   "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.tsx",
   "collectCoverage": true,
   "collectCoverageFrom": [
