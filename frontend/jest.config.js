@@ -13,6 +13,7 @@ module.exports = {
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "\\.d.ts$",
+    "src/index.tsx",
     "setupTests.tsx"
   ],
   "testURL": "http://localhost",
