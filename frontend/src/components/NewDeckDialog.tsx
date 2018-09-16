@@ -30,7 +30,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
     this.state = {
       form: {
         name: '',
-        deck: "silicon-dawn",
+        deck: 'rider-waite-smith',
         voidSuit: true,
         ninetyNines: true,
         extraArcana: true
