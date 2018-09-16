@@ -61,7 +61,7 @@ function renderSiliconDawn(card: OrientedCard): JSX.Element {
   return (
     <div className="interpretation">
       <h3>{title}</h3>
-      {meaning.map((line) => <p>{line}</p>)}
+      {meaning.map((line, index) => <p key={index}>{line}</p>)}
     </div>
   );
 }

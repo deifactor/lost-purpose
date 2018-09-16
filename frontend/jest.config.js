@@ -2,6 +2,7 @@ module.exports = {
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },
+  "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.tsx",
   "collectCoverage": true,
   "collectCoverageFrom": [
     "src/**/*.{ts,tsx}",
@@ -9,6 +10,7 @@ module.exports = {
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "\\.d.ts$",
+    "setupTests.tsx"
   ],
   "testURL": "http://localhost",
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
