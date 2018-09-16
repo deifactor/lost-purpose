@@ -42,7 +42,7 @@ module.exports = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({title: 'Tarot of the Lost Purpose'}),
     new CheckerPlugin()
   ],
 
