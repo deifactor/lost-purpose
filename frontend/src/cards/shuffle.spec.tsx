@@ -30,11 +30,11 @@ describe("shuffling", () => {
         .toEqual([true, false]);
     });
 
-    it("should reverse roughly half of a hundred-card deck", () => {
-      const shuffled = shuffle(faceUpDeck(_.range(100)));
+    it("should reverse roughly half of a thousand-card deck", () => {
+      const shuffled = shuffle(faceUpDeck(_.range(1000)));
       const reversedCount = shuffled.filter((x) => x.reversed).length;
-      expect(reversedCount).toBeLessThan(70);
-      expect(reversedCount).toBeGreaterThan(30);
+      expect(reversedCount).toBeLessThan(800);
+      expect(reversedCount).toBeGreaterThan(200);
     });
   });
 });
