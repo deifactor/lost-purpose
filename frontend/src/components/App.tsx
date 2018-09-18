@@ -129,11 +129,17 @@ export default class App extends React.Component<Props, State> {
         key={deck.id}
         path={`/deck/${deck.id.substr(0, 8)}`}
         render={() => (
-          <Deck
-            onDraw={this.handleDraw.bind(this, deck)}
-            onShuffle={this.handleShuffle.bind(this, deck)}
-            onDelete={this.handleDeleteDeck.bind(this, deck)}
-            deck={deck} />)} />
+          <React.Fragment>
+            <Deck
+              onDraw={this.handleDraw.bind(this, deck)}
+              onShuffle={this.handleShuffle.bind(this, deck)}
+              onDelete={this.handleDeleteDeck.bind(this, deck)}
+              deck={deck} />
+            <div id="draw-result-container">
+              <DrawResult card={this.state.currentCard} />
+            </div>
+          </React.Fragment>
+        )} />
     ));
     return (
       <HashRouter>
@@ -144,10 +150,6 @@ export default class App extends React.Component<Props, State> {
           <Route
             path="/about"
             render={() => <ReactMarkdown source={aboutMarkdown} />} />
-
-          <div id="draw-result-container">
-            <DrawResult card={this.state.currentCard} />
-          </div>
 
           <ReactModal
             isOpen={this.state.showNewDeckDialog}
