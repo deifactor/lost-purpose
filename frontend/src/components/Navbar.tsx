@@ -12,19 +12,10 @@ interface Props {
 }
 
 export const Navbar: React.SFC<Props> = (props) => {
-  const onNewDeck = (e: React.FormEvent) => {
-    e.preventDefault();
-    props.onNewDeck();
-  }
-  const handleDeckClick = (e: React.FormEvent, deck: Deck, index: number) => {
-    e.preventDefault();
-    props.onDeckSelect(deck, index);
-  };
   const deckElements = props.decks.map((deck, index) =>
-    <li key={index}>
-      <a href="#" onClick={(e) => handleDeckClick(e, deck, index)}>
-        {deck.name}
-      </a>
+    <li key={index}
+      onClick={() => props.onDeckSelect(deck, index)}>
+      {deck.name}
     </li>);
   return (
     <nav className="navbar">
@@ -35,9 +26,7 @@ export const Navbar: React.SFC<Props> = (props) => {
           </div>
           <ul className="dropdown-content">
             {deckElements}
-            <li>
-              <a href="#" onClick={onNewDeck}>Add new deck</a>
-            </li>
+            <li onClick={props.onNewDeck}>Add new deck</li>
           </ul>
         </li>
       </ul>
