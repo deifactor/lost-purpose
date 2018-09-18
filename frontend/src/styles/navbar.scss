@@ -27,6 +27,7 @@ nav.navbar {
       display: none;
       border: 1px solid white;
       position: absolute;
+      z-index: 100;
       background: #181818;
 
       li {
