@@ -25,7 +25,7 @@ function asciify(dir) {
     fs.mkdirSync(targetDir);
   }
   for (const source of listImages(sourceDir)) {
-    const target = path.join(targetDir, path.parse(source).name + '.png');
+    const target = path.join(targetDir, path.parse(source).name + '.jpg');
     console.log(`asciifying ${source} => ${target}`);
 
     child_process.spawnSync(cli, [

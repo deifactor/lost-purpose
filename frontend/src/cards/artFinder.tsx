@@ -7,17 +7,17 @@ import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from './cards';
 import { context } from './artFinderContext';
 
 export function path(card: Card) {
-  return context(card.art)(`./${fileName(card)}.png`);
+  return context(card.art)(`./${fileName(card)}.jpg`);
 }
 
 export function thumbnail(card: Card) {
-  return context(card.art)(`./thumbs/${fileName(card)}.png`);
+  return context(card.art)(`./thumbs/${fileName(card)}.jpg`);
 }
 
 export function back(card: Card) {
   switch (card.art) {
-    case Art.SiliconDawn: return context(card.art)("./black.png");
-    case Art.RiderWaiteSmith: return context(card.art)("./back.png");
+    case Art.SiliconDawn: return context(card.art)("./black.jpg");
+    case Art.RiderWaiteSmith: return context(card.art)("./back.jpg");
   }
 }
 
