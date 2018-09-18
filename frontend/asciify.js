@@ -40,10 +40,3 @@ assert(cli);
 
 asciify('silicon-dawn');
 asciify('rider-waite-smith');
-
-for (const rws of listImages('assets/rider-waite-smith-ascii')) {
-  console.log(`trimming ${rws}`);
-  child_process.spawnSync('mogrify', [
-    '-shave', '61x61', 'crop', '-0-45', rws
-  ]);
-}
