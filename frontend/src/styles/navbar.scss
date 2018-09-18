@@ -7,21 +7,18 @@ nav.navbar {
 
   a {
     text-decoration: none;
+    display: inline-block;
   }
 
-  ul {
-    margin: 0;
-    padding: 0;
+  .dropdown-header,
+  a {
+    padding: .7em 1em;
   }
 
-  >ul>li {
+  .dropdown {
     display: inline-block;
     position: relative;
     margin: 0;
-
-    .navbar-content {
-      padding: .7em 1em;
-    }
 
     .dropdown-content {
       display: none;
@@ -30,8 +27,7 @@ nav.navbar {
       z-index: 100;
       background: #181818;
 
-      li {
-        padding: .5em 1em;
+      a {
         display: block;
       }
     }
@@ -41,10 +37,10 @@ nav.navbar {
     }
   }
 
-  .navbar-content,
-  .dropdown-content li {
-    &:hover {
-      background: #003ae3;
-    }
+  .dropdown:hover {
+    background: #444444;
+  }
+  a:hover {
+    background: #003ae3;
   }
 }

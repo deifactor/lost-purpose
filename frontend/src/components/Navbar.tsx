@@ -13,24 +13,20 @@ interface Props {
 export const Navbar: React.SFC<Props> = (props) => {
   const deckElements = props.decks.map((deck, index) =>
     <Link to={`/deck/${deck.id.substr(0, 8)}`} key={index}>
-      <li>{deck.name}</li>
+      {deck.name}
     </Link>);
   return (
     <nav className="navbar">
-      <ul>
-        <li>
-          <div className="navbar-content">
-            Select a deck
-          </div>
-          <ul className="dropdown-content">
-            {deckElements}
-            <li onClick={props.onNewDeck}>Add new deck</li>
-          </ul>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-      </ul>
+      <div className="dropdown">
+        <div className="dropdown-header">
+          Select a deck
+        </div>
+        <div className="dropdown-content">
+          {deckElements}
+          <a onClick={props.onNewDeck}>Add new deck</a>
+        </div>
+      </div>
+      <Link className="item" to="/about">About</Link>
     </nav>
   );
 }
