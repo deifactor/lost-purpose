@@ -3,7 +3,8 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest"
   },
   "moduleNameMapper": {
-    "\\.(css|scss|sass)$": "<rootDir>/__mocks__/styleMock.js"
+    "\\.(css|scss|sass)$": "<rootDir>/__mocks__/styleMock.js",
+    "\\.md$": "<rootDir>/__mocks__/rawMock.js"
   },
   "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.tsx",
   "collectCoverage": true,
