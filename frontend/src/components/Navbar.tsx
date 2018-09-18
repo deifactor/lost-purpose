@@ -4,13 +4,21 @@ import { Deck } from '../cards/cards';
 import '../styles/navbar.scss';
 
 interface Props {
-  decks: ReadonlyArray<Deck>
+  decks: ReadonlyArray<Deck>,
+  // Called whenever the user selects a deck.
+  onDeckSelect: (deck: Deck, index: number) => void
 }
 
 export const Navbar: React.SFC<Props> = (props) => {
+  const handleDeckClick = (e: React.FormEvent, deck: Deck, index: number) => {
+    e.preventDefault();
+    props.onDeckSelect(deck, index);
+  };
   const deckElements = props.decks.map((deck, index) =>
     <li key={index}>
-      {deck.name}
+      <a href="#" onClick={(e) => handleDeckClick(e, deck, index)}>
+        {deck.name}
+      </a>
     </li>);
   return (
     <nav className="navbar">
@@ -21,7 +29,6 @@ export const Navbar: React.SFC<Props> = (props) => {
           </div>
           <ul className="dropdown-content">
             {deckElements}
-            <li>Add new deck</li>
           </ul>
         </li>
       </ul>

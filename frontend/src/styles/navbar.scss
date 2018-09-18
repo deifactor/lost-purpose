@@ -5,6 +5,10 @@ nav.navbar {
   background: #181818;
   user-select: none;
 
+  a {
+    text-decoration: none;
+  }
+
   ul {
     margin: 0;
     padding: 0;

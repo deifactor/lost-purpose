@@ -32,7 +32,7 @@ export default class App extends React.Component<Props, State> {
 
     this.handleNewDeck = this.handleNewDeck.bind(this);
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSelectDeck = this.handleSelectDeck.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
     this.saveState = this.saveState.bind(this);
@@ -61,7 +61,7 @@ export default class App extends React.Component<Props, State> {
     );
   }
 
-  handleChange(index: number) {
+  handleSelectDeck(deck: Cards.Deck, index: number) {
     console.debug(`Selecting deck ${index}`);
     this.setState((state) => ({
       currentDeckIndex: index
@@ -124,11 +124,11 @@ export default class App extends React.Component<Props, State> {
     const currentDeck = this.currentDeck();
     return (
       <div>
-        <Navbar decks={this.state.decks} />
+        <Navbar decks={this.state.decks}
+                onDeckSelect={this.handleSelectDeck} />
         <DeckList decks={this.state.decks}
           onNewDeck={this.handleNewDeck}
           onDeleteDeck={this.handleDeleteDeck}
-          onChange={this.handleChange}
         />
         {currentDeck &&
           <Deck onDraw={this.handleDraw}
