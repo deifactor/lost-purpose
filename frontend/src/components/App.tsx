@@ -5,6 +5,7 @@ import DrawResult from "./DrawResult";
 import * as ArtFinder from "../cards/artFinder";
 import Deck from "./Deck";
 import DeckList from "./DeckList";
+import { Navbar } from './Navbar';
 import { LFSR } from "../cards/lfsr";
 import update from "immutability-helper";
 
@@ -123,6 +124,7 @@ export default class App extends React.Component<Props, State> {
     const currentDeck = this.currentDeck();
     return (
       <div>
+        <Navbar decks={this.state.decks} />
         <DeckList decks={this.state.decks}
           onNewDeck={this.handleNewDeck}
           onDeleteDeck={this.handleDeleteDeck}
