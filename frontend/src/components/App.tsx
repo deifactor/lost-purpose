@@ -4,7 +4,6 @@ import { shuffle } from "../cards/shuffle";
 import DrawResult from "./DrawResult";
 import * as ArtFinder from "../cards/artFinder";
 import Deck from "./Deck";
-import DeckList from "./DeckList";
 import { Navbar } from './Navbar';
 import { LFSR } from "../cards/lfsr";
 import update from "immutability-helper";
@@ -67,10 +66,23 @@ export default class App extends React.Component<Props, State> {
     }));
   }
 
-  handleDeleteDeck(index: number) {
+  handleDeleteDeck() {
+    const index = this.state.currentDeckIndex;
+    if (index === null) {
+      console.error('Attempted to delete a deck at index null?');
+      return;
+    }
+    const deck = this.state.decks[index];
+    if (!confirm(`Are you sure you want to delete the deck "${deck.name}"? This cannot be undone.`)) {
+      return;
+    }
+
     console.debug(`Deleting deck ${index}`);
     this.setState((state) =>
-      update(state, { decks: { $splice: [[index, 1]] } })
+      update(state, {
+        decks: { $splice: [[index, 1]] },
+        currentDeckIndex: { $set: null }
+      })
     );
   }
 
@@ -140,13 +152,10 @@ export default class App extends React.Component<Props, State> {
         <Navbar decks={this.state.decks}
           onDeckSelect={this.handleSelectDeck}
           onNewDeck={this.handleShowNewDeckDialog} />
-        <DeckList decks={this.state.decks}
-          onNewDeck={this.handleNewDeck}
-          onDeleteDeck={this.handleDeleteDeck}
-        />
         {currentDeck &&
           <Deck onDraw={this.handleDraw}
             onShuffle={this.handleShuffle}
+            onDelete={this.handleDeleteDeck}
             deck={currentDeck} />}
         <div id="draw-result-container">
           <DrawResult card={this.state.currentCard} />

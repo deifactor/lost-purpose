@@ -8,7 +8,8 @@ import '../styles/modal.scss';
 interface Props {
   deck: Cards.Deck,
   onDraw: () => void,
-  onShuffle: (fingerprint: number) => void
+  onShuffle: (fingerprint: number) => void,
+  onDelete: () => void
 }
 
 interface State {
@@ -38,6 +39,7 @@ export default class Deck extends React.Component<Props, State> {
         <h3>{this.props.deck.name}</h3>
         <button onClick={this.props.onDraw}>Draw</button>
         <button onClick={this.startShuffle}>Shuffle</button>
+        <button onClick={this.props.onDelete}>Delete deck</button>
         <ReactModal
           isOpen={this.state.showPrompter}
           className="modal"
