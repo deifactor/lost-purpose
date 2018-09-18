@@ -10,8 +10,10 @@ import update from "immutability-helper";
 import ReactModal = require('react-modal');
 import { NewDeckDialog } from './NewDeckDialog';
 import { HashRouter, Route } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 import '../styles/app.scss';
+const aboutMarkdown = require('./About.md');
 
 interface Props {
 }
@@ -139,6 +141,10 @@ export default class App extends React.Component<Props, State> {
           <Navbar decks={this.state.decks}
             onNewDeck={this.handleShowNewDeckDialog} />
           {deckRoutes}
+          <Route
+            path="/about"
+            render={() => <ReactMarkdown source={aboutMarkdown} />} />
+
           <div id="draw-result-container">
             <DrawResult card={this.state.currentCard} />
           </div>

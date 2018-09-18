@@ -27,6 +27,9 @@ export const Navbar: React.SFC<Props> = (props) => {
             <li onClick={props.onNewDeck}>Add new deck</li>
           </ul>
         </li>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
       </ul>
     </nav>
   );

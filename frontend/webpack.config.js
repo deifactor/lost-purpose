@@ -34,6 +34,10 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
+        test: /\.md$/,
+        use: ["raw-loader"]
+      },
+      {
         enforce: "pre",
         test: /\.js$/,
         loader: "source-map-loader"
