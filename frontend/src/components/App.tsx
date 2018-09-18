@@ -8,6 +8,8 @@ import DeckList from "./DeckList";
 import { Navbar } from './Navbar';
 import { LFSR } from "../cards/lfsr";
 import update from "immutability-helper";
+import ReactModal = require('react-modal');
+import { NewDeckDialog } from './NewDeckDialog';
 
 import '../styles/app.scss';
 
@@ -19,6 +21,7 @@ interface State {
   currentDeckIndex: number | null,
   currentCard: Cards.OrientedCard | null,
   decks: ReadonlyArray<Cards.Deck>,
+  showNewDeckDialog: boolean
 }
 
 const decksStorageKey = 'decks';
@@ -28,8 +31,14 @@ export default class App extends React.Component<Props, State> {
     super(props);
     const savedDecks = localStorage.getItem(decksStorageKey);
     const decks = savedDecks ? JSON.parse(savedDecks) : [];
-    this.state = { decks, currentDeckIndex: decks.length != 0 ? 0 : null, currentCard: null };
+    this.state = {
+      decks,
+      currentDeckIndex: decks.length != 0 ? 0 : null,
+      currentCard: null,
+      showNewDeckDialog: false
+    };
 
+    this.handleShowNewDeckDialog = this.handleShowNewDeckDialog.bind(this);
     this.handleNewDeck = this.handleNewDeck.bind(this);
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
     this.handleSelectDeck = this.handleSelectDeck.bind(this);
@@ -44,6 +53,10 @@ export default class App extends React.Component<Props, State> {
   componentWillUnmount() {
     this.saveState();
     window.removeEventListener("beforeunload", this.saveState);
+  }
+
+  private handleShowNewDeckDialog() {
+    this.setState({ showNewDeckDialog: true });
   }
 
   handleNewDeck(deck: Cards.Deck) {
@@ -125,7 +138,8 @@ export default class App extends React.Component<Props, State> {
     return (
       <div>
         <Navbar decks={this.state.decks}
-                onDeckSelect={this.handleSelectDeck} />
+          onDeckSelect={this.handleSelectDeck}
+          onNewDeck={this.handleShowNewDeckDialog} />
         <DeckList decks={this.state.decks}
           onNewDeck={this.handleNewDeck}
           onDeleteDeck={this.handleDeleteDeck}
@@ -137,6 +151,14 @@ export default class App extends React.Component<Props, State> {
         <div id="draw-result-container">
           <DrawResult card={this.state.currentCard} />
         </div>
+
+        <ReactModal
+          isOpen={this.state.showNewDeckDialog}
+          className="modal"
+          overlayClassName="overlay"
+          closeTimeoutMS={200}>
+          <NewDeckDialog onNewDeck={this.handleNewDeck} />
+        </ReactModal>
       </div>
     );
   }

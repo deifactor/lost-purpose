@@ -7,9 +7,15 @@ interface Props {
   decks: ReadonlyArray<Deck>,
   // Called whenever the user selects a deck.
   onDeckSelect: (deck: Deck, index: number) => void
+  // Called when the user wants to add a new deck.
+  onNewDeck: () => void
 }
 
 export const Navbar: React.SFC<Props> = (props) => {
+  const onNewDeck = (e: React.FormEvent) => {
+    e.preventDefault();
+    props.onNewDeck();
+  }
   const handleDeckClick = (e: React.FormEvent, deck: Deck, index: number) => {
     e.preventDefault();
     props.onDeckSelect(deck, index);
@@ -29,6 +35,9 @@ export const Navbar: React.SFC<Props> = (props) => {
           </div>
           <ul className="dropdown-content">
             {deckElements}
+            <li>
+              <a href="#" onClick={onNewDeck}>Add new deck</a>
+            </li>
           </ul>
         </li>
       </ul>

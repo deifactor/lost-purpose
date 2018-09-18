@@ -1,7 +1,5 @@
 import * as React from "react";
 import * as Cards from "../cards/cards";
-import ReactModal = require('react-modal');
-import { NewDeckDialog } from './NewDeckDialog';
 
 interface Props {
   decks: ReadonlyArray<Cards.Deck>,
@@ -12,25 +10,12 @@ interface Props {
 }
 
 interface State {
-  showNewDeckDialog: boolean
 }
 
 export default class DeckList extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { showNewDeckDialog: false };
-
-    this.handleNewDeckButton = this.handleNewDeckButton.bind(this);
-    this.handleNewDeck = this.handleNewDeck.bind(this);
-  }
-
-  handleNewDeckButton(e: React.FormEvent) {
-    this.setState({ showNewDeckDialog: true });
-  }
-
-  handleNewDeck(deck: Cards.Deck) {
-    this.setState({ showNewDeckDialog: false });
-    this.props.onNewDeck(deck);
   }
 
   render() {
@@ -41,15 +26,7 @@ export default class DeckList extends React.Component<Props, State> {
       </li>);
     return (
       <div>
-        <ReactModal
-          isOpen={this.state.showNewDeckDialog}
-          className="modal"
-          overlayClassName="overlay"
-          closeTimeoutMS={200}>
-          <NewDeckDialog onNewDeck={this.handleNewDeck} />
-        </ReactModal>
         <ul>{deckItems}</ul>
-        <button onClick={this.handleNewDeckButton}>Add new deck</button>
       </div>
     );
   }
