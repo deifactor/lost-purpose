@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Cards from "../cards/cards";
 import { shuffle } from "../cards/shuffle";
-import DrawResult from "./DrawResult";
+import { DrawResult } from "./DrawResult";
 import * as ArtFinder from "../cards/artFinder";
 import Deck from "./Deck";
 import { Navbar } from './Navbar';
