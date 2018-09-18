@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as Cards from "../cards/cards";
-import update from "immutability-helper";
-import * as uuid from "uuid";
+import * as React from 'react';
+import * as Cards from '../cards/cards';
+import update from 'immutability-helper';
+import * as uuid from 'uuid';
 
 import '../styles/dialog_form.scss';
 

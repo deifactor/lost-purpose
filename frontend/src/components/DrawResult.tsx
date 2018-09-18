@@ -1,9 +1,9 @@
-import * as React from "react";
-import * as Cards from "../cards/cards";
-import * as ArtFinder from "../cards/artFinder";
-import { CardFormatter } from "../cards/cardFormatter";
-import CardArtViewer from "./CardArtViewer";
-import { InterpretationView } from "./InterpretationView";
+import * as React from 'react';
+import * as Cards from '../cards/cards';
+import * as ArtFinder from '../cards/artFinder';
+import { CardFormatter } from '../cards/cardFormatter';
+import CardArtViewer from './CardArtViewer';
+import { InterpretationView } from './InterpretationView';
 
 import '../styles/draw_result.scss';
 

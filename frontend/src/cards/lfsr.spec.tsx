@@ -1,4 +1,4 @@
-import { LFSR } from "./lfsr";
+import { LFSR } from './lfsr';
 
 describe("nonsensical inputs", () => {
   it("should fail if the feed is unsafe", () => {

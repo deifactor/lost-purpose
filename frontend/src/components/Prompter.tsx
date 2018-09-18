@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 import CRC32 = require('crc-32');
 import classNames = require('classnames');
-import delay from "delay";
+import delay from 'delay';
 
 import '../styles/prompter.scss';
 

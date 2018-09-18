@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Cards from '../cards/cards';
 import { NewDeckDialog } from './NewDeckDialog';
 import { shallow } from 'enzyme';
-import update from "immutability-helper";
+import update from 'immutability-helper';
 
 function ignore(deck: Cards.Deck) {}
 

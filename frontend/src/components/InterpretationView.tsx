@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import { Art, OrientedCard } from '../cards/cards';
 import * as interpret from '../cards/interpret';
 

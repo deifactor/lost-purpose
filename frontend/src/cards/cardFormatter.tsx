@@ -1,4 +1,4 @@
-import { MajorArcana, Card, OrientedCard, CardKind, Rank, Suit, Color } from "./cards";
+import { MajorArcana, Card, OrientedCard, CardKind, Rank, Suit, Color } from './cards';
 import romanize = require('romanize');
 
 export enum NumberFormat {

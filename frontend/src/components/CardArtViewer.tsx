@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as Cards from "../cards/cards";
+import * as React from 'react';
+import * as Cards from '../cards/cards';
 import classNames = require('classnames');
-import delay from "delay";
+import delay from 'delay';
 
 import '../styles/card_art_viewer.scss';
 

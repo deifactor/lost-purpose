@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as Cards from "../cards/cards";
+import * as React from 'react';
+import * as Cards from '../cards/cards';
 import ReactModal = require('react-modal');
-import { Prompter } from "./Prompter";
+import { Prompter } from './Prompter';
 
 import '../styles/modal.scss';
 
