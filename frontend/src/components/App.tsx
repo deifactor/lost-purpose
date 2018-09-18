@@ -9,6 +9,7 @@ import { LFSR } from "../cards/lfsr";
 import update from "immutability-helper";
 import ReactModal = require('react-modal');
 import { NewDeckDialog } from './NewDeckDialog';
+import { HashRouter, Route } from 'react-router-dom';
 
 import '../styles/app.scss';
 
@@ -17,7 +18,6 @@ interface Props {
 
 interface State {
   // This is null if and only if there are no decks.
-  currentDeckIndex: number | null,
   currentCard: Cards.OrientedCard | null,
   decks: ReadonlyArray<Cards.Deck>,
   showNewDeckDialog: boolean
@@ -32,7 +32,6 @@ export default class App extends React.Component<Props, State> {
     const decks = savedDecks ? JSON.parse(savedDecks) : [];
     this.state = {
       decks,
-      currentDeckIndex: decks.length != 0 ? 0 : null,
       currentCard: null,
       showNewDeckDialog: false
     };
@@ -40,7 +39,6 @@ export default class App extends React.Component<Props, State> {
     this.handleShowNewDeckDialog = this.handleShowNewDeckDialog.bind(this);
     this.handleNewDeck = this.handleNewDeck.bind(this);
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
-    this.handleSelectDeck = this.handleSelectDeck.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
     this.saveState = this.saveState.bind(this);
@@ -62,18 +60,16 @@ export default class App extends React.Component<Props, State> {
     console.debug(`Creating new deck named ${deck.name}`);
     this.setState((state) => ({
       decks: [...state.decks, deck],
-      currentDeckIndex: state.decks.length,
       showNewDeckDialog: false
     }));
   }
 
-  handleDeleteDeck() {
-    const index = this.state.currentDeckIndex;
+  handleDeleteDeck(deck: Cards.Deck) {
+    const index = this.state.decks.indexOf(deck);
     if (index === null) {
       console.error('Attempted to delete a deck at index null?');
       return;
     }
-    const deck = this.state.decks[index];
     if (!confirm(`Are you sure you want to delete the deck "${deck.name}"? This cannot be undone.`)) {
       return;
     }
@@ -87,36 +83,18 @@ export default class App extends React.Component<Props, State> {
     );
   }
 
-  handleSelectDeck(deck: Cards.Deck, index: number) {
-    console.debug(`Selecting deck ${index}`);
-    this.setState((state) => ({
-      currentDeckIndex: index
-    }));
-  }
-
   saveState() {
     console.log("Saving state to localStorage");
     window.localStorage.setItem(decksStorageKey, JSON.stringify(this.state.decks));
   }
 
-  currentDeck(): Cards.Deck | null {
-    if (this.state.currentDeckIndex !== null) {
-      return this.state.decks[this.state.currentDeckIndex];
-    } else {
-      return null;
-    }
-  }
-
-  private handleDraw() {
+  private handleDraw(deck: Cards.Deck) {
     this.setState((state) => {
-      const index = this.state.currentDeckIndex;
-      if (index === null) {
-        throw new Error("null currentDeckIndex");
-      }
-      const topCard = state.decks[index].cards[0];
+      const index = this.state.decks.indexOf(deck)!;
+      const topCard = deck.cards[0];
       console.info("Drew", topCard);
       const currentCard = topCard;
-      const numCards = state.decks[index].cards.length;
+      const numCards = deck.cards.length;
       let newDecks = update(state.decks,
         { [index]: { cards: { $splice: [[0, 1]] } } });
       newDecks = update(newDecks,
@@ -125,14 +103,11 @@ export default class App extends React.Component<Props, State> {
     });
   }
 
-  private handleShuffle(fingerprint: number) {
+  private handleShuffle(deck: Cards.Deck, fingerprint: number) {
     const lfsr = new LFSR(fingerprint);
     console.debug("Shuffling deck");
     this.setState((state) => {
-      const index = this.state.currentDeckIndex;
-      if (index === null) {
-        throw new Error("null currentDeckIndex");
-      }
+      const index = this.state.decks.indexOf(deck)!;
       let repeatedShuffle = function <T>(cards: Array<Cards.OrientedCard>) {
         // Ten times is enough to get some actual mixing.
         for (let i = 0; i < 10; i++) {
@@ -147,29 +122,36 @@ export default class App extends React.Component<Props, State> {
   }
 
   render() {
-    const currentDeck = this.currentDeck();
+    const deckRoutes = this.state.decks.map((deck) => (
+      <Route
+        key={deck.id}
+        path={`/deck/${deck.id.substr(0, 8)}`}
+        render={() => (
+          <Deck
+            onDraw={this.handleDraw.bind(this, deck)}
+            onShuffle={this.handleShuffle.bind(this, deck)}
+            onDelete={this.handleDeleteDeck.bind(this, deck)}
+            deck={deck} />)} />
+    ));
     return (
-      <div>
-        <Navbar decks={this.state.decks}
-          onDeckSelect={this.handleSelectDeck}
-          onNewDeck={this.handleShowNewDeckDialog} />
-        {currentDeck &&
-          <Deck onDraw={this.handleDraw}
-            onShuffle={this.handleShuffle}
-            onDelete={this.handleDeleteDeck}
-            deck={currentDeck} />}
-        <div id="draw-result-container">
-          <DrawResult card={this.state.currentCard} />
-        </div>
+      <HashRouter>
+        <div>
+          <Navbar decks={this.state.decks}
+            onNewDeck={this.handleShowNewDeckDialog} />
+          {deckRoutes}
+          <div id="draw-result-container">
+            <DrawResult card={this.state.currentCard} />
+          </div>
 
-        <ReactModal
-          isOpen={this.state.showNewDeckDialog}
-          className="modal"
-          overlayClassName="overlay"
-          closeTimeoutMS={200}>
-          <NewDeckDialog onNewDeck={this.handleNewDeck} />
-        </ReactModal>
-      </div>
+          <ReactModal
+            isOpen={this.state.showNewDeckDialog}
+            className="modal"
+            overlayClassName="overlay"
+            closeTimeoutMS={200}>
+            <NewDeckDialog onNewDeck={this.handleNewDeck} />
+          </ReactModal>
+        </div>
+      </HashRouter>
     );
   }
 }

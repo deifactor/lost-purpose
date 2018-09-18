@@ -29,7 +29,7 @@ nav.navbar {
       position: absolute;
       background: #181818;
 
-      >li {
+      li {
         padding: .5em 1em;
         display: block;
       }
@@ -41,7 +41,7 @@ nav.navbar {
   }
 
   .navbar-content,
-  .dropdown-content>li {
+  .dropdown-content li {
     &:hover {
       background: #003ae3;
     }
