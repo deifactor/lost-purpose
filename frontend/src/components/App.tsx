@@ -4,6 +4,7 @@ import { shuffle } from '../cards/shuffle';
 import { DrawResult } from './DrawResult';
 import * as ArtFinder from '../cards/artFinder';
 import Deck from './Deck';
+import { BackupRestore } from './BackupRestore';
 import { Navbar } from './Navbar';
 import { LFSR } from '../cards/lfsr';
 import update from 'immutability-helper';
@@ -43,6 +44,7 @@ export default class App extends React.Component<Props, State> {
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
+    this.handleRestore = this.handleRestore.bind(this);
     this.saveState = this.saveState.bind(this);
 
     // Needed since componentWillUnmount isn't called if the user is reloading the page.
@@ -83,6 +85,21 @@ export default class App extends React.Component<Props, State> {
         currentDeckIndex: { $set: null }
       })
     );
+  }
+
+  private handleRestore(value: string) {
+    let decks: Cards.Deck[] | undefined;
+    try {
+      decks = JSON.parse(value);
+    } catch (err) {
+      console.log(err);
+      alert('Could not restore backup.');
+      return;
+    }
+    this.setState((state) =>
+      update(state, {
+        decks: { $set: decks! } }));
+    alert('Restore successful.');
   }
 
   saveState() {
@@ -150,6 +167,11 @@ export default class App extends React.Component<Props, State> {
           <Route
             path="/about"
             render={() => <ReactMarkdown source={aboutMarkdown} />} />
+          <Route
+            path="/backup-restore"
+            render={() => <BackupRestore
+              value={JSON.stringify(this.state.decks)}
+              onRestore={this.handleRestore} />} />
 
           <ReactModal
             isOpen={this.state.showNewDeckDialog}

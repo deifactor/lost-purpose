@@ -27,6 +27,7 @@ export const Navbar: React.SFC<Props> = (props) => {
         </div>
       </div>
       <Link className="item" to="/about">About</Link>
+      <Link className="item" to="/backup-restore">Backup/Restore</Link>
     </nav>
   );
 }
