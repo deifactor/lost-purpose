@@ -6,6 +6,7 @@ import * as ArtFinder from '../cards/artFinder';
 import Deck from './Deck';
 import { BackupRestore } from './BackupRestore';
 import { Navbar } from './Navbar';
+import { DeckPreloader } from './DeckPreloader';
 import { LFSR } from '../cards/lfsr';
 import update from 'immutability-helper';
 import ReactModal = require('react-modal');
@@ -157,6 +158,7 @@ export default class App extends React.Component<Props, State> {
               onShuffle={this.handleShuffle.bind(this, deck)}
               onDelete={this.handleDeleteDeck.bind(this, deck)}
               deck={deck} />
+            <DeckPreloader count={5} deck={deck} />
             <div id="draw-result-container">
               <DrawResult card={this.state.currentCard} />
             </div>
