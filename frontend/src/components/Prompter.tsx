@@ -86,7 +86,11 @@ export class Prompter extends React.Component<Props, State> {
         <div className="modal-title">{title}</div>
         <div className="body">
           <form onSubmit={this.handleInputSubmit} className={classNames(formClasses)}>
-            <input type="text" onChange={this.handleInputChange} value={this.state.input} />
+            <input
+              type="text"
+              autoFocus
+              onChange={this.handleInputChange}
+              value={this.state.input} />
             <button type="submit">Ask</button>
           </form>
           <div className={classNames(fingerprintClasses)}>

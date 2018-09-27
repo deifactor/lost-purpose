@@ -104,6 +104,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
             id="name"
             name="name"
             type="text"
+            autoFocus
             onChange={this.handleChange}
             value={this.state.form.name} />
           <label htmlFor="deck">Deck</label>
