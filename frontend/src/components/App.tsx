@@ -11,13 +11,18 @@ import { LFSR } from '../cards/lfsr';
 import update from 'immutability-helper';
 import ReactModal = require('react-modal');
 import { NewDeckDialog } from './NewDeckDialog';
-import { HashRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { withRouter } from 'react-router';
+import history from 'history';
 
 import '../styles/app.scss';
 const aboutMarkdown = require('./About.md');
 
 interface Props {
+  history: history.History,
+  location: any,
+  match: any
 }
 
 interface State {
@@ -29,7 +34,7 @@ interface State {
 
 const decksStorageKey = 'decks';
 
-export default class App extends React.Component<Props, State> {
+class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const savedDecks = localStorage.getItem(decksStorageKey);
@@ -73,10 +78,11 @@ export default class App extends React.Component<Props, State> {
       decks: [...state.decks, deck],
       showNewDeckDialog: false
     }));
+    this.props.history.push(`/deck/${deck.id.substr(0, 8)}`);
   }
 
   private handleSelectDeck() {
-    this.setState({currentCard: null});
+    this.setState({ currentCard: null });
   }
 
   private handleDeleteDeck(deck: Cards.Deck) {
@@ -109,7 +115,8 @@ export default class App extends React.Component<Props, State> {
     }
     this.setState((state) =>
       update(state, {
-        decks: { $set: decks! } }));
+        decks: { $set: decks! }
+      }));
     alert('Restore successful.');
   }
 
@@ -171,32 +178,32 @@ export default class App extends React.Component<Props, State> {
         )} />
     ));
     return (
-      <HashRouter>
-        <div>
-          <Navbar
-            decks={this.state.decks}
-            onSelectDeck={this.handleSelectDeck}
-            onNewDeck={this.handleShowNewDeckDialog} />
-          {deckRoutes}
-          <Route
-            path="/about"
-            render={() => <ReactMarkdown source={aboutMarkdown} />} />
-          <Route
-            path="/backup-restore"
-            render={() => <BackupRestore
-              value={JSON.stringify(this.state.decks)}
-              onRestore={this.handleRestore} />} />
+      <div>
+        <Navbar
+          decks={this.state.decks}
+          onSelectDeck={this.handleSelectDeck}
+          onNewDeck={this.handleShowNewDeckDialog} />
+        {deckRoutes}
+        <Route
+          path="/about"
+          render={() => <ReactMarkdown source={aboutMarkdown} />} />
+        <Route
+          path="/backup-restore"
+          render={() => <BackupRestore
+            value={JSON.stringify(this.state.decks)}
+            onRestore={this.handleRestore} />} />
 
-          <ReactModal
-            isOpen={this.state.showNewDeckDialog}
-            className="modal"
-            overlayClassName="overlay"
-            onRequestClose={this.handleCloseNewDeck}
-            closeTimeoutMS={200}>
-            <NewDeckDialog onNewDeck={this.handleNewDeck} />
-          </ReactModal>
-        </div>
-      </HashRouter>
+        <ReactModal
+          isOpen={this.state.showNewDeckDialog}
+          className="modal"
+          overlayClassName="overlay"
+          onRequestClose={this.handleCloseNewDeck}
+          closeTimeoutMS={200}>
+          <NewDeckDialog onNewDeck={this.handleNewDeck} />
+        </ReactModal>
+      </div>
     );
   }
 }
+
+export default withRouter(App);
