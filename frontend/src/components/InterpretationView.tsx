@@ -58,10 +58,19 @@ function renderSiliconDawn(card: OrientedCard): JSX.Element {
 
   const { title, meaning } = interpretation;
 
+  function renderLine(line: string, index: number) {
+    // Ugly hack to make the 99 of Cups render properly.
+    if (line.startsWith("<pre>")) {
+      return <pre key={index}>{line.slice("<pre>".length)}</pre>
+    } else {
+      return <p key={index}>{line}</p>
+    }
+  }
+
   return (
     <div className="interpretation">
       <h3>{title}</h3>
-      {meaning.map((line, index) => <p key={index}>{line}</p>)}
+      {meaning.map(renderLine)}
     </div>
   );
 }
