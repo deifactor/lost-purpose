@@ -1,5 +1,7 @@
 /frontend/assets/silicon-dawn-ascii
 /frontend/assets/rider-waite-smith-ascii
+/frontend/assets/neon-moon-ascii
+/frontend/assets/neon-moon/*.png
 /frontend/coverage
 /frontend/dist
 /frontend/node_modules
