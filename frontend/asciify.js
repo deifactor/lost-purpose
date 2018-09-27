@@ -40,3 +40,4 @@ assert(cli);
 
 asciify('silicon-dawn');
 asciify('rider-waite-smith');
+asciify('neon-moon');

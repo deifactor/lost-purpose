@@ -57,6 +57,10 @@ of print at the moment (mid-september 2018). the interpretations are also used
 with her permission, as Silicon Dawn deviates significantly from
 Rider-Waite-Smith interpretations.
 
+the Neon Moon deck is by [Pixel Occult](http://www.neonmoontarot.com/), and is
+also used with explicit permission. the colors work *really* well with the
+asciifier, and i'm happy that the creator was cool enough to let me use them :)
+
 the asciifying process is done using [a program i wrote
 myself](https://github.com/deifactor/ascender). it's done entirely
 automatically; i'm sure that you could hand-tune the characters to produce

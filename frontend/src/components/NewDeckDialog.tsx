@@ -12,7 +12,7 @@ interface Props {
 interface State {
   form: {
     name: string,
-    deck: "silicon-dawn" | "rider-waite-smith",
+    deck: "silicon-dawn" | "rider-waite-smith" | "neon-moon",
     voidSuit: boolean,
     ninetyNines: boolean,
     extraArcana: boolean
@@ -21,7 +21,8 @@ interface State {
 
 const DECK_TO_ART = {
   "silicon-dawn": Cards.Art.SiliconDawn,
-  "rider-waite-smith": Cards.Art.RiderWaiteSmith
+  "rider-waite-smith": Cards.Art.RiderWaiteSmith,
+  "neon-moon": Cards.Art.RiderWaiteSmith
 };
 
 export class NewDeckDialog extends React.Component<Props, State> {
@@ -79,6 +80,9 @@ export class NewDeckDialog extends React.Component<Props, State> {
       case "rider-waite-smith":
         cards = Cards.standard();
         break;
+      case "neon-moon":
+        cards = Cards.standard(Cards.Art.NeonMoon);
+        break;
     }
     const deck = {
       cards,
@@ -110,6 +114,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
             value={this.state.form.deck}>
             <option value="silicon-dawn">Silicon Dawn</option>
             <option value="rider-waite-smith">Rider-Waite-Smith</option>
+            <option value="neon-moon">Neon Moon</option>
           </select>
 
           {this.state.form.deck == "silicon-dawn" &&

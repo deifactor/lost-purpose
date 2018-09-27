@@ -18,6 +18,7 @@ export function back(card: Card) {
   switch (card.art) {
     case Art.SiliconDawn: return context(card.art)("./black.jpg");
     case Art.RiderWaiteSmith: return context(card.art)("./back.jpg");
+    case Art.NeonMoon: return context(card.art)("./back.jpg");
   }
 }
 

@@ -13,7 +13,7 @@ interface Props {
 
 export const DrawResult: React.SFC<Props> = (props) => {
   const formatter = new CardFormatter();
-  const { card } = this.props;
+  const { card } = props;
   const cardName = card ? formatter.format(card) : undefined;
   const viewerProps = card ?
     {
