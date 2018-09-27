@@ -43,6 +43,7 @@ export default class App extends React.Component<Props, State> {
     this.handleShowNewDeckDialog = this.handleShowNewDeckDialog.bind(this);
     this.handleCloseNewDeck = this.handleCloseNewDeck.bind(this);
     this.handleNewDeck = this.handleNewDeck.bind(this);
+    this.handleSelectDeck = this.handleSelectDeck.bind(this);
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
@@ -72,6 +73,10 @@ export default class App extends React.Component<Props, State> {
       decks: [...state.decks, deck],
       showNewDeckDialog: false
     }));
+  }
+
+  private handleSelectDeck() {
+    this.setState({currentCard: null});
   }
 
   handleDeleteDeck(deck: Cards.Deck) {
@@ -168,7 +173,9 @@ export default class App extends React.Component<Props, State> {
     return (
       <HashRouter>
         <div>
-          <Navbar decks={this.state.decks}
+          <Navbar
+            decks={this.state.decks}
+            onSelectDeck={this.handleSelectDeck}
             onNewDeck={this.handleShowNewDeckDialog} />
           {deckRoutes}
           <Route

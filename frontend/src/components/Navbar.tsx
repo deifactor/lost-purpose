@@ -6,13 +6,18 @@ import '../styles/navbar.scss';
 
 interface Props {
   decks: ReadonlyArray<Deck>,
+  // Called when the user chooses a deck.
+  onSelectDeck: () => void,
   // Called when the user wants to add a new deck.
   onNewDeck: () => void
 }
 
 export const Navbar: React.SFC<Props> = (props) => {
   const deckElements = props.decks.map((deck, index) =>
-    <Link to={`/deck/${deck.id.substr(0, 8)}`} key={index}>
+    <Link
+      onClick={props.onSelectDeck}
+      to={`/deck/${deck.id.substr(0, 8)}`}
+      key={index}>
       {deck.name}
     </Link>);
   return (
