@@ -22,10 +22,15 @@ export default class Deck extends React.Component<Props, State> {
     this.state = { showPrompter: false };
     this.startShuffle = this.startShuffle.bind(this);
     this.handleFingerprintComputed = this.handleFingerprintComputed.bind(this);
+    this.handleClosePrompter = this.handleClosePrompter.bind(this);
   }
 
   private startShuffle() {
     this.setState({ showPrompter: true });
+  }
+
+  private handleClosePrompter() {
+    this.setState({ showPrompter: false });
   }
 
   private handleFingerprintComputed(fingerprint: number) {
@@ -43,6 +48,7 @@ export default class Deck extends React.Component<Props, State> {
         <ReactModal
           isOpen={this.state.showPrompter}
           className="modal"
+          onRequestClose={this.handleClosePrompter}
           overlayClassName="overlay"
           closeTimeoutMS={200}>
           <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />

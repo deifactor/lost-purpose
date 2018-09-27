@@ -40,6 +40,7 @@ export default class App extends React.Component<Props, State> {
     };
 
     this.handleShowNewDeckDialog = this.handleShowNewDeckDialog.bind(this);
+    this.handleCloseNewDeck = this.handleCloseNewDeck.bind(this);
     this.handleNewDeck = this.handleNewDeck.bind(this);
     this.handleDeleteDeck = this.handleDeleteDeck.bind(this);
     this.handleDraw = this.handleDraw.bind(this);
@@ -58,6 +59,10 @@ export default class App extends React.Component<Props, State> {
 
   private handleShowNewDeckDialog() {
     this.setState({ showNewDeckDialog: true });
+  }
+
+  private handleCloseNewDeck() {
+    this.setState({ showNewDeckDialog: false });
   }
 
   handleNewDeck(deck: Cards.Deck) {
@@ -177,6 +182,7 @@ export default class App extends React.Component<Props, State> {
             isOpen={this.state.showNewDeckDialog}
             className="modal"
             overlayClassName="overlay"
+            onRequestClose={this.handleCloseNewDeck}
             closeTimeoutMS={200}>
             <NewDeckDialog onNewDeck={this.handleNewDeck} />
           </ReactModal>
