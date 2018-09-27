@@ -67,7 +67,7 @@ export default class App extends React.Component<Props, State> {
     this.setState({ showNewDeckDialog: false });
   }
 
-  handleNewDeck(deck: Cards.Deck) {
+  private handleNewDeck(deck: Cards.Deck) {
     console.debug(`Creating new deck named ${deck.name}`);
     this.setState((state) => ({
       decks: [...state.decks, deck],
@@ -79,7 +79,7 @@ export default class App extends React.Component<Props, State> {
     this.setState({currentCard: null});
   }
 
-  handleDeleteDeck(deck: Cards.Deck) {
+  private handleDeleteDeck(deck: Cards.Deck) {
     const index = this.state.decks.indexOf(deck);
     if (index === null) {
       console.error('Attempted to delete a deck at index null?');
@@ -113,7 +113,7 @@ export default class App extends React.Component<Props, State> {
     alert('Restore successful.');
   }
 
-  saveState() {
+  private saveState() {
     console.log("Saving state to localStorage");
     window.localStorage.setItem(decksStorageKey, JSON.stringify(this.state.decks));
   }
