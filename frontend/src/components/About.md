@@ -76,6 +76,14 @@ vastly more intelligible output.
 [the code itself](https://github.com/deifactor/lost-purpose) is all me (Ash),
 but relies on more libraries than i can count.
 
+## contact
+
+if you want to get in contact with me, here are your options from best to worst:
+
+- [send me a message on Mastodon](https://cybre.space/@hierarchon)
+- [send me a message on Twitter](https://twitter.com/hierarchon) (public DMs are on)
+- [mailto:relativistic.policeman@gmail.com](e-mail me)
+
 ---
 
 ¹ and who is also very cute
