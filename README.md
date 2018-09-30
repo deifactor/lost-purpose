@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose) [![codecov](https://codecov.io/gh/deifactor/lost-purpose/branch/master/graph/badge.svg)](https://codecov.io/gh/deifactor/lost-purpose)
 
-***IN PROGRESS; NOT FINISHED YET***
+If you want to try the Tarot of the Lost Purpose out for yourself, see [the
+official instance](https://synthetic.zone/lost-purpose).
 
 Tarot of the Lost Purpose (or just Lost Purpose) is a
 [skeuomorphic](https://en.wikipedia.org/wiki/Skeuomorph) tarot deck web
