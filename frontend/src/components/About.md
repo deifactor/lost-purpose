@@ -1,6 +1,6 @@
-## about the tarot of the lost purpose
+# about the tarot of the lost purpose
 
-### origin story
+## origin story
 
 the tarot of the lost purpose began on june 8, 2018, with me thinking:
 
@@ -15,7 +15,16 @@ but also
 sadly, the rust backend atrophied when i decided to do everything on the
 frontend, but i wound up using it for the asciifier, so hey.
 
-### what's in a name?
+## why do i have to make a deck?
+
+because Lost Purpose actually does store the state of your deck, including
+whether each card is reversed or not, and actually uses a vague simulation of
+how humans shuffle, where the RNG is a function of the query you type in.
+
+of course, it would also be possible to just use a real RNG and pick a card at
+random, but that isn't really fun, is it?
+
+## what's in a name?
 
 originally it was called 'skarot', for
 '[skeumorphic](https://en.wikipedia.org/wiki/Skeuomorph) tarot', but i later
@@ -26,7 +35,7 @@ tarot in the first place¹ suggested 'lost purpose', both because:
 - a skeumorphism is something that's lost its purpose
 - tarot is something you turn to when you've lost your purpose
 
-### do you actually believe in the occult?
+## do you actually believe in the occult?
 
 me, personally? nah. the shuffling algorithm is *entirely* deterministic (modulo
 a huge lag spike decreasing the number of crc32 stretches). but what i do
@@ -41,7 +50,7 @@ yourself\[...\]", so i guess reversed means 'yes, i am real, and i will doom you
 for doubting me'? i'm not making this up because you wouldn't believe me if i
 did.
 
-### credits
+## credits
 
 the Rider-Waite-Smith deck was drawn by [Pamela Coleman
 Smith](https://en.wikipedia.org/wiki/Pamela_Colman_Smith). this is the original
