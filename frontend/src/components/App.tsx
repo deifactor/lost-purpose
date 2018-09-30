@@ -104,6 +104,7 @@ class App extends React.Component<Props, State> {
           onSelectDeck={this.handleSelectDeck}
           onNewDeck={this.handleShowNewDeckDialog}
         />
+        {deckRoutes}
         <Route exact path="/" component={Home} />
         <Route
           path="/about"
