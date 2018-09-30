@@ -52,11 +52,10 @@ situation in a certain way, or act as symmetry-breaking for indecision. and i
 think they're just pretty to look at.
 
 after writing the above, i asked a fresh, shuffled silicon dawn deck whether the
-occult is real, and it gave me History reversed. history upright "\[...\]may be a
+occult is real, and it gave me History reversed. history upright "...may be a
 reminder that the whole deck can just be an elaborate way of talking to
-yourself\[...\]", so i guess reversed means 'yes, i am real, and i will doom you
-for doubting me'? i'm not making this up because you wouldn't believe me if i
-did.
+yourself...", so i guess reversed means 'yes, i am real, and i will doom you for
+doubting me'? i'm not making this up because you wouldn't believe me if i did.
 
 ## contact
 
