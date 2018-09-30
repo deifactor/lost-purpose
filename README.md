@@ -21,6 +21,8 @@ necessary, and makes several design decisions with the explicit purpose of
   implements a 'chunked riffle shuffle' where the deck is randomly cut and
   randomly-sized chunks from each half are interleaved.
 
+For a more rambly about page, read [the about page](frontend/src/components/About.md).
+
 ## Silicon Dawn
 
 Lost Purpose also supports the [Tarot of the Silicon
