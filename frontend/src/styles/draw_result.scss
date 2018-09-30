@@ -7,13 +7,8 @@
     font-size: 80%;
     max-width: 520px;
 
-    max-height: 540px;
     display: flex;
     flex-direction: column;
-
-    .interpretation {
-      overflow-y: scroll;
-    }
   }
 
   .card-name {
