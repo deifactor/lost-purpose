@@ -1,34 +1,34 @@
-import * as React from 'react';
-import * as Cards from '../cards/cards';
-import update from 'immutability-helper';
-import ReactModal = require('react-modal');
-import { shuffle } from '../cards/shuffle';
-import { LFSR } from '../cards/lfsr';
-import { Prompter } from './Prompter';
-import delay from 'delay';
-import * as uuid from 'uuid';
+import delay from "delay";
+import update from "immutability-helper";
+import * as React from "react";
+import ReactModal = require("react-modal");
+import * as uuid from "uuid";
+import * as Cards from "../cards/cards";
+import { LFSR } from "../cards/lfsr";
+import { shuffle } from "../cards/shuffle";
+import { Prompter } from "./Prompter";
 
-import '../styles/dialog_form.scss';
+import "../styles/dialog_form.scss";
 
 interface Props {
-  onNewDeck: (deck: Cards.Deck) => void
+  onNewDeck: (deck: Cards.Deck) => void;
 }
 
 interface State {
-  showPrompter: boolean,
+  showPrompter: boolean;
   form: {
     name: string,
     deck: "silicon-dawn" | "rider-waite-smith" | "neon-moon",
     voidSuit: boolean,
     ninetyNines: boolean,
-    extraArcana: boolean
-  }
+    extraArcana: boolean,
+  };
 }
 
 const DECK_TO_ART = {
   "silicon-dawn": Cards.Art.SiliconDawn,
   "rider-waite-smith": Cards.Art.RiderWaiteSmith,
-  "neon-moon": Cards.Art.RiderWaiteSmith
+  "neon-moon": Cards.Art.RiderWaiteSmith,
 };
 
 export class NewDeckDialog extends React.Component<Props, State> {
@@ -37,19 +37,19 @@ export class NewDeckDialog extends React.Component<Props, State> {
     this.state = {
       showPrompter: false,
       form: {
-        name: '',
-        deck: 'rider-waite-smith',
+        name: "",
+        deck: "rider-waite-smith",
         voidSuit: true,
         ninetyNines: true,
-        extraArcana: true
-      }
+        extraArcana: true,
+      },
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleFingerprintComputed = this.handleFingerprintComputed.bind(this);
   }
 
-  handleChange(e: React.ChangeEvent<Element & { name: string }>) {
+  public handleChange(e: React.ChangeEvent<Element & { name: string }>) {
     const target = e.target;
     switch (target.name) {
       case "name":
@@ -74,7 +74,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
     }
   }
 
-  handleSubmit(e: React.FormEvent) {
+  public handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!this.state.form.name) {
       console.error("Cannot create a deck with an empty name");
@@ -83,7 +83,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
     this.setState({showPrompter: true});
   }
 
-  async handleFingerprintComputed(fingerprint: number) {
+  public async handleFingerprintComputed(fingerprint: number) {
     let cards: Cards.OrientedCard[] = [];
     switch (this.state.form.deck) {
       case "silicon-dawn":
@@ -104,13 +104,13 @@ export class NewDeckDialog extends React.Component<Props, State> {
     const deck = {
       cards,
       name: this.state.form.name,
-      id: uuid.v4()
+      id: uuid.v4(),
     };
     await delay(4000);
     this.props.onNewDeck(deck);
   }
 
-  render() {
+  public render() {
     const submissionDisabled = !this.state.form.name;
 
     return (
@@ -122,7 +122,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
             id="name"
             name="name"
             type="text"
-            autoFocus
+            autoFocus={true}
             onChange={this.handleChange}
             value={this.state.form.name} />
           <label htmlFor="deck">Deck</label>

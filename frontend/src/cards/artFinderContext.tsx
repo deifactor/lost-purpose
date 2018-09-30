@@ -1,4 +1,4 @@
-import { Art } from './cards';
+import { Art } from "./cards";
 
 const riderWaiteSmithAscii = require.context("../../assets/rider-waite-smith-ascii", true, /\.jpg/);
 const siliconDawnAscii = require.context("../../assets/silicon-dawn-ascii", true, /\.jpg/);

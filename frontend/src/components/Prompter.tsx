@@ -1,23 +1,23 @@
-import * as React from 'react';
-import CRC32 = require('crc-32');
-import classNames = require('classnames');
-import delay from 'delay';
+import classNames = require("classnames");
+import CRC32 = require("crc-32");
+import delay from "delay";
+import * as React from "react";
 
-import '../styles/prompter.scss';
+import "../styles/prompter.scss";
 
 interface Props {
   // Invoked when we've computed a fingerprint from the user's input.
-  onFingerprintComputed: (fingerprint: number) => void,
+  onFingerprintComputed: (fingerprint: number) => void;
   // Number of milliseconds to fingerprint the input for.
-  duration: number,
+  duration: number;
 }
 
 interface State {
   // If we're currently in the middle of stretching the fingerprint, the intermediate fingerprint.
-  fingerprint: number | null,
+  fingerprint: number | null;
   // Whether the current fingerprint has finished being computed.
-  finished: boolean,
-  input: string
+  finished: boolean;
+  input: string;
 }
 
 /**
@@ -33,11 +33,43 @@ export class Prompter extends React.Component<Props, State> {
     this.state = {
       fingerprint: null,
       finished: false,
-      input: ""
+      input: "",
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleInputSubmit = this.handleInputSubmit.bind(this);
+  }
+
+  public render() {
+    const fingerprint = this.state.fingerprint;
+    const fingerprinting = fingerprint !== null;
+    const title = this.state.finished ? "entropy extracted" :
+      fingerprinting ? "contemplating..." :
+        "input query";
+    // We show the form when the user hasn't input their query and the fingerprint when they have.
+    const formClasses = classNames({ visible: !fingerprinting, invisible: fingerprinting });
+    const fingerprintClasses = classNames(
+      "fingerprint",
+      { visible: fingerprinting, invisible: !fingerprinting },
+      { finished: this.state.finished });
+    return (
+      <div className="prompter">
+        <div className="modal-title">{title}</div>
+        <div className="body">
+          <form onSubmit={this.handleInputSubmit} className={classNames(formClasses)}>
+            <input
+              type="text"
+              autoFocus={true}
+              onChange={this.handleInputChange}
+              value={this.state.input} />
+            <button type="submit">Ask</button>
+          </form>
+          <div className={classNames(fingerprintClasses)}>
+            {fingerprint && formatFingerprint(fingerprint)}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   private handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -67,38 +99,6 @@ export class Prompter extends React.Component<Props, State> {
     this.setState({ finished: true });
     this.props.onFingerprintComputed(fingerprint);
     // No need to clear the state since we'll get unmounted when the modal closes.
-  }
-
-  render() {
-    const fingerprint = this.state.fingerprint;
-    const fingerprinting = fingerprint !== null;
-    const title = this.state.finished ? "entropy extracted" :
-      fingerprinting ? "contemplating..." :
-        "input query";
-    // We show the form when the user hasn't input their query and the fingerprint when they have.
-    const formClasses = classNames({ visible: !fingerprinting, invisible: fingerprinting });
-    const fingerprintClasses = classNames(
-      'fingerprint',
-      { visible: fingerprinting, invisible: !fingerprinting },
-      { finished: this.state.finished });
-    return (
-      <div className="prompter">
-        <div className="modal-title">{title}</div>
-        <div className="body">
-          <form onSubmit={this.handleInputSubmit} className={classNames(formClasses)}>
-            <input
-              type="text"
-              autoFocus
-              onChange={this.handleInputChange}
-              value={this.state.input} />
-            <button type="submit">Ask</button>
-          </form>
-          <div className={classNames(fingerprintClasses)}>
-            {fingerprint && formatFingerprint(fingerprint)}
-          </div>
-        </div>
-      </div>
-    );
   }
 }
 

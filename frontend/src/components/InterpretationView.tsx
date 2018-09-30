@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { Art, OrientedCard } from '../cards/cards';
-import * as interpret from '../cards/interpret';
+import * as React from "react";
+import { Art, OrientedCard } from "../cards/cards";
+import * as interpret from "../cards/interpret";
 
 interface Props {
-  card: OrientedCard
+  card: OrientedCard;
 }
 
 export const InterpretationView: React.SFC<Props> = (props) => {
@@ -13,10 +13,10 @@ export const InterpretationView: React.SFC<Props> = (props) => {
   } else {
     return renderRws(card);
   }
-}
+};
 
 function renderRws(card: OrientedCard): JSX.Element {
-  let interpretation = interpret.rws(card);
+  const interpretation = interpret.rws(card);
   if (!interpretation) {
     return (
       <div className="interpretation">
@@ -47,7 +47,7 @@ function renderRws(card: OrientedCard): JSX.Element {
 }
 
 function renderSiliconDawn(card: OrientedCard): JSX.Element {
-  let interpretation = interpret.siliconDawn(card);
+  const interpretation = interpret.siliconDawn(card);
   if (!interpretation) {
     return (
       <div className="interpretation">
@@ -61,9 +61,9 @@ function renderSiliconDawn(card: OrientedCard): JSX.Element {
   function renderLine(line: string, index: number) {
     // Ugly hack to make the 99 of Cups render properly.
     if (line.startsWith("<pre>")) {
-      return <pre key={index}>{line.slice("<pre>".length)}</pre>
+      return <pre key={index}>{line.slice("<pre>".length)}</pre>;
     } else {
-      return <p key={index}>{line}</p>
+      return <p key={index}>{line}</p>;
     }
   }
 

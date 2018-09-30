@@ -1,19 +1,19 @@
-import * as React from 'react';
-import * as Cards from '../cards/cards';
-import ReactModal = require('react-modal');
-import { Prompter } from './Prompter';
+import * as React from "react";
+import ReactModal = require("react-modal");
+import * as Cards from "../cards/cards";
+import { Prompter } from "./Prompter";
 
-import '../styles/modal.scss';
+import "../styles/modal.scss";
 
 interface Props {
-  deck: Cards.Deck,
-  onDraw: () => void,
-  onShuffle: (fingerprint: number) => void,
-  onDelete: () => void
+  deck: Cards.Deck;
+  onDraw: () => void;
+  onShuffle: (fingerprint: number) => void;
+  onDelete: () => void;
 }
 
 interface State {
-  showPrompter: boolean
+  showPrompter: boolean;
 }
 
 export default class Deck extends React.Component<Props, State> {
@@ -25,20 +25,7 @@ export default class Deck extends React.Component<Props, State> {
     this.handleClosePrompter = this.handleClosePrompter.bind(this);
   }
 
-  private startShuffle() {
-    this.setState({ showPrompter: true });
-  }
-
-  private handleClosePrompter() {
-    this.setState({ showPrompter: false });
-  }
-
-  private handleFingerprintComputed(fingerprint: number) {
-    this.props.onShuffle(fingerprint);
-    setTimeout(() => this.setState({ showPrompter: false }), 4000);
-  }
-
-  render() {
+  public render() {
     return (
       <div>
         <h3>{this.props.deck.name}</h3>
@@ -55,5 +42,18 @@ export default class Deck extends React.Component<Props, State> {
         </ReactModal>
       </div>
     );
+  }
+
+  private startShuffle() {
+    this.setState({ showPrompter: true });
+  }
+
+  private handleClosePrompter() {
+    this.setState({ showPrompter: false });
+  }
+
+  private handleFingerprintComputed(fingerprint: number) {
+    this.props.onShuffle(fingerprint);
+    setTimeout(() => this.setState({ showPrompter: false }), 4000);
   }
 }

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import * as Cards from '../cards/cards';
-import * as artFinder from '../cards/artFinder';
+import * as React from "react";
+import * as artFinder from "../cards/artFinder";
+import * as Cards from "../cards/cards";
 
 interface Props {
-  count: number,
-  deck: Cards.Deck
+  count: number;
+  deck: Cards.Deck;
 }
 
 /** Preloads art assets for a deck. Does not render anything into the DOM. */
@@ -17,4 +17,4 @@ export const DeckPreloader: React.SFC<Props> = (props) => {
     new Image().src = artFinder.back(card);
   });
   return null;
-}
+};

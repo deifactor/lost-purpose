@@ -1,12 +1,12 @@
 export interface Deck {
-  cards: Array<OrientedCard>,
-  name: string,
+  cards: OrientedCard[];
+  name: string;
   /** UUIDv4 format ID. */
-  id: string
+  id: string;
 }
 
-export function standard(art: Art = Art.RiderWaiteSmith): Array<OrientedCard> {
-  const cards: Array<OrientedCard> = [];
+export function standard(art: Art = Art.RiderWaiteSmith): OrientedCard[] {
+  const cards: OrientedCard[] = [];
   for (const major of MajorArcana.standard()) {
     cards.push({ kind: CardKind.Major, arcana: major, reversed: false, art });
   }
@@ -26,25 +26,25 @@ export function standard(art: Art = Art.RiderWaiteSmith): Array<OrientedCard> {
  */
 export function siliconDawn(
   options = { voidSuit: true, ninetyNines: true, extraArcana: true })
-  : Array<OrientedCard> {
+  : OrientedCard[] {
   let cards = standard();
   const art = Art.SiliconDawn;
   cards.forEach((card) => card.art = art);
   if (options.voidSuit) {
     const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-    const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank: rank, suit: Suit.Void, reversed: false, art }));
+    const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank, suit: Suit.Void, reversed: false, art }));
     cards = cards.concat(voids);
   }
   if (options.ninetyNines) {
     const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false, art }));
-    cards = cards.concat(ninetyNines)
+    cards = cards.concat(ninetyNines);
   }
   if (options.extraArcana) {
     const extraCards = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false, art }));
     cards = cards.concat(extraCards);
     cards = cards.concat([
       { kind: CardKind.Extra, color: Color.Black, reversed: false, art },
-      { kind: CardKind.Extra, color: Color.White, reversed: false, art }
+      { kind: CardKind.Extra, color: Color.White, reversed: false, art },
     ]);
   }
   return cards;
@@ -53,18 +53,18 @@ export function siliconDawn(
 export enum CardKind {
   Major,
   Minor,
-  Extra
+  Extra,
 }
 
 export interface MajorCard {
-  kind: CardKind.Major,
-  arcana: MajorArcana
+  kind: CardKind.Major;
+  arcana: MajorArcana;
 }
 
 export interface MinorCard {
-  kind: CardKind.Minor,
-  rank: Rank,
-  suit: Suit
+  kind: CardKind.Minor;
+  rank: Rank;
+  suit: Suit;
 }
 
 /**
@@ -72,15 +72,15 @@ export interface MinorCard {
  * white face.
  */
 export interface ExtraCard {
-  kind: CardKind.Extra,
-  color: Color
+  kind: CardKind.Extra;
+  color: Color;
 }
 
 export enum Art {
   SiliconDawn,
   RiderWaiteSmith,
-  NeonMoon
-};
+  NeonMoon,
+}
 
 export type Card = (MajorCard | MinorCard | ExtraCard) & { art: Art };
 export type OrientedCard = Card & { reversed: boolean };
@@ -118,7 +118,7 @@ export enum MajorArcana {
   Vulture,
   SheIsLegend,
   History,
-  AlephFour
+  AlephFour,
 }
 
 export namespace MajorArcana {
@@ -155,7 +155,7 @@ export namespace MajorArcana {
       MajorArcana.Vulture,
       MajorArcana.SheIsLegend,
       MajorArcana.History,
-      MajorArcana.AlephFour
+      MajorArcana.AlephFour,
     ];
   }
 
@@ -212,7 +212,7 @@ export enum Suit {
   Swords,
   Pentacles,
   // Silicon Dawn only. Has a 0, Progeny, Cavalier, Queen, and King, but nothing else.
-  Void
+  Void,
 }
 
 export namespace Suit {
@@ -221,12 +221,12 @@ export namespace Suit {
       Suit.Wands,
       Suit.Cups,
       Suit.Swords,
-      Suit.Pentacles
+      Suit.Pentacles,
     ];
   }
 }
 
 export enum Color {
   White,
-  Black
+  Black,
 }

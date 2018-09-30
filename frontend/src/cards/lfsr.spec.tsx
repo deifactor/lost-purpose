@@ -1,4 +1,4 @@
-import { LFSR } from './lfsr';
+import { LFSR } from "./lfsr";
 
 describe("nonsensical inputs", () => {
   it("should fail if the feed is unsafe", () => {
@@ -33,7 +33,7 @@ it("should not always output the same value", () => {
 
 it("should have the proper period for small states", () => {
   // 0xC should give something with period 15.
-  let lfsr = new LFSR(3, 0xC);
+  const lfsr = new LFSR(3, 0xC);
   const values = [];
   for (let i = 0; i < 15; i++) {
     values.push(lfsr.nextBit());

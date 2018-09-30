@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Deck } from '../cards/cards';
-import { Link } from 'react-router-dom';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { Deck } from "../cards/cards";
 
-import '../styles/navbar.scss';
+import "../styles/navbar.scss";
 
 interface Props {
-  decks: ReadonlyArray<Deck>,
+  decks: ReadonlyArray<Deck>;
   // Called when the user chooses a deck.
-  onSelectDeck: () => void,
+  onSelectDeck: () => void;
   // Called when the user wants to add a new deck.
-  onNewDeck: () => void
+  onNewDeck: () => void;
 }
 
 export const Navbar: React.SFC<Props> = (props) => {
@@ -35,4 +35,4 @@ export const Navbar: React.SFC<Props> = (props) => {
       <Link className="item" to="/backup-restore">Backup/Restore</Link>
     </nav>
   );
-}
+};

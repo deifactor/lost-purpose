@@ -1,35 +1,50 @@
-import * as React from 'react';
-import * as Cards from '../cards/cards';
-import classNames = require('classnames');
-import delay from 'delay';
+import classNames = require("classnames");
+import delay from "delay";
+import * as React from "react";
+import * as Cards from "../cards/cards";
 
-import '../styles/card_art_viewer.scss';
+import "../styles/card_art_viewer.scss";
 
 interface Props {
   /** The currently-displayed image. If null, the card back is displayed. */
-  src?: string,
+  src?: string;
   /** Alt text for the image. */
-  alt?: string,
+  alt?: string;
   /** If true, the card should be displayed reversed (upside-down). */
-  reversed?: boolean,
-  width: number,
-  height: number,
+  reversed?: boolean;
+  width: number;
+  height: number;
   /** What to use for the card back. If null, uses solid black. */
-  back?: string
+  back?: string;
 }
 
 interface State {
-  facedown: boolean,
+  facedown: boolean;
   /**
    * The image that we're *actually* currently displaying. This doesn't change
    * when src changes until after the card's been flipped face-down.
    */
-  displayed: { src: string, reversed: boolean } | undefined
+  displayed: { src: string, reversed: boolean } | undefined;
 }
 
 export default class CardArtViewer extends React.Component<Props, State> {
-  static defaultProps = {
+  public static defaultProps = {
     reversed: false,
+  };
+
+  public static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
+    const { displayed, facedown } = state;
+    if (facedown && props.src) {
+      // If we're face down and the user draws again, just flip us up. This
+      // should only happen either on the first draw or if the user draws in the
+      // small delay between facedown and faceup, but it also avoids a bug where we
+      // somehow forget to turn faceup and we get stuck.
+      return { facedown: false, displayed: { src: props.src, reversed: props.reversed || false } };
+    } else if (displayed && displayed.src != props.src) {
+      return { facedown: true };
+    } else {
+      return null;
+    }
   }
 
   constructor(props: Props) {
@@ -38,41 +53,12 @@ export default class CardArtViewer extends React.Component<Props, State> {
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
   }
 
-  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
-    const { displayed, facedown } = state;
-    if (facedown && props.src) {
-      // If we're face down and the user draws again, just flip us up. This
-      // should only happen either on the first draw or if the user draws in the
-      // small delay between facedown and faceup, but it also avoids a bug where we
-      // somehow forget to turn faceup and we get stuck.
-      return { facedown: false, displayed: { src: props.src, reversed: props.reversed || false } }
-    } else if (displayed && displayed.src != props.src) {
-      return { facedown: true };
-    } else {
-      return null;
-    }
-  }
-
-  private async handleTransitionEnd() {
-    if (!this.state.facedown) {
-      return;
-    }
-    // Aesthetic delay. Not necessary, but it looks nice.
-    await delay(100);
-    if (this.props.src) {
-      this.setState({
-        facedown: false,
-        displayed: { src: this.props.src, reversed: this.props.reversed || false }
-      });
-    }
-  }
-
-  render() {
+  public render() {
     const { displayed } = this.state;
-    const className = classNames('card-art-viewer', { facedown: this.state.facedown });
-    const backClass = classNames('back', { 'has-back': this.props.back });
+    const className = classNames("card-art-viewer", { facedown: this.state.facedown });
+    const backClass = classNames("back", { "has-back": this.props.back });
     const backSrc = this.props.back ||
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
     return (
       <div className={className}
         onTransitionEnd={this.handleTransitionEnd}>
@@ -91,5 +77,19 @@ export default class CardArtViewer extends React.Component<Props, State> {
           src={backSrc} />
       </div>
     );
+  }
+
+  private async handleTransitionEnd() {
+    if (!this.state.facedown) {
+      return;
+    }
+    // Aesthetic delay. Not necessary, but it looks nice.
+    await delay(100);
+    if (this.props.src) {
+      this.setState({
+        facedown: false,
+        displayed: { src: this.props.src, reversed: this.props.reversed || false },
+      });
+    }
   }
 }

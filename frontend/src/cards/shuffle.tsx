@@ -1,13 +1,13 @@
 interface Oriented {
-  reversed: boolean
-};
+  reversed: boolean;
+}
 
 /**
  * Shuffles the given array similarly to how a physical deck is shuffled: by
  * splitting it in two, turning the bottom half upside-down, and then
  * interleaving the cards in chunks starting from the bottom half.
  */
-export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): number } = Math): Array<T> {
+export function shuffle<T extends Oriented>(cards: T[], rng: { random(): number } = Math): T[] {
   if (cards.length == 1) {
     return cards;
   }
@@ -18,7 +18,7 @@ export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): nu
   const cutPoint = generateInteger(
     Math.max(midpoint - offset, 1),
     Math.min(midpoint + offset + 1, cards.length),
-    rng
+    rng,
   );
   for (const card of cards.slice(cutPoint)) {
     card.reversed = !card.reversed;
@@ -27,7 +27,7 @@ export function shuffle<T extends Oriented>(cards: Array<T>, rng: { random(): nu
   const leftChunks = chunk(cards.slice(0, cutPoint), chunker);
   const rightChunks = chunk(cards.slice(cutPoint), chunker);
 
-  let shuffled: Array<T> = [];
+  let shuffled: T[] = [];
   for (let i = 0; i < Math.max(leftChunks.length, rightChunks.length); i++) {
     if (i < rightChunks.length) {
       shuffled = shuffled.concat(rightChunks[i]);
@@ -50,7 +50,7 @@ function generateInteger(low: number, high: number, rng: { random(): number }): 
  * Splits the given array into chunks using the given function to determine the
  * size. The chunker must always return a number >= 1.
  */
-function chunk<T>(array: Array<T>, chunker: () => number): Array<Array<T>> {
+function chunk<T>(array: T[], chunker: () => number): T[][] {
   const chunks = [];
   let offset = 0;
   while (offset < array.length) {

@@ -1,14 +1,14 @@
-import * as React from 'react';
-import * as Cards from '../cards/cards';
-import * as ArtFinder from '../cards/artFinder';
-import { CardFormatter } from '../cards/cardFormatter';
-import CardArtViewer from './CardArtViewer';
-import { InterpretationView } from './InterpretationView';
+import * as React from "react";
+import * as ArtFinder from "../cards/artFinder";
+import { CardFormatter } from "../cards/cardFormatter";
+import * as Cards from "../cards/cards";
+import CardArtViewer from "./CardArtViewer";
+import { InterpretationView } from "./InterpretationView";
 
-import '../styles/draw_result.scss';
+import "../styles/draw_result.scss";
 
 interface Props {
-  card: Cards.OrientedCard | null
+  card: Cards.OrientedCard | null;
 }
 
 export const DrawResult: React.SFC<Props> = (props) => {
@@ -20,7 +20,7 @@ export const DrawResult: React.SFC<Props> = (props) => {
       src: ArtFinder.path(card),
       alt: cardName,
       back: ArtFinder.back(card),
-      reversed: card.reversed
+      reversed: card.reversed,
     } : {};
   // XXX: Don't hardcode the width and the height.
   return (
@@ -39,4 +39,4 @@ export const DrawResult: React.SFC<Props> = (props) => {
       </div>
     </div>
   );
-}
+};

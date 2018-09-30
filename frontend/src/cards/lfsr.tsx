@@ -6,8 +6,8 @@
  */
 
 export class LFSR {
-  feed: number;
-  state: number;
+  public feed: number;
+  public state: number;
 
   // feed and state must be <= MAX_SAFE_INTEGER. The feed values should be taken from http://users.ece.cmu.edu/~koopman/lfsr/index.html.
   constructor(state: number, feed?: number) {

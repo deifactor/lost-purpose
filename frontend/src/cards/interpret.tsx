@@ -1,20 +1,20 @@
-import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from './cards';
-import rawJson from '../../assets/tarot_interpretations.json';
-import siliconDawnJson from '../../assets/silicon-dawn/interpretations.json';
+import siliconDawnJson from "../../assets/silicon-dawn/interpretations.json";
+import rawJson from "../../assets/tarot_interpretations.json";
+import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from "./cards";
 
 export interface RWSInterpretation {
-  fortuneTelling: string[],
-  keywords: string[],
+  fortuneTelling: string[];
+  keywords: string[];
   meanings: {
     upright: string[],
-    reversed: string[]
-  }
+    reversed: string[],
+  };
 }
 
 export interface SiliconDawnInterpretation {
-  title: string,
+  title: string;
   // Each element of this list should be its own paragraph.
-  meaning: string[]
+  meaning: string[];
 }
 
 /**
@@ -50,7 +50,7 @@ export function siliconDawn(card: Card): SiliconDawnInterpretation | undefined {
       const minor = siliconDawnJson.minors[rank][card.suit];
       if (minor == null) {
         // Should never happen. The only nulls are for rank 0, 'normal' suits.
-        throw new Error(`Unexpected null with card ${card}`)
+        throw new Error(`Unexpected null with card ${card}`);
       }
       return minor;
     case CardKind.Extra:
@@ -63,16 +63,16 @@ export function siliconDawn(card: Card): SiliconDawnInterpretation | undefined {
   }
 }
 
-let majorInterpretations: Map<MajorArcana, RWSInterpretation> = new Map();
-let minorInterpretations: Map<Rank, Map<Suit, RWSInterpretation>> = new Map();
+const majorInterpretations: Map<MajorArcana, RWSInterpretation> = new Map();
+const minorInterpretations: Map<Rank, Map<Suit, RWSInterpretation>> = new Map();
 for (const raw of rawJson.tarot_interpretations) {
   const cleaned = {
     fortuneTelling: raw.fortune_telling,
     keywords: raw.keywords,
     meanings: {
       upright: raw.meanings.light,
-      reversed: raw.meanings.shadow
-    }
+      reversed: raw.meanings.shadow,
+    },
   };
   if (raw.suit == "major") {
     majorInterpretations.set(raw.rank as MajorArcana, cleaned);
@@ -87,8 +87,8 @@ for (const raw of rawJson.tarot_interpretations) {
       keywords: raw.keywords,
       meanings: {
         upright: raw.meanings.light,
-        reversed: raw.meanings.shadow
-      }
+        reversed: raw.meanings.shadow,
+      },
     });
   }
 }
@@ -119,12 +119,12 @@ function parseRawSuit(rawSuit: string): Suit {
 
 // The interpretation interface in the raw data.
 interface RawInterpretation {
-  fortune_telling: string[],
-  keywords: string[],
+  fortune_telling: string[];
+  keywords: string[];
   meanings: {
     light: string[],
-    shadow: string[]
-  },
-  rank: number,
-  suit: string
+    shadow: string[],
+  };
+  rank: number;
+  suit: string;
 }

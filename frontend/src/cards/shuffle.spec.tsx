@@ -1,7 +1,7 @@
-import * as _ from 'lodash';
-import { shuffle } from './shuffle';
+import * as _ from "lodash";
+import { shuffle } from "./shuffle";
 
-function faceUpDeck(values: Array<number>): Array<{ value: number, reversed: boolean }> {
+function faceUpDeck(values: number[]): Array<{ value: number, reversed: boolean }> {
   return values.map((value) => ({ value, reversed: false }));
 }
 

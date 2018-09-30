@@ -1,9 +1,9 @@
-import * as interpret from './interpret';
-import { Card, CardKind, MajorArcana, Rank, Suit, Art, standard, Color, siliconDawn } from './cards';
+import { Art, Card, CardKind, Color, MajorArcana, Rank, siliconDawn, standard, Suit } from "./cards";
+import * as interpret from "./interpret";
 
 describe("RWS tarot meaning data", () => {
   const table = standard().map((card) => [card]);
-  describe.each(table)('%j', (card) => {
+  describe.each(table)("%j", (card) => {
     const interpretation = interpret.rws(card);
     it("should have an interpretation", () => {
       expect(interpretation).toBeTruthy();
@@ -17,35 +17,35 @@ describe("RWS tarot meaning data", () => {
   const aleph_four: Card = {
     kind: CardKind.Major,
     arcana: MajorArcana.AlephFour,
-    art: Art.SiliconDawn
+    art: Art.SiliconDawn,
   };
   const ninety_nine_swords: Card = {
     kind: CardKind.Minor,
     rank: Rank.NinetyNine,
     suit: Suit.Swords,
-    art: Art.SiliconDawn
+    art: Art.SiliconDawn,
   };
   const queen_of_void: Card = {
     kind: CardKind.Minor,
     rank: Rank.Queen,
     suit: Suit.Void,
-    art: Art.SiliconDawn
+    art: Art.SiliconDawn,
   };
   const extra: Card = {
     kind: CardKind.Extra,
     color: Color.Black,
-    art: Art.SiliconDawn
+    art: Art.SiliconDawn,
   };
-  describe.each([aleph_four, ninety_nine_swords, queen_of_void, extra])('%j', (card) => {
+  describe.each([aleph_four, ninety_nine_swords, queen_of_void, extra])("%j", (card) => {
     it("should not have an interpretation", () => {
       expect(interpret.rws(card)).toBeFalsy();
-    })
+    });
   });
 });
 
 describe("Silicon Dawn tarot meaning data", () => {
   const table = siliconDawn();
-  describe.each(siliconDawn())('%j', (card) => {
+  describe.each(siliconDawn())("%j", (card) => {
     it("should have an interpretation", () => {
       const interpretation = interpret.siliconDawn(card);
       expect(interpretation).toBeTruthy();

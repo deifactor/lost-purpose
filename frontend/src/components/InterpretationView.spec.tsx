@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { InterpretationView } from './InterpretationView';
-import * as Cards from '../cards/cards';
-import { mount, render } from 'enzyme';
+import { mount, render } from "enzyme";
+import * as React from "react";
+import * as Cards from "../cards/cards";
+import { InterpretationView } from "./InterpretationView";
 
 const magician: Cards.OrientedCard = {
   kind: Cards.CardKind.Major,
   arcana: Cards.MajorArcana.Magician,
   art: Cards.Art.RiderWaiteSmith,
-  reversed: false
+  reversed: false,
 };
 const siliconDawnMagician = { ...magician, art: Cards.Art.SiliconDawn };
 const reversed = { ...magician, reversed: true };
@@ -43,7 +43,7 @@ describe("Silicon Dawn descriptions", () => {
       rank: Cards.Rank.Ten,
       suit: Cards.Suit.Pentacles,
       art: Cards.Art.SiliconDawn,
-      reversed: false
+      reversed: false,
     };
     expect(render(<InterpretationView card={card} />).text()).toMatch("Oppression");
   });

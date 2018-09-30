@@ -3,8 +3,8 @@
  * separate from the card loic so that we don't have to mess around with
  * webpack's require.context when testing pure logic.
  */
-import { Card, Art, CardKind, MajorArcana, Rank, Suit, Color } from './cards';
-import { context } from './artFinderContext';
+import { context } from "./artFinderContext";
+import { Art, Card, CardKind, Color, MajorArcana, Rank, Suit } from "./cards";
 
 export function path(card: Card) {
   return context(card.art)(`./${fileName(card)}.jpg`);
@@ -58,6 +58,6 @@ function suitComponent(suit: Suit) {
     case Suit.Pentacles: return "pents";
     case Suit.Swords: return "swords";
     case Suit.Wands: return "wands";
-    case Suit.Void: return "VOID"
+    case Suit.Void: return "VOID";
   }
 }

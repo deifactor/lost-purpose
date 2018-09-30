@@ -1,12 +1,12 @@
-import { CardFormatter, NumberFormat } from './cardFormatter';
-import { OrientedCard, Art, CardKind, MajorArcana, Rank, Suit, Color } from './cards';
+import { CardFormatter, NumberFormat } from "./cardFormatter";
+import { Art, CardKind, Color, MajorArcana, OrientedCard, Rank, Suit } from "./cards";
 
 const art = Art.SiliconDawn;
 
 describe("numeric formatting", () => {
   const formatter = new CardFormatter({
     romanNumeralMajorArcana: false,
-    minorArcanaRankFormat: NumberFormat.Numerals
+    minorArcanaRankFormat: NumberFormat.Numerals,
   });
   it("should format 5S correctly", () => {
     const card: OrientedCard = {
@@ -14,7 +14,7 @@ describe("numeric formatting", () => {
       rank: Rank.Five,
       suit: Suit.Swords,
       reversed: false,
-      art
+      art,
     };
     expect(formatter.format(card)).toBe("the 5 of Swords");
   });
@@ -25,7 +25,7 @@ describe("numeric formatting", () => {
       rank: Rank.NinetyNine,
       suit: Suit.Swords,
       reversed: false,
-      art
+      art,
     };
     expect(formatter.format(card)).toBe("the 99 of Swords");
   });
@@ -34,16 +34,16 @@ describe("numeric formatting", () => {
 describe("roman numeral formatting", () => {
   const options = {
     romanNumeralMajorArcana: true,
-    minorArcanaRankFormat: NumberFormat.Roman
-  }
+    minorArcanaRankFormat: NumberFormat.Roman,
+  };
   const formatter = new CardFormatter({ romanNumeralMajorArcana: true, minorArcanaRankFormat: NumberFormat.Roman });
   it("should format the Fool correctly", () => {
     const fool: OrientedCard = {
       kind: CardKind.Major,
       arcana: MajorArcana.Fool,
       reversed: false,
-      art
-    }
+      art,
+    };
     expect(formatter.format(fool)).toBe("0, the Fool");
   });
 
@@ -53,7 +53,7 @@ describe("roman numeral formatting", () => {
       rank: Rank.NinetyNine,
       suit: Suit.Swords,
       reversed: false,
-      art
+      art,
     };
     expect(formatter.format(card)).toBe("the XCIX of Swords");
   });

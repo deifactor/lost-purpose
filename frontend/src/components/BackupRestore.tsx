@@ -1,28 +1,24 @@
-import * as React from 'react';
+import * as React from "react";
 
-import '../styles/backup-restore.scss';
+import "../styles/backup-restore.scss";
 
 interface Props {
-  value: string,
-  onRestore: (value: string) => void
+  value: string;
+  onRestore: (value: string) => void;
 }
 
 interface State {
-  restoreValue: string
+  restoreValue: string;
 }
 
 export class BackupRestore extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { restoreValue: '' };
+    this.state = { restoreValue: "" };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  private handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    this.setState({ restoreValue: e.target.value });
-  }
-
-  render() {
+  public render() {
     return (
       <div className="backup-restore">
         <section>
@@ -32,7 +28,7 @@ export class BackupRestore extends React.Component<Props, State> {
             This includes everything about your decks, including their names, the order of the cards,
             and so on.
           </p>
-          <textarea readOnly value={this.props.value} />
+          <textarea readOnly={true} value={this.props.value} />
         </section>
         <hr />
         <section>
@@ -49,5 +45,9 @@ export class BackupRestore extends React.Component<Props, State> {
         </section>
       </div>
     );
+  }
+
+  private handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    this.setState({ restoreValue: e.target.value });
   }
 }

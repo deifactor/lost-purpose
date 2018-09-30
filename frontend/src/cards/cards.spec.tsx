@@ -1,4 +1,4 @@
-import { standard, siliconDawn, Art, MajorArcana, Rank, Suit } from './cards';
+import { Art, MajorArcana, Rank, siliconDawn, standard, Suit } from "./cards";
 
 describe("Rider-Waite-Smith", () => {
   it("should have all cards using Rider-Waite-Smith art", () => {
@@ -66,7 +66,7 @@ describe("the major arcana", () => {
 
   it("should have the right count of Silicon Dawn arcana", () => {
     expect(MajorArcana.siliconDawn().length).toBe(5);
-  })
+  });
 });
 
 describe("the ranks", () => {
