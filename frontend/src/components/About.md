@@ -1,5 +1,3 @@
-# about the tarot of the lost purpose
-
 ## origin story
 
 the tarot of the lost purpose began on june 8, 2018, with me thinking:

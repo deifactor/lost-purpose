@@ -34,6 +34,15 @@ type State = {
 
 const decksStorageKey = "decks";
 
+export const Home: React.SFC<{}> = (props) => {
+  return (
+    <div style={{textAlign: "center"}}>
+      <h1>the Tarot of the Lost Purpose</h1>
+      <h3>an excessively-realistic tarot simulator</h3>
+    </div>
+  );
+};
+
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -95,7 +104,7 @@ class App extends React.Component<Props, State> {
           onSelectDeck={this.handleSelectDeck}
           onNewDeck={this.handleShowNewDeckDialog}
         />
-        {deckRoutes}
+        <Route exact path="/" component={Home} />
         <Route
           path="/about"
           render={() => <ReactMarkdown source={aboutMarkdown} />}
