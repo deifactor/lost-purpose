@@ -5,11 +5,14 @@
  * (number generators she remembers reading about).
  */
 
+/* tslint:disable:no-bitwise */
+
 export class LFSR {
   public feed: number;
   public state: number;
 
-  // feed and state must be <= MAX_SAFE_INTEGER. The feed values should be taken from http://users.ece.cmu.edu/~koopman/lfsr/index.html.
+  // feed and state must be <= MAX_SAFE_INTEGER. The feed values should be taken
+  // from http://users.ece.cmu.edu/~koopman/lfsr/index.html.
   constructor(state: number, feed?: number) {
     if (!feed) {
       feed = 0x8000000000004;

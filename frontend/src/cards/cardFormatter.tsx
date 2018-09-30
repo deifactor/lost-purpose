@@ -7,7 +7,7 @@ export enum NumberFormat {
   Numerals,
 }
 
-export interface Options {
+export type Options = {
   /** If true, major arcana are formatted like "XIII, Death". Defaults to false. */
   romanNumeralMajorArcana: boolean;
   /**
@@ -15,7 +15,7 @@ export interface Options {
    * Defaults to words.
    */
   minorArcanaRankFormat: NumberFormat;
-}
+};
 
 export class CardFormatter {
 
@@ -94,7 +94,8 @@ export class CardFormatter {
     const unoriented = this.formatUnoriented(card);
     const kind = card.kind;
     // The (VOID) cards and the 'extras' cannot be reversed.
-    const shouldIndicateReversal = card.kind == CardKind.Major || (card.kind == CardKind.Minor && card.suit != Suit.Void);
+    const shouldIndicateReversal =
+      card.kind === CardKind.Major || (card.kind === CardKind.Minor && card.suit !== Suit.Void);
     if (card.reversed && shouldIndicateReversal) {
       return `${unoriented}, reversed`;
     } else {
@@ -134,5 +135,5 @@ export class CardFormatter {
 }
 
 function zeroAwareRomanize(n: number): string {
-  return n == 0 ? "0" : romanize(n);
+  return n === 0 ? "0" : romanize(n);
 }

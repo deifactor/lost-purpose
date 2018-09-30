@@ -2,7 +2,7 @@ import { mount, render, shallow } from "enzyme";
 import * as React from "react";
 import { Prompter } from "./Prompter";
 
-const ignore = () => { };
+const ignore = () => { return; };
 
 describe("the duration property", () => {
   it("should reject a negative duration", () => {

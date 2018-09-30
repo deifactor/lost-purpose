@@ -5,16 +5,16 @@ import { Prompter } from "./Prompter";
 
 import "../styles/modal.scss";
 
-interface Props {
+type Props = {
   deck: Cards.Deck;
   onDraw: () => void;
   onShuffle: (fingerprint: number) => void;
   onDelete: () => void;
-}
+};
 
-interface State {
+type State = {
   showPrompter: boolean;
-}
+};
 
 export default class Deck extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -37,7 +37,8 @@ export default class Deck extends React.Component<Props, State> {
           className="modal"
           onRequestClose={this.handleClosePrompter}
           overlayClassName="overlay"
-          closeTimeoutMS={200}>
+          closeTimeoutMS={200}
+        >
           <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />
         </ReactModal>
       </div>

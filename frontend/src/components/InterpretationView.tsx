@@ -2,13 +2,13 @@ import * as React from "react";
 import { Art, OrientedCard } from "../cards/cards";
 import * as interpret from "../cards/interpret";
 
-interface Props {
+type Props = {
   card: OrientedCard;
-}
+};
 
 export const InterpretationView: React.SFC<Props> = (props) => {
   const { card } = props;
-  if (card.art == Art.SiliconDawn) {
+  if (card.art === Art.SiliconDawn) {
     return renderSiliconDawn(card);
   } else {
     return renderRws(card);

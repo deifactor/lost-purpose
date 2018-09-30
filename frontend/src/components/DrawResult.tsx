@@ -7,9 +7,9 @@ import { InterpretationView } from "./InterpretationView";
 
 import "../styles/draw_result.scss";
 
-interface Props {
+type Props = {
   card: Cards.OrientedCard | null;
-}
+};
 
 export const DrawResult: React.SFC<Props> = (props) => {
   const formatter = new CardFormatter();
@@ -28,7 +28,8 @@ export const DrawResult: React.SFC<Props> = (props) => {
       <CardArtViewer
         {...viewerProps}
         width={311}
-        height={528} />
+        height={528}
+      />
       <div className="card-info">
         {card &&
           <React.Fragment>

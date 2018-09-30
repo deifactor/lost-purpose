@@ -14,18 +14,18 @@ describe("RWS tarot meaning data", () => {
     });
   });
 
-  const aleph_four: Card = {
+  const alephFour: Card = {
     kind: CardKind.Major,
     arcana: MajorArcana.AlephFour,
     art: Art.SiliconDawn,
   };
-  const ninety_nine_swords: Card = {
+  const ninetyNineSwords: Card = {
     kind: CardKind.Minor,
     rank: Rank.NinetyNine,
     suit: Suit.Swords,
     art: Art.SiliconDawn,
   };
-  const queen_of_void: Card = {
+  const queenOfVoid: Card = {
     kind: CardKind.Minor,
     rank: Rank.Queen,
     suit: Suit.Void,
@@ -36,7 +36,7 @@ describe("RWS tarot meaning data", () => {
     color: Color.Black,
     art: Art.SiliconDawn,
   };
-  describe.each([aleph_four, ninety_nine_swords, queen_of_void, extra])("%j", (card) => {
+  describe.each([alephFour, ninetyNineSwords, queenOfVoid, extra])("%j", (card) => {
     it("should not have an interpretation", () => {
       expect(interpret.rws(card)).toBeFalsy();
     });

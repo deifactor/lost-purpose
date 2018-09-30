@@ -4,6 +4,11 @@
     "tslint:recommended", "tslint-react"
   ],
   "jsRules": {},
-  "rules": {},
+  "rules": {
+    "object-literal-sort-keys": false,
+    "interface-over-type-literal": false,
+    "interface-name": false,
+    "no-console": false
+  },
   "rulesDirectory": []
 }

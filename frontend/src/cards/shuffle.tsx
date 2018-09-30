@@ -8,7 +8,7 @@ interface Oriented {
  * interleaving the cards in chunks starting from the bottom half.
  */
 export function shuffle<T extends Oriented>(cards: T[], rng: { random(): number } = Math): T[] {
-  if (cards.length == 1) {
+  if (cards.length === 1) {
     return cards;
   }
 

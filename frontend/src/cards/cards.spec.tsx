@@ -2,7 +2,7 @@ import { Art, MajorArcana, Rank, siliconDawn, standard, Suit } from "./cards";
 
 describe("Rider-Waite-Smith", () => {
   it("should have all cards using Rider-Waite-Smith art", () => {
-    expect(standard().every((card) => card.art == Art.RiderWaiteSmith));
+    expect(standard().every((card) => card.art === Art.RiderWaiteSmith));
   });
 
   it("should have the right number of cards", () => {
@@ -54,7 +54,7 @@ describe("decks", () => {
     });
 
     it("should have all cards using Silicon Dawn art", () => {
-      expect(siliconDawn().every((card) => card.art == Art.SiliconDawn));
+      expect(siliconDawn().every((card) => card.art === Art.SiliconDawn));
     });
   });
 });

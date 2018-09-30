@@ -4,7 +4,7 @@ import * as React from "react";
 import * as Cards from "../cards/cards";
 import { NewDeckDialog } from "./NewDeckDialog";
 
-function ignore(deck: Cards.Deck) {}
+function ignore(deck: Cards.Deck) { return; }
 
 describe("the submit button", () => {
   it("doesn't allow submission with an empty name", () => {

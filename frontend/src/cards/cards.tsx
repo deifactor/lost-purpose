@@ -32,15 +32,32 @@ export function siliconDawn(
   cards.forEach((card) => card.art = art);
   if (options.voidSuit) {
     const voidRanks = [Rank.Zero, Rank.Progeny, Rank.Cavalier, Rank.Queen, Rank.King];
-    const voids = voidRanks.map((rank): OrientedCard => ({ kind: CardKind.Minor, rank, suit: Suit.Void, reversed: false, art }));
+    const voids = voidRanks.map((rank): OrientedCard => ({
+      kind: CardKind.Minor,
+      rank,
+      suit: Suit.Void,
+      reversed: false,
+      art,
+    }));
     cards = cards.concat(voids);
   }
   if (options.ninetyNines) {
-    const ninetyNines = Suit.standard().map((suit): OrientedCard => ({ kind: CardKind.Minor, rank: Rank.NinetyNine, suit, reversed: false, art }));
+    const ninetyNines = Suit.standard().map((suit): OrientedCard => ({
+      kind: CardKind.Minor,
+      rank: Rank.NinetyNine,
+      suit,
+      reversed: false,
+      art,
+    }));
     cards = cards.concat(ninetyNines);
   }
   if (options.extraArcana) {
-    const extraCards = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({ kind: CardKind.Major, arcana, reversed: false, art }));
+    const extraCards = MajorArcana.siliconDawn().map((arcana): OrientedCard => ({
+      kind: CardKind.Major,
+      arcana,
+      reversed: false,
+      art,
+    }));
     cards = cards.concat(extraCards);
     cards = cards.concat([
       { kind: CardKind.Extra, color: Color.Black, reversed: false, art },
@@ -121,6 +138,7 @@ export enum MajorArcana {
   AlephFour,
 }
 
+// tslint:disable-next-line:no-namespace
 export namespace MajorArcana {
   export function standard() {
     return [
@@ -185,6 +203,7 @@ export enum Rank {
   NinetyNine = 99,
 }
 
+// tslint:disable-next-line:no-namespace
 export namespace Rank {
   export function standard() {
     return [
@@ -215,6 +234,7 @@ export enum Suit {
   Void,
 }
 
+// tslint:disable-next-line:no-namespace
 export namespace Suit {
   export function standard() {
     return [

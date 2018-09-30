@@ -23,7 +23,7 @@ export interface SiliconDawnInterpretation {
  * significantly different symbolism.
  */
 export function rws(card: Card): RWSInterpretation | undefined {
-  if (card.art == Art.SiliconDawn) {
+  if (card.art === Art.SiliconDawn) {
     return undefined;
   }
   switch (card.kind) {
@@ -39,16 +39,16 @@ export function rws(card: Card): RWSInterpretation | undefined {
 }
 
 export function siliconDawn(card: Card): SiliconDawnInterpretation | undefined {
-  if (card.art != Art.SiliconDawn) {
+  if (card.art !== Art.SiliconDawn) {
     return undefined;
   }
   switch (card.kind) {
     case CardKind.Major:
       return siliconDawnJson.majors[card.arcana];
     case CardKind.Minor:
-      const rank = card.rank == 99 ? 15 : card.rank;
+      const rank = card.rank === 99 ? 15 : card.rank;
       const minor = siliconDawnJson.minors[rank][card.suit];
-      if (minor == null) {
+      if (minor === null) {
         // Should never happen. The only nulls are for rank 0, 'normal' suits.
         throw new Error(`Unexpected null with card ${card}`);
       }
@@ -74,7 +74,7 @@ for (const raw of rawJson.tarot_interpretations) {
       reversed: raw.meanings.shadow,
     },
   };
-  if (raw.suit == "major") {
+  if (raw.suit === "major") {
     majorInterpretations.set(raw.rank as MajorArcana, cleaned);
   } else {
     const rank = parseRawRank(raw.rank);

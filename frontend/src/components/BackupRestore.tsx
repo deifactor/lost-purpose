@@ -2,14 +2,14 @@ import * as React from "react";
 
 import "../styles/backup-restore.scss";
 
-interface Props {
+type Props = {
   value: string;
   onRestore: (value: string) => void;
-}
+};
 
-interface State {
+type State = {
   restoreValue: string;
-}
+};
 
 export class BackupRestore extends React.Component<Props, State> {
   constructor(props: Props) {

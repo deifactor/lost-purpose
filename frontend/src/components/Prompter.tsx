@@ -5,20 +5,20 @@ import * as React from "react";
 
 import "../styles/prompter.scss";
 
-interface Props {
+type Props = {
   // Invoked when we've computed a fingerprint from the user's input.
   onFingerprintComputed: (fingerprint: number) => void;
   // Number of milliseconds to fingerprint the input for.
   duration: number;
-}
+};
 
-interface State {
+type State = {
   // If we're currently in the middle of stretching the fingerprint, the intermediate fingerprint.
   fingerprint: number | null;
   // Whether the current fingerprint has finished being computed.
   finished: boolean;
   input: string;
-}
+};
 
 /**
  * Asks the user for a string (i.e., the question they want to ask the Tarot deck)
@@ -61,7 +61,8 @@ export class Prompter extends React.Component<Props, State> {
               type="text"
               autoFocus={true}
               onChange={this.handleInputChange}
-              value={this.state.input} />
+              value={this.state.input}
+            />
             <button type="submit">Ask</button>
           </form>
           <div className={classNames(fingerprintClasses)}>
@@ -78,7 +79,7 @@ export class Prompter extends React.Component<Props, State> {
 
   private async handleInputSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (this.state.input == "") {
+    if (this.state.input === "") {
       return;
     }
     console.log(`User asked: ${this.state.input}`);

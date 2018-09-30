@@ -10,11 +10,11 @@ import { Prompter } from "./Prompter";
 
 import "../styles/dialog_form.scss";
 
-interface Props {
+type Props = {
   onNewDeck: (deck: Cards.Deck) => void;
-}
+};
 
-interface State {
+type State = {
   showPrompter: boolean;
   form: {
     name: string,
@@ -23,7 +23,7 @@ interface State {
     ninetyNines: boolean,
     extraArcana: boolean,
   };
-}
+};
 
 const DECK_TO_ART = {
   "silicon-dawn": Cards.Art.SiliconDawn,
@@ -80,7 +80,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
       console.error("Cannot create a deck with an empty name");
       return;
     }
-    this.setState({showPrompter: true});
+    this.setState({ showPrompter: true });
   }
 
   public async handleFingerprintComputed(fingerprint: number) {
@@ -124,19 +124,21 @@ export class NewDeckDialog extends React.Component<Props, State> {
             type="text"
             autoFocus={true}
             onChange={this.handleChange}
-            value={this.state.form.name} />
+            value={this.state.form.name}
+          />
           <label htmlFor="deck">Deck</label>
           <select
             id="deck"
             name="deck"
             onChange={this.handleChange}
-            value={this.state.form.deck}>
+            value={this.state.form.deck}
+          >
             <option value="silicon-dawn">Silicon Dawn</option>
             <option value="rider-waite-smith">Rider-Waite-Smith</option>
             <option value="neon-moon">Neon Moon</option>
           </select>
 
-          {this.state.form.deck == "silicon-dawn" &&
+          {this.state.form.deck === "silicon-dawn" &&
             <React.Fragment>
               <label htmlFor="voidSuit">VOID suit</label>
               <input id="voidSuit" name="voidSuit" type="checkbox" defaultChecked={this.state.form.voidSuit} />
@@ -158,7 +160,8 @@ export class NewDeckDialog extends React.Component<Props, State> {
           isOpen={this.state.showPrompter}
           className="modal"
           overlayClassName="overlay"
-          closeTimeoutMS={200}>
+          closeTimeoutMS={200}
+        >
           <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />
         </ReactModal>
       </div>

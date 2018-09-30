@@ -5,7 +5,7 @@ import * as Cards from "../cards/cards";
 
 import "../styles/card_art_viewer.scss";
 
-interface Props {
+type Props = {
   /** The currently-displayed image. If null, the card back is displayed. */
   src?: string;
   /** Alt text for the image. */
@@ -16,16 +16,16 @@ interface Props {
   height: number;
   /** What to use for the card back. If null, uses solid black. */
   back?: string;
-}
+};
 
-interface State {
+type State = {
   facedown: boolean;
   /**
    * The image that we're *actually* currently displaying. This doesn't change
    * when src changes until after the card's been flipped face-down.
    */
   displayed: { src: string, reversed: boolean } | undefined;
-}
+};
 
 export default class CardArtViewer extends React.Component<Props, State> {
   public static defaultProps = {
@@ -40,7 +40,7 @@ export default class CardArtViewer extends React.Component<Props, State> {
       // small delay between facedown and faceup, but it also avoids a bug where we
       // somehow forget to turn faceup and we get stuck.
       return { facedown: false, displayed: { src: props.src, reversed: props.reversed || false } };
-    } else if (displayed && displayed.src != props.src) {
+    } else if (displayed && displayed.src !== props.src) {
       return { facedown: true };
     } else {
       return null;
@@ -60,21 +60,25 @@ export default class CardArtViewer extends React.Component<Props, State> {
     const backSrc = this.props.back ||
       "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
     return (
-      <div className={className}
-        onTransitionEnd={this.handleTransitionEnd}>
+      <div
+        className={className}
+        onTransitionEnd={this.handleTransitionEnd}
+      >
         {displayed &&
           <img
             className={classNames("front", { reversed: displayed.reversed })}
             width={this.props.width}
             height={this.props.height}
             alt={this.props.alt}
-            src={displayed.src} />}
+            src={displayed.src}
+          />}
         <img
           className={backClass}
           width={this.props.width}
           height={this.props.height}
           alt="card back"
-          src={backSrc} />
+          src={backSrc}
+        />
       </div>
     );
   }

@@ -19,18 +19,18 @@ import { NewDeckDialog } from "./NewDeckDialog";
 import "../styles/app.scss";
 const aboutMarkdown = require("./About.md");
 
-interface Props {
+type Props = {
   history: history.History;
   location: any;
   match: any;
-}
+};
 
-interface State {
+type State = {
   // This is null if and only if there are no decks.
   currentCard: Cards.OrientedCard | null;
   decks: ReadonlyArray<Cards.Deck>;
   showNewDeckDialog: boolean;
-}
+};
 
 const decksStorageKey = "decks";
 
@@ -65,46 +65,58 @@ class App extends React.Component<Props, State> {
   }
 
   public render() {
-    const deckRoutes = this.state.decks.map((deck) => (
-      <Route
-        key={deck.id}
-        path={`/deck/${deck.id.substr(0, 8)}`}
-        render={() => (
-          <React.Fragment>
-            <Deck
-              onDraw={this.handleDraw.bind(this, deck)}
-              onShuffle={this.handleShuffle.bind(this, deck)}
-              onDelete={this.handleDeleteDeck.bind(this, deck)}
-              deck={deck} />
-            <DeckPreloader count={5} deck={deck} />
-            <div id="draw-result-container">
-              <DrawResult card={this.state.currentCard} />
-            </div>
-          </React.Fragment>
-        )} />
-    ));
+    const deckRoutes = this.state.decks.map((deck) => {
+      const renderDeck = () => (
+        <React.Fragment>
+          <Deck
+            onDraw={this.handleDraw.bind(this, deck)}
+            onShuffle={this.handleShuffle.bind(this, deck)}
+            onDelete={this.handleDeleteDeck.bind(this, deck)}
+            deck={deck}
+          />
+          <DeckPreloader count={5} deck={deck} />
+          <div id="draw-result-container">
+            <DrawResult card={this.state.currentCard} />
+          </div>
+        </React.Fragment>
+      );
+      return (
+        <Route
+          key={deck.id}
+          path={`/deck/${deck.id.substr(0, 8)}`}
+          render={renderDeck}
+        />
+      );
+    });
     return (
       <div>
         <Navbar
           decks={this.state.decks}
           onSelectDeck={this.handleSelectDeck}
-          onNewDeck={this.handleShowNewDeckDialog} />
+          onNewDeck={this.handleShowNewDeckDialog}
+        />
         {deckRoutes}
         <Route
           path="/about"
-          render={() => <ReactMarkdown source={aboutMarkdown} />} />
+          render={() => <ReactMarkdown source={aboutMarkdown} />}
+        />
         <Route
           path="/backup-restore"
-          render={() => <BackupRestore
-            value={JSON.stringify(this.state.decks)}
-            onRestore={this.handleRestore} />} />
+          render={() => (
+            <BackupRestore
+              value={JSON.stringify(this.state.decks)}
+              onRestore={this.handleRestore}
+            />
+          )}
+        />
 
         <ReactModal
           isOpen={this.state.showNewDeckDialog}
           className="modal"
           overlayClassName="overlay"
           onRequestClose={this.handleCloseNewDeck}
-          closeTimeoutMS={200}>
+          closeTimeoutMS={200}
+        >
           <NewDeckDialog onNewDeck={this.handleNewDeck} />
         </ReactModal>
       </div>
@@ -192,7 +204,7 @@ class App extends React.Component<Props, State> {
     console.debug("Shuffling deck");
     this.setState((state) => {
       const index = this.state.decks.indexOf(deck)!;
-      const repeatedShuffle = function <T>(cards: Cards.OrientedCard[]) {
+      const repeatedShuffle = (cards: Cards.OrientedCard[]) => {
         // Ten times is enough to get some actual mixing.
         for (let i = 0; i < 10; i++) {
           cards = shuffle(cards, lfsr);
