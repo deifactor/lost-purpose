@@ -73,7 +73,8 @@ myself](https://github.com/deifactor/ascender). it's done entirely
 automatically; i'm sure that you could hand-tune the characters to produce
 vastly more intelligible output.
 
-the code itself is all me (Ash), but relies on more libraries than i can count.
+[the code itself](https://github.com/deifactor/lost-purpose) is all me (Ash),
+but relies on more libraries than i can count.
 
 ---
 
