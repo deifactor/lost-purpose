@@ -1,6 +1,11 @@
 import * as React from 'react';
 import * as Cards from '../cards/cards';
 import update from 'immutability-helper';
+import ReactModal = require('react-modal');
+import { shuffle } from '../cards/shuffle';
+import { LFSR } from '../cards/lfsr';
+import { Prompter } from './Prompter';
+import delay from 'delay';
 import * as uuid from 'uuid';
 
 import '../styles/dialog_form.scss';
@@ -10,6 +15,7 @@ interface Props {
 }
 
 interface State {
+  showPrompter: boolean,
   form: {
     name: string,
     deck: "silicon-dawn" | "rider-waite-smith" | "neon-moon",
@@ -29,6 +35,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      showPrompter: false,
       form: {
         name: '',
         deck: 'rider-waite-smith',
@@ -39,6 +46,7 @@ export class NewDeckDialog extends React.Component<Props, State> {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleFingerprintComputed = this.handleFingerprintComputed.bind(this);
   }
 
   handleChange(e: React.ChangeEvent<Element & { name: string }>) {
@@ -72,6 +80,10 @@ export class NewDeckDialog extends React.Component<Props, State> {
       console.error("Cannot create a deck with an empty name");
       return;
     }
+    this.setState({showPrompter: true});
+  }
+
+  async handleFingerprintComputed(fingerprint: number) {
     let cards: Cards.OrientedCard[] = [];
     switch (this.state.form.deck) {
       case "silicon-dawn":
@@ -84,11 +96,17 @@ export class NewDeckDialog extends React.Component<Props, State> {
         cards = Cards.standard(Cards.Art.NeonMoon);
         break;
     }
+    const lfsr = new LFSR(fingerprint);
+    // Ten times is enough to get some actual mixing.
+    for (let i = 0; i < 10; i++) {
+      cards = shuffle(cards, lfsr);
+    }
     const deck = {
       cards,
       name: this.state.form.name,
       id: uuid.v4()
     };
+    await delay(4000);
     this.props.onNewDeck(deck);
   }
 
@@ -132,9 +150,17 @@ export class NewDeckDialog extends React.Component<Props, State> {
           }
 
           <div className="button-row">
-            <button type="submit" disabled={submissionDisabled}>Add new deck</button>
+            <button type="submit" disabled={submissionDisabled}>Create & shuffle deck</button>
           </div>
         </form>
+
+        <ReactModal
+          isOpen={this.state.showPrompter}
+          className="modal"
+          overlayClassName="overlay"
+          closeTimeoutMS={200}>
+          <Prompter onFingerprintComputed={this.handleFingerprintComputed} duration={3000} />
+        </ReactModal>
       </div>
     );
   }
