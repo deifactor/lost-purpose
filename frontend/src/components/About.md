@@ -82,7 +82,7 @@ if you want to get in contact with me, here are your options from best to worst:
 
 - [send me a message on Mastodon](https://cybre.space/@hierarchon)
 - [send me a message on Twitter](https://twitter.com/hierarchon) (public DMs are on)
-- [mailto:relativistic.policeman@gmail.com](e-mail me)
+- [e-mail me](mailto:relativistic.policeman+tarot@gmail.com)
 
 ---
 
