@@ -18,6 +18,7 @@ import { NewDeckDialog } from "./NewDeckDialog";
 
 import "../styles/app.scss";
 const aboutMarkdown = require("./About.md");
+const creditsMarkdown = require("./Credits.md");
 
 type Props = {
   history: history.History;
@@ -118,6 +119,10 @@ class App extends React.Component<Props, State> {
               onRestore={this.handleRestore}
             />
           )}
+        />
+        <Route
+          path="/credits"
+          render={() => <ReactMarkdown source={creditsMarkdown} />}
         />
 
         <ReactModal
