@@ -46,7 +46,7 @@
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.1.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "raw-loader": "^0.5.1",
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.3",
@@ -55,7 +55,7 @@
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
     "typescript": "^2.9.2",
-    "webpack": "^4.16.4",
+    "webpack": "^4.43.0",
     "webpack-command": "^0.4.1",
     "webpack-serve": "^2.0.2"
   }
