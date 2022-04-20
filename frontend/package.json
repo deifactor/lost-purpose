@@ -23,7 +23,7 @@
     "css-loader": "^1.0.0",
     "delay": "^3.1.0",
     "immutability-helper": "^2.7.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-markdown": "^3.6.0",
@@ -56,7 +56,7 @@
     "tslint-react": "^3.6.0",
     "typescript": "^2.9.2",
     "webpack": "^4.43.0",
-    "webpack-command": "^0.4.1",
+    "webpack-command": "^0.5.1",
     "webpack-serve": "^2.0.2"
   }
 }
