@@ -1,6 +1,12 @@
 # Tarot of the Lost Purpose
 
-[![Build Status](https://travis-ci.org/deifactor/lost-purpose.svg?branch=master)](https://travis-ci.org/deifactor/lost-purpose) [![codecov](https://codecov.io/gh/deifactor/lost-purpose/branch/master/graph/badge.svg)](https://codecov.io/gh/deifactor/lost-purpose)
+**NOT MAINTAINED**
+
+This was an experiment back in 2019 to learn React. Unfortunately, the nature
+of modern webdev means severay of the 'best practices' here are no longer
+valid. One day I'd like to rewrite this in the 'modern' recommended style,
+possibly with Preact or even without any framework at all. But until then,
+consider this code bit-rotten.
 
 If you want to try the Tarot of the Lost Purpose out for yourself, see [the
 official instance](https://synthetic.zone/lost-purpose).
